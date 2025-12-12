@@ -246,4 +246,29 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+fixtures = [
+    {"dt": "DocType", "filters": [["module", "=", "idli_book"]]}
+]
+app_name = "idli_book"
+app_title = "Idli Book"
+app_publisher = "You"
+app_description = "Minimal accounting app for Idli Book"
+app_version = "0.0.1"
+
+# include client side js (optional)
+app_include_js = "/assets/idli_book/js/timezone_autoset.js"
+
+# Scheduler tasks
+scheduler_events = {
+    "daily": [
+        "idli_book.tasks.daily_tasks"
+    ],
+    "hourly": [
+        "idli_book.tasks.hourly_tasks"
+    ]
+}
+
+fixtures = [
+    {"dt": "DocType", "filters": [["module", "=", "idli_book"]]}
+]
 
