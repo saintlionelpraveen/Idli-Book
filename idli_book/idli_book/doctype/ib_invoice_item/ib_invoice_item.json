@@ -1,0 +1,118 @@
+{
+    "actions": [],
+    "creation": "2025-01-05 17:00:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "item_code",
+        "item_name",
+        "description",
+        "quantity",
+        "uom",
+        "rate",
+        "discount_type",
+        "discount_percentage",
+        "discount_amount",
+        "amount",
+        "tax",
+        "tax_rate",
+        "tax_amount"
+    ],
+    "fields": [
+        {
+            "fieldname": "item_code",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Item Code",
+            "options": "IB Item",
+            "reqd": 1
+        },
+        {
+            "fieldname": "item_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Item Name",
+            "read_only": 1
+        },
+        {
+            "fieldname": "description",
+            "fieldtype": "Small Text",
+            "label": "Description"
+        },
+        {
+            "fieldname": "quantity",
+            "fieldtype": "Float",
+            "in_list_view": 1,
+            "label": "Quantity",
+            "reqd": 1,
+            "default": "1"
+        },
+        {
+            "fieldname": "uom",
+            "fieldtype": "Link",
+            "label": "UOM",
+            "options": "UOM"
+        },
+        {
+            "fieldname": "rate",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Rate",
+            "reqd": 1
+        },
+        {
+            "fieldname": "amount",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Amount",
+            "read_only": 1
+        },
+        {
+            "default": "Percentage",
+            "fieldname": "discount_type",
+            "fieldtype": "Select",
+            "label": "Discount Type",
+            "options": "Percentage\nAmount"
+        },
+        {
+            "fieldname": "discount_percentage",
+            "fieldtype": "Percent",
+            "label": "Discount %"
+        },
+        {
+            "fieldname": "discount_amount",
+            "fieldtype": "Currency",
+            "label": "Discount Amount"
+        },
+        {
+            "fieldname": "tax",
+            "fieldtype": "Link",
+            "label": "Tax",
+            "options": "IB Tax"
+        },
+        {
+            "fieldname": "tax_rate",
+            "fieldtype": "Percent",
+            "label": "Tax Rate",
+            "read_only": 1
+        },
+        {
+            "fieldname": "tax_amount",
+            "fieldtype": "Currency",
+            "label": "Tax Amount",
+            "read_only": 1
+        }
+    ],
+    "istable": 1,
+    "links": [],
+    "modified": "2025-01-05 17:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Invoice Item",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

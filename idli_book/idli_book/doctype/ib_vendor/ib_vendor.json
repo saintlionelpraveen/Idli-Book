@@ -1,0 +1,129 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "field:vendor_name",
+    "creation": "2025-01-05 16:35:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "vendor_name",
+        "tax_id",
+        "currency",
+        "column_break_contact",
+        "email",
+        "phone",
+        "website",
+        "address_section",
+        "billing_address",
+        "column_break_shipping",
+        "shipping_address",
+        "settings_section",
+        "payment_terms",
+        "default_payable_account"
+    ],
+    "fields": [
+        {
+            "fieldname": "vendor_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Vendor Name",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "tax_id",
+            "fieldtype": "Data",
+            "label": "Tax ID / GSTIN"
+        },
+        {
+            "fieldname": "currency",
+            "fieldtype": "Link",
+            "label": "Currency",
+            "options": "Currency",
+            "default": "INR"
+        },
+        {
+            "fieldname": "column_break_contact",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "email",
+            "fieldtype": "Data",
+            "label": "Email",
+            "options": "Email"
+        },
+        {
+            "fieldname": "phone",
+            "fieldtype": "Data",
+            "label": "Phone"
+        },
+        {
+            "fieldname": "website",
+            "fieldtype": "Data",
+            "label": "Website"
+        },
+        {
+            "fieldname": "address_section",
+            "fieldtype": "Section Break",
+            "label": "Address"
+        },
+        {
+            "fieldname": "billing_address",
+            "fieldtype": "Small Text",
+            "label": "Billing Address"
+        },
+        {
+            "fieldname": "column_break_shipping",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "shipping_address",
+            "fieldtype": "Small Text",
+            "label": "Shipping Address"
+        },
+        {
+            "fieldname": "settings_section",
+            "fieldtype": "Section Break",
+            "label": "Settings"
+        },
+        {
+            "fieldname": "payment_terms",
+            "fieldtype": "Select",
+            "label": "Payment Terms",
+            "options": "Due on Receipt\nNet 15\nNet 30\nNet 45\nNet 60",
+            "default": "Due on Receipt"
+        },
+        {
+            "fieldname": "default_payable_account",
+            "fieldtype": "Link",
+            "label": "Payable Account",
+            "options": "IB Chart of Accounts",
+            "description": "Account to track what you owe this vendor"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2025-01-05 16:35:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Vendor",
+    "naming_rule": "By fieldname",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

@@ -1,0 +1,170 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "naming_series:",
+    "creation": "2025-01-05 16:55:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "payment_type",
+        "naming_series",
+        "party_type",
+        "party",
+        "payment_date",
+        "mode_of_payment",
+        "reference_no",
+        "reference_date",
+        "amount_section",
+        "amount",
+        "bank_charges",
+        "tax_deducted",
+        "accounts_section",
+        "paid_from_account",
+        "paid_to_account",
+        "allocation_section",
+        "references",
+        "unallocated_amount"
+    ],
+    "fields": [
+        {
+            "fieldname": "payment_type",
+            "fieldtype": "Select",
+            "label": "Payment Type",
+            "options": "Receive\nPay",
+            "default": "Receive",
+            "reqd": 1
+        },
+        {
+            "fieldname": "naming_series",
+            "fieldtype": "Select",
+            "label": "Series",
+            "options": "PAY-.YYYY.-",
+            "default": "PAY-.YYYY.-"
+        },
+        {
+            "fieldname": "party_type",
+            "fieldtype": "Select",
+            "label": "Party Type",
+            "options": "IB Customer\nIB Vendor",
+            "default": "IB Customer",
+            "reqd": 1
+        },
+        {
+            "fieldname": "party",
+            "fieldtype": "Dynamic Link",
+            "label": "Party",
+            "options": "party_type",
+            "reqd": 1
+        },
+        {
+            "fieldname": "payment_date",
+            "fieldtype": "Date",
+            "label": "Payment Date",
+            "default": "Today",
+            "reqd": 1
+        },
+        {
+            "fieldname": "mode_of_payment",
+            "fieldtype": "Select",
+            "label": "Mode of Payment",
+            "options": "Cash\nBank Transfer\nCheque\nCredit Card",
+            "default": "Bank Transfer"
+        },
+        {
+            "fieldname": "reference_no",
+            "fieldtype": "Data",
+            "label": "Reference#"
+        },
+        {
+            "fieldname": "reference_date",
+            "fieldtype": "Date",
+            "label": "Reference Date"
+        },
+        {
+            "fieldname": "amount_section",
+            "fieldtype": "Section Break",
+            "label": "Amount"
+        },
+        {
+            "fieldname": "amount",
+            "fieldtype": "Currency",
+            "label": "Amount",
+            "reqd": 1
+        },
+        {
+            "fieldname": "bank_charges",
+            "fieldtype": "Currency",
+            "label": "Bank Charges"
+        },
+        {
+            "fieldname": "tax_deducted",
+            "fieldtype": "Currency",
+            "label": "Tax Deducted (TDS)"
+        },
+        {
+            "fieldname": "accounts_section",
+            "fieldtype": "Section Break",
+            "label": "Accounts"
+        },
+        {
+            "fieldname": "paid_from_account",
+            "fieldtype": "Link",
+            "label": "Paid From",
+            "options": "IB Chart of Accounts",
+            "reqd": 1,
+            "description": "Asset/Bank for Pay, Asset/Receivable for Receive (Party Account)"
+        },
+        {
+            "fieldname": "paid_to_account",
+            "fieldtype": "Link",
+            "label": "Paid To",
+            "options": "IB Chart of Accounts",
+            "reqd": 1,
+            "description": "Liability/Payable for Pay (Party Account), Asset/Bank for Receive"
+        },
+        {
+            "fieldname": "allocation_section",
+            "fieldtype": "Section Break",
+            "label": "Allocation"
+        },
+        {
+            "fieldname": "references",
+            "fieldtype": "Table",
+            "label": "Payment References",
+            "options": "IB Payment Reference"
+        },
+        {
+            "fieldname": "unallocated_amount",
+            "fieldtype": "Currency",
+            "label": "Unallocated Amount",
+            "read_only": 1
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "is_submittable": 1,
+    "links": [],
+    "modified": "2025-01-05 16:55:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Payment",
+    "naming_rule": "By \"naming_series\" field",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "submit": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

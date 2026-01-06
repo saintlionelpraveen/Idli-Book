@@ -1,0 +1,185 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "naming_series:",
+    "creation": "2025-01-05 16:45:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "order_details",
+        "naming_series",
+        "customer",
+        "estimate_ref",
+        "order_date",
+        "shipment_date",
+        "reference",
+        "item_section",
+        "items",
+        "totals_section",
+        "subtotal",
+        "discount_type",
+        "discount_percentage",
+        "discount_amount",
+        "tax_amount",
+        "grand_total",
+        "status_section",
+        "status",
+        "terms_section",
+        "customer_notes",
+        "terms_and_conditions"
+    ],
+    "fields": [
+        {
+            "fieldname": "order_details",
+            "fieldtype": "Section Break",
+            "label": "Order Details"
+        },
+        {
+            "fieldname": "naming_series",
+            "fieldtype": "Select",
+            "label": "Series",
+            "options": "SO-.YYYY.-",
+            "default": "SO-.YYYY.-"
+        },
+        {
+            "fieldname": "customer",
+            "fieldtype": "Link",
+            "label": "Customer Name",
+            "options": "IB Customer",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "order_date",
+            "fieldtype": "Date",
+            "label": "Order Date",
+            "default": "Today",
+            "reqd": 1
+        },
+        {
+            "fieldname": "shipment_date",
+            "fieldtype": "Date",
+            "label": "Expected Shipment Date"
+        },
+        {
+            "fieldname": "estimate_ref",
+            "fieldtype": "Link",
+            "label": "Estimate Reference",
+            "options": "IB Estimate",
+            "read_only": 1
+        },
+        {
+            "fieldname": "reference",
+            "fieldtype": "Data",
+            "label": "Reference#"
+        },
+        {
+            "fieldname": "item_section",
+            "fieldtype": "Section Break",
+            "label": "Items"
+        },
+        {
+            "fieldname": "items",
+            "fieldtype": "Table",
+            "label": "Items",
+            "options": "IB Invoice Item",
+            "reqd": 1
+        },
+        {
+            "fieldname": "totals_section",
+            "fieldtype": "Section Break",
+            "label": "Totals"
+        },
+        {
+            "fieldname": "subtotal",
+            "fieldtype": "Currency",
+            "label": "Subtotal",
+            "read_only": 1
+        },
+        {
+            "default": "Percentage",
+            "fieldname": "discount_type",
+            "fieldtype": "Select",
+            "label": "Discount Type",
+            "options": "Percentage\nAmount"
+        },
+        {
+            "fieldname": "discount_percentage",
+            "fieldtype": "Percent",
+            "label": "Discount %"
+        },
+        {
+            "fieldname": "discount_amount",
+            "fieldtype": "Currency",
+            "label": "Discount Amount"
+        },
+        {
+            "fieldname": "tax_amount",
+            "fieldtype": "Currency",
+            "label": "Total Tax",
+            "read_only": 1
+        },
+        {
+            "fieldname": "grand_total",
+            "fieldtype": "Currency",
+            "label": "Grand Total",
+            "read_only": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "status_section",
+            "fieldtype": "Section Break",
+            "label": "Status"
+        },
+        {
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "label": "Status",
+            "options": "Draft\nConfirmed\nInvoiced\nClosed\nVoid",
+            "default": "Draft",
+            "read_only": 1
+        },
+        {
+            "fieldname": "terms_section",
+            "fieldtype": "Section Break",
+            "label": "Terms & Notes"
+        },
+        {
+            "fieldname": "customer_notes",
+            "fieldtype": "Small Text",
+            "label": "Customer Notes"
+        },
+        {
+            "fieldname": "terms_and_conditions",
+            "fieldtype": "Small Text",
+            "label": "Terms & Conditions"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "is_submittable": 1,
+    "links": [],
+    "modified": "2025-01-05 16:45:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Sales Order",
+    "naming_rule": "By \"naming_series\" field",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "submit": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

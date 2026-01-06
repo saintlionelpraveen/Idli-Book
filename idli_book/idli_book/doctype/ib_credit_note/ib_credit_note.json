@@ -1,0 +1,157 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "naming_series:",
+    "creation": "2025-01-05 16:30:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "basic_info_section",
+        "naming_series",
+        "customer",
+        "invoice_reference",
+        "column_break_info",
+        "credit_note_date",
+        "reason",
+        "items_section",
+        "is_tax_inclusive",
+        "items",
+        "totals_section",
+        "subtotal",
+        "tax_amount",
+        "grand_total",
+        "status",
+        "notes_section",
+        "notes"
+    ],
+    "fields": [
+        {
+            "fieldname": "basic_info_section",
+            "fieldtype": "Section Break",
+            "label": "Credit Note Details"
+        },
+        {
+            "fieldname": "naming_series",
+            "fieldtype": "Select",
+            "label": "Series",
+            "options": "CN-.YYYY.-",
+            "default": "CN-.YYYY.-"
+        },
+        {
+            "fieldname": "customer",
+            "fieldtype": "Link",
+            "label": "Customer Name",
+            "options": "IB Customer",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "invoice_reference",
+            "fieldtype": "Link",
+            "label": "Reference Invoice",
+            "options": "IB Sales Invoice"
+        },
+        {
+            "fieldname": "column_break_info",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "credit_note_date",
+            "fieldtype": "Date",
+            "label": "Date",
+            "default": "Today",
+            "reqd": 1
+        },
+        {
+            "fieldname": "reason",
+            "fieldtype": "Data",
+            "label": "Reason"
+        },
+        {
+            "fieldname": "items_section",
+            "fieldtype": "Section Break",
+            "label": "Items"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_tax_inclusive",
+            "fieldtype": "Check",
+            "label": "Tax Inclusive Rates"
+        },
+        {
+            "fieldname": "items",
+            "fieldtype": "Table",
+            "label": "Items",
+            "options": "IB Invoice Item",
+            "reqd": 1
+        },
+        {
+            "fieldname": "totals_section",
+            "fieldtype": "Section Break",
+            "label": "Totals"
+        },
+        {
+            "fieldname": "subtotal",
+            "fieldtype": "Currency",
+            "label": "Subtotal",
+            "read_only": 1
+        },
+        {
+            "fieldname": "tax_amount",
+            "fieldtype": "Currency",
+            "label": "Total Tax",
+            "read_only": 1
+        },
+        {
+            "fieldname": "grand_total",
+            "fieldtype": "Currency",
+            "label": "Grand Total",
+            "read_only": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "label": "Status",
+            "options": "Draft\nSubmitted\nCancelled",
+            "default": "Draft",
+            "read_only": 1
+        },
+        {
+            "fieldname": "notes_section",
+            "fieldtype": "Section Break",
+            "label": "Notes"
+        },
+        {
+            "fieldname": "notes",
+            "fieldtype": "Small Text",
+            "label": "Notes"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "is_submittable": 1,
+    "modified": "2025-01-05 16:30:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Credit Note",
+    "naming_rule": "By \"naming_series\" field",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "submit": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

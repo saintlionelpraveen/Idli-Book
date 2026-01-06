@@ -1,0 +1,76 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "field:tax_name",
+    "creation": "2025-01-05 16:40:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "tax_name",
+        "tax_rate",
+        "tax_type",
+        "account_head",
+        "is_inter_state"
+    ],
+    "fields": [
+        {
+            "fieldname": "tax_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Tax Name",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "tax_rate",
+            "fieldtype": "Percent",
+            "in_list_view": 1,
+            "label": "Rate (%)",
+            "reqd": 1
+        },
+        {
+            "fieldname": "tax_type",
+            "fieldtype": "Select",
+            "label": "Tax Type",
+            "options": "GST\nVAT\nOther",
+            "default": "GST"
+        },
+        {
+            "fieldname": "account_head",
+            "fieldtype": "Link",
+            "label": "Account Head",
+            "options": "IB Chart of Accounts"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_inter_state",
+            "fieldtype": "Check",
+            "label": "Inter State Tax (IGST)"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2025-01-05 16:40:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Tax",
+    "naming_rule": "By fieldname",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

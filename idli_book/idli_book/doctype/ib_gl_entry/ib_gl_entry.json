@@ -1,0 +1,115 @@
+{
+    "actions": [],
+    "creation": "2025-01-05 17:30:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "posting_date",
+        "transaction_date",
+        "account",
+        "party_type",
+        "party",
+        "debit",
+        "credit",
+        "transaction_type",
+        "transaction_no",
+        "fiscal_year",
+        "remarks"
+    ],
+    "fields": [
+        {
+            "fieldname": "posting_date",
+            "fieldtype": "Date",
+            "in_list_view": 1,
+            "label": "Posting Date",
+            "reqd": 1
+        },
+        {
+            "fieldname": "transaction_date",
+            "fieldtype": "Datetime",
+            "label": "Transaction Date"
+        },
+        {
+            "fieldname": "account",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Account",
+            "options": "IB Chart of Accounts",
+            "reqd": 1
+        },
+        {
+            "fieldname": "party_type",
+            "fieldtype": "Link",
+            "label": "Party Type",
+            "options": "DocType"
+        },
+        {
+            "fieldname": "party",
+            "fieldtype": "Dynamic Link",
+            "label": "Party",
+            "options": "party_type"
+        },
+        {
+            "fieldname": "debit",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Debit",
+            "default": "0"
+        },
+        {
+            "fieldname": "credit",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Credit",
+            "default": "0"
+        },
+        {
+            "fieldname": "transaction_type",
+            "fieldtype": "Link",
+            "label": "Voucher Type",
+            "options": "DocType"
+        },
+        {
+            "fieldname": "transaction_no",
+            "fieldtype": "Dynamic Link",
+            "label": "Voucher No",
+            "options": "transaction_type"
+        },
+        {
+            "fieldname": "fiscal_year",
+            "fieldtype": "Data",
+            "label": "Fiscal Year"
+        },
+        {
+            "fieldname": "remarks",
+            "fieldtype": "Small Text",
+            "label": "Remarks"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "is_submittable": 0,
+    "links": [],
+    "modified": "2025-01-05 17:30:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB GL Entry",
+    "naming_rule": "Autoincrement",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

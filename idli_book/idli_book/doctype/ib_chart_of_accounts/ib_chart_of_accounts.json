@@ -1,0 +1,111 @@
+{
+    "actions": [],
+    "autoname": "field:account_name",
+    "creation": "2025-01-05 15:35:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "account_name",
+        "account_number",
+        "is_group",
+        "account_type",
+        "root_type",
+        "frozen",
+        "parent_account",
+        "lft",
+        "rgt",
+        "old_parent"
+    ],
+    "fields": [
+        {
+            "fieldname": "account_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Account Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "account_number",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Account Number"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_group",
+            "fieldtype": "Check",
+            "label": "Is Group"
+        },
+        {
+            "fieldname": "account_type",
+            "fieldtype": "Select",
+            "label": "Account Type",
+            "options": "\nAsset\nLiability\nEquity\nIncome\nExpense\nBank\nCash\nReceivable\nPayable"
+        },
+        {
+            "fieldname": "root_type",
+            "fieldtype": "Select",
+            "label": "Root Type",
+            "options": "\nAsset\nLiability\nEquity\nIncome\nExpense",
+            "reqd": 1
+        },
+        {
+            "default": "0",
+            "fieldname": "frozen",
+            "fieldtype": "Check",
+            "label": "Frozen"
+        },
+        {
+            "fieldname": "parent_account",
+            "fieldtype": "Link",
+            "label": "Parent Account",
+            "options": "IB Chart of Accounts"
+        },
+        {
+            "fieldname": "lft",
+            "fieldtype": "Int",
+            "hidden": 1,
+            "label": "Left"
+        },
+        {
+            "fieldname": "rgt",
+            "fieldtype": "Int",
+            "hidden": 1,
+            "label": "Right"
+        },
+        {
+            "fieldname": "old_parent",
+            "fieldtype": "Link",
+            "hidden": 1,
+            "label": "Old Parent",
+            "options": "IB Chart of Accounts"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "is_tree": 1,
+    "links": [],
+    "modified": "2025-01-05 15:35:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Chart of Accounts",
+    "naming_rule": "By fieldname",
+    "nsm_parent_field": "parent_account",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

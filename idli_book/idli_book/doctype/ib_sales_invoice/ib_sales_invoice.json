@@ -1,0 +1,251 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "naming_series:",
+    "creation": "2025-01-05 16:10:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "invoice_details_section",
+        "naming_series",
+        "customer",
+        "sales_order_ref",
+        "place_of_supply",
+        "column_break_details",
+        "invoice_date",
+        "due_date",
+        "payment_terms",
+        "address_section",
+        "billing_address",
+        "column_break_addr",
+        "shipping_address",
+        "items_section",
+        "is_tax_inclusive",
+        "items",
+        "totals_section",
+        "subtotal",
+        "discount_type",
+        "discount_percentage",
+        "discount_amount",
+        "column_break_tax",
+        "tax_amount",
+        "adjustment",
+        "grand_total",
+        "paid_amount",
+        "outstanding_amount",
+        "status",
+        "terms_section",
+        "customer_notes",
+        "terms_and_conditions"
+    ],
+    "fields": [
+        {
+            "fieldname": "invoice_details_section",
+            "fieldtype": "Section Break",
+            "label": "Invoice Details"
+        },
+        {
+            "fieldname": "naming_series",
+            "fieldtype": "Select",
+            "label": "Series",
+            "options": "INV-.YYYY.-",
+            "default": "INV-.YYYY.-"
+        },
+        {
+            "fieldname": "customer",
+            "fieldtype": "Link",
+            "label": "Customer Name",
+            "options": "IB Customer",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "sales_order_ref",
+            "fieldtype": "Link",
+            "label": "Sales Order Reference",
+            "options": "IB Sales Order",
+            "read_only": 1
+        },
+        {
+            "fieldname": "place_of_supply",
+            "fieldtype": "Select",
+            "label": "Place of Supply",
+            "description": "State for GST calculation",
+            "options": "Andhra Pradesh\nArunachal Pradesh\nAssam\nBihar\nChhattisgarh\nGoa\nGujarat\nHaryana\nHimachal Pradesh\nJharkhand\nKarnataka\nKerala\nMadhya Pradesh\nMaharashtra\nManipur\nMeghalaya\nMizoram\nNagaland\nOdisha\nPunjab\nRajasthan\nSikkim\nTamil Nadu\nTelangana\nTripura\nUttar Pradesh\nUttarakhand\nWest Bengal\nAndaman and Nicobar Islands\nChandigarh\nDadra and Nagar Haveli and Daman and Diu\nDelhi\nJammu and Kashmir\nLadakh\nLakshadweep\nPuducherry"
+        },
+        {
+            "fieldname": "column_break_details",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "invoice_date",
+            "fieldtype": "Date",
+            "label": "Invoice Date",
+            "default": "Today",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "due_date",
+            "fieldtype": "Date",
+            "label": "Due Date"
+        },
+        {
+            "fieldname": "payment_terms",
+            "fieldtype": "Select",
+            "label": "Terms",
+            "options": "Due on Receipt\nNet 15\nNet 30\nNet 45\nNet 60"
+        },
+        {
+            "fieldname": "address_section",
+            "fieldtype": "Section Break",
+            "label": "Address Information"
+        },
+        {
+            "fieldname": "billing_address",
+            "fieldtype": "Small Text",
+            "label": "Billing Address"
+        },
+        {
+            "fieldname": "column_break_addr",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "shipping_address",
+            "fieldtype": "Small Text",
+            "label": "Shipping Address"
+        },
+        {
+            "fieldname": "items_section",
+            "fieldtype": "Section Break",
+            "label": "Item Table"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_tax_inclusive",
+            "fieldtype": "Check",
+            "label": "Tax Inclusive Rates"
+        },
+        {
+            "fieldname": "items",
+            "fieldtype": "Table",
+            "label": "Items",
+            "options": "IB Invoice Item",
+            "reqd": 1
+        },
+        {
+            "fieldname": "totals_section",
+            "fieldtype": "Section Break",
+            "label": "Totals"
+        },
+        {
+            "fieldname": "subtotal",
+            "fieldtype": "Currency",
+            "label": "Subtotal",
+            "read_only": 1
+        },
+        {
+            "fieldname": "discount_type",
+            "fieldtype": "Select",
+            "label": "Discount Type",
+            "options": "None\nPercentage\nAmount",
+            "default": "None"
+        },
+        {
+            "depends_on": "eval:doc.discount_type=='Percentage'",
+            "fieldname": "discount_percentage",
+            "fieldtype": "Percent",
+            "label": "Discount %"
+        },
+        {
+            "depends_on": "eval:doc.discount_type!='None'",
+            "fieldname": "discount_amount",
+            "fieldtype": "Currency",
+            "label": "Discount Amount"
+        },
+        {
+            "fieldname": "column_break_tax",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "tax_amount",
+            "fieldtype": "Currency",
+            "label": "Total Tax",
+            "read_only": 1
+        },
+        {
+            "fieldname": "adjustment",
+            "fieldtype": "Currency",
+            "label": "Adjustment"
+        },
+        {
+            "fieldname": "grand_total",
+            "fieldtype": "Currency",
+            "label": "Grand Total",
+            "read_only": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "paid_amount",
+            "fieldtype": "Currency",
+            "label": "Paid Amount",
+            "read_only": 1
+        },
+        {
+            "fieldname": "outstanding_amount",
+            "fieldtype": "Currency",
+            "label": "Outstanding Amount",
+            "read_only": 1
+        },
+        {
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "label": "Status",
+            "options": "Draft\nAwaiting Payment\nPaid\nPartially Paid\nCancelled\nOverdue",
+            "default": "Draft",
+            "read_only": 1
+        },
+        {
+            "fieldname": "terms_section",
+            "fieldtype": "Section Break",
+            "label": "Notes & Terms"
+        },
+        {
+            "fieldname": "customer_notes",
+            "fieldtype": "Small Text",
+            "label": "Customer Notes"
+        },
+        {
+            "fieldname": "terms_and_conditions",
+            "fieldtype": "Small Text",
+            "label": "Terms & Conditions"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "is_submittable": 1,
+    "modified": "2025-01-05 16:10:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Sales Invoice",
+    "naming_rule": "By \"naming_series\" field",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "submit": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "title_field": "customer"
+}
