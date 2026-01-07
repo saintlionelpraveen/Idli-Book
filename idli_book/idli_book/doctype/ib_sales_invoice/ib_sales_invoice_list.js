@@ -1,34 +1,29 @@
 frappe.listview_settings['IB Sales Invoice'] = {
-    formatters: {
-        status(value) {
-            const status_colors = {
-                'Draft': 'gray',
-                'Awaiting Payment': 'orange',
-                'Partially Paid': 'yellow',
-                'Paid': 'green',
-                'Cancelled': 'red',
-                'Overdue': 'darkred'
-            };
-            return `<span class="indicator-pill ${status_colors[value] || 'gray'}">${value}</span>`;
-        }
-    },
-
+    add_fields: ["email_delivery_status", "status"],
     get_indicator: function (doc) {
+        if (doc.email_delivery_status === "Error") {
+            return [__("Email Error"), "red", "email_delivery_status,=,Error"];
+        }
         const status_colors = {
-            'Draft': ['Draft', 'gray', 'status,=,Draft'],
-            'Awaiting Payment': ['Awaiting Payment', 'orange', 'status,=,Awaiting Payment'],
-            'Partially Paid': ['Partially Paid', 'yellow', 'status,=,Partially Paid'],
-            'Paid': ['Paid', 'green', 'status,=,Paid'],
-            'Cancelled': ['Cancelled', 'red', 'status,=,Cancelled'],
-            'Overdue': ['Overdue', 'darkred', 'status,=,Overdue']
+            "Draft": "grey",
+            "Unpaid": "red",
+            "Partly Paid": "orange",
+            "Paid": "green",
+            "Overdue": "red",
+            "Cancelled": "red"
         };
-        return status_colors[doc.status] || ['Unknown', 'gray'];
+        return [__(doc.status), status_colors[doc.status] || "grey", "status,=," + doc.status];
     },
-
-    onload: function (listview) {
-        // Add custom columns for payment info
-        listview.page.add_inner_button(__('Refresh'), function () {
-            listview.refresh();
-        });
+    formatters: {
+        email_delivery_status: function (val) {
+            const colors = {
+                "Not Sent": "grey",
+                "Queued": "orange",
+                "Sent": "green",
+                "Error": "red"
+            };
+            const color = colors[val] || "grey";
+            return `<span class="indicator-pill ${color}">${val}</span>`;
+        }
     }
 };

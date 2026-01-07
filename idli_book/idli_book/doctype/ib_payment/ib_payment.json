@@ -23,7 +23,9 @@
         "paid_to_account",
         "allocation_section",
         "references",
-        "unallocated_amount"
+        "unallocated_amount",
+        "email_delivery_status",
+        "amended_from"
     ],
     "fields": [
         {
@@ -32,7 +34,8 @@
             "label": "Payment Type",
             "options": "Receive\nPay",
             "default": "Receive",
-            "reqd": 1
+            "reqd": 1,
+            "in_list_view": 1
         },
         {
             "fieldname": "naming_series",
@@ -138,6 +141,23 @@
             "fieldtype": "Currency",
             "label": "Unallocated Amount",
             "read_only": 1
+        },
+        {
+            "fieldname": "email_delivery_status",
+            "fieldtype": "Select",
+            "label": "Email Status",
+            "options": "Not Sent\nQueued\nSent\nError",
+            "default": "Not Sent",
+            "read_only": 1
+        },
+        {
+            "fieldname": "amended_from",
+            "fieldtype": "Link",
+            "label": "Amended From",
+            "options": "IB Payment",
+            "read_only": 1,
+            "no_copy": 1,
+            "print_hide": 1
         }
     ],
     "index_web_pages_for_search": 1,

@@ -4,6 +4,14 @@ from frappe.utils import flt, nowdate
 
 class IBPurchaseBill(Document):
 	def validate(self):
+		if self.due_date and self.bill_date:
+			if self.due_date < self.bill_date:
+				frappe.throw("Due Date cannot be before Bill Date")
+		
+		# Auto-fill missing fields if possible
+		if not self.billing_address and self.vendor:
+			self.billing_address = frappe.db.get_value("IB Vendor", self.vendor, "billing_address")
+			
 		self.calculate_totals()
 	
 	def calculate_totals(self):
@@ -50,6 +58,10 @@ class IBPurchaseBill(Document):
 		self.status = "Awaiting Payment"
 		self.outstanding_amount = self.grand_total
 		self.update_stock(factor=1)
+		
+		# Set posting_date for GL Engine (Use Bill Date)
+		self.posting_date = self.bill_date
+		
 		self.make_gl_entries()
 		self.update_purchase_order_status()
 	

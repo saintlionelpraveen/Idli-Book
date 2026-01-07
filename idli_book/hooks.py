@@ -137,13 +137,11 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Email Queue": {
+		"on_update": "idli_book.api.email_tracker.update_estimate_email_status"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
@@ -260,8 +258,12 @@ app_include_js = "/assets/idli_book/js/timezone_autoset.js"
 
 # Scheduler tasks
 scheduler_events = {
+    "all": [
+        "idli_book.tasks.sync_email_statuses"
+    ],
     "daily": [
-        "idli_book.tasks.daily_tasks"
+        "idli_book.tasks.daily_tasks",
+        "idli_book.tasks.send_payment_reminders"
     ],
     "hourly": [
         "idli_book.tasks.hourly_tasks"

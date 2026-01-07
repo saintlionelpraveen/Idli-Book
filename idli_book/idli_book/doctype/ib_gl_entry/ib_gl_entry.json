@@ -5,16 +5,18 @@
     "engine": "InnoDB",
     "field_order": [
         "posting_date",
-        "transaction_date",
-        "account",
-        "party_type",
-        "party",
-        "debit",
-        "credit",
         "transaction_type",
         "transaction_no",
-        "fiscal_year",
-        "remarks"
+        "account",
+        "against_account",
+        "debit",
+        "credit",
+        "party_type",
+        "party",
+        "remarks",
+        "is_cancelled",
+        "transaction_date",
+        "fiscal_year"
     ],
     "fields": [
         {
@@ -25,9 +27,18 @@
             "reqd": 1
         },
         {
-            "fieldname": "transaction_date",
-            "fieldtype": "Datetime",
-            "label": "Transaction Date"
+            "fieldname": "transaction_type",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Voucher Type",
+            "options": "DocType"
+        },
+        {
+            "fieldname": "transaction_no",
+            "fieldtype": "Dynamic Link",
+            "in_list_view": 1,
+            "label": "Voucher No",
+            "options": "transaction_type"
         },
         {
             "fieldname": "account",
@@ -38,16 +49,10 @@
             "reqd": 1
         },
         {
-            "fieldname": "party_type",
-            "fieldtype": "Link",
-            "label": "Party Type",
-            "options": "DocType"
-        },
-        {
-            "fieldname": "party",
-            "fieldtype": "Dynamic Link",
-            "label": "Party",
-            "options": "party_type"
+            "fieldname": "against_account",
+            "fieldtype": "Small Text",
+            "label": "Against Account",
+            "description": "Contra account(s) for quick reference"
         },
         {
             "fieldname": "debit",
@@ -64,26 +69,37 @@
             "default": "0"
         },
         {
-            "fieldname": "transaction_type",
+            "fieldname": "party_type",
             "fieldtype": "Link",
-            "label": "Voucher Type",
+            "label": "Party Type",
             "options": "DocType"
         },
         {
-            "fieldname": "transaction_no",
+            "fieldname": "party",
             "fieldtype": "Dynamic Link",
-            "label": "Voucher No",
-            "options": "transaction_type"
-        },
-        {
-            "fieldname": "fiscal_year",
-            "fieldtype": "Data",
-            "label": "Fiscal Year"
+            "label": "Party",
+            "options": "party_type"
         },
         {
             "fieldname": "remarks",
             "fieldtype": "Small Text",
             "label": "Remarks"
+        },
+        {
+            "fieldname": "is_cancelled",
+            "fieldtype": "Check",
+            "label": "Is Cancelled",
+            "default": "0"
+        },
+        {
+            "fieldname": "transaction_date",
+            "fieldtype": "Datetime",
+            "label": "Transaction Date"
+        },
+        {
+            "fieldname": "fiscal_year",
+            "fieldtype": "Data",
+            "label": "Fiscal Year"
         }
     ],
     "index_web_pages_for_search": 1,

@@ -7,6 +7,11 @@ class IBSalesInvoice(Document):
 	def validate(self):
 		self.set_dates()
 		self.calculate_totals()
+		self.auto_fetch_address_details()
+		
+		# Clear payment references if this is an amended document
+		if self.amended_from and self.docstatus == 0:
+			self.clear_amended_references()
 	
 	def set_dates(self):
 		if not self.invoice_date:
@@ -35,7 +40,6 @@ class IBSalesInvoice(Document):
 			
 			if self.is_tax_inclusive:
 				if row.tax_rate:
-					# Back-calculate net amount from inclusive
 					row_net = row.amount / (1 + (row.tax_rate / 100))
 					row_tax = row.amount - row_net
 			else:
@@ -47,7 +51,7 @@ class IBSalesInvoice(Document):
 			
 		self.subtotal = flt(subtotal)
 		
-		# Apply Discount on Subtotal
+		# Apply Discount
 		self.discount_amount = flt(self.discount_amount)
 		if self.discount_type == "Percentage":
 			if self.discount_percentage:
@@ -57,34 +61,27 @@ class IBSalesInvoice(Document):
 		elif self.discount_type == "None":
 			self.discount_amount = 0
 			
-		# Total Tax is just sum of line taxes for now
-		# (Refinement: If discount applies before tax, tax should decrease. 
-		# But usually GST is on transaction value. If discount is "Trade Discount" it reduces value.
-		# For simplicity, let's assume discount reduces taxable value proportionally or just post-tax discount?
-		# Zoho allows both "Discount before Tax" and "Discount after Tax".
-		# Let's assume Discount is on Net Total (reducing taxable value) for simplicity and standardization.)
-		
-		# Pro-rating discount for tax reduction is complex. 
-		# Let's keep it simple: Discount is post-calculation adjustment for now to avoid tax recalc complexity in this iteration,
-		# unless we want to do it perfectly.
-		# "Production Ready" implies handling it right.
-		# If we discount the subtotal, the tax should essentially be recalculated strictly speaking if it's a value reduction.
-		# Let's subtract discount from subtotal to get "Taxable Amount" generally.
-		
-		# Revised:
-		# Taxable = Subtotal - Discount
-		# Tax = Taxable * Rate? No, rate varies per item.
-		# So Discount must be line-level or we pro-rate.
-		# Simplest robust way: Discount Amount is treated as an expense or revenue reduction in GL, 
-		# without altering line tax for now, OR we say Discount is "Post Tax" (Cash Discount).
-		# Let's go with "Discount" as a separate GL Line (Debit Income or separate Expense).
-		
 		grand_total = self.subtotal - self.discount_amount + total_tax + flt(self.adjustment)
 		self.tax_amount = total_tax
 		self.grand_total = flt(grand_total)
 		
 		if self.status == "Draft":
 			self.outstanding_amount = self.grand_total
+
+	def auto_fetch_address_details(self):
+		if self.customer:
+			# Auto-fetch Shipping Address if empty
+			if not self.shipping_address:
+				addr = frappe.db.get_value("IB Customer", self.customer, "billing_address") # Assuming billing for now or default logic
+				# Actually user asked for "customer shipping address".
+				# Let's check if IB Customer has distinct shipping address field?
+				# Standard fields are usually Address/Billing Address. I'll use Billing Address as fallback.
+				if addr: self.shipping_address = addr
+			
+			# Auto-fetch Place of Supply (State)
+			if not self.place_of_supply:
+				state = frappe.db.get_value("IB Customer", self.customer, "state")
+				if state: self.place_of_supply = state
 
 	def on_submit(self):
 		if self.outstanding_amount < 0: 
@@ -97,27 +94,132 @@ class IBSalesInvoice(Document):
 
 		# Set posting_date for GL Engine
 		self.posting_date = self.invoice_date
-
-		self.make_gl_entries()
+		
+		# Create GL Entries with error handling
+		try:
+			self.make_gl_entries()
+		except Exception as e:
+			frappe.log_error("GL Entry Creation Failed", f"Invoice: {self.name}\nError: {str(e)}")
+			frappe.throw(f"Failed to create accounting entries: {str(e)}")
+		
 		self.update_stock(-1)
-		# The following lines were incorrectly moved from on_cancel or make_gl_entries
-		# from idli_book.idli_book.gl_engine import GLEngine
-		# GLEngine.delete_gl_entries(self)
+		
+		# Auto-Email Invoice
+		self.send_invoice_email()
+	
+	def clear_amended_references(self):
+		"""Remove payment references pointing to the cancelled invoice"""
+		try:
+			refs = frappe.get_all("IB Payment Reference", 
+				filters={"reference_name": self.amended_from},
+				fields=["name", "parent"])
+			
+			for ref in refs:
+				frappe.db.delete("IB Payment Reference", {"name": ref.name})
+				frappe.msgprint(f"Cleared payment reference from {ref.parent}")
+		except Exception as e:
+			frappe.log_error("Amendment Reference Cleanup", str(e))
 
-	def on_cancel(self):
-		self.status = "Cancelled"
-		self.update_stock(1)
-		from idli_book.idli_book.gl_engine import GLEngine
-		GLEngine.delete_gl_entries(self)
+	def send_invoice_email(self):
+		customer_email = frappe.db.get_value("IB Customer", self.customer, "email")
+		if customer_email:
+			org_name = frappe.db.get_single_value('IB Organization', 'organization_name') or "Our Company"
+			subject = f"Invoice #{self.name} from {org_name}"
+			
+			message = f"""
+			<div style="font-family: Arial, sans-serif; padding: 20px;">
+				<h3>Invoice #{self.name}</h3>
+				<p>Hello {self.customer},</p>
+				<p>Please find attached invoice for <b>{frappe.format(self.grand_total, {'fieldtype': 'Currency'})}</b>.</p>
+				<p><b>Status:</b> {self.status}</p>
+				<p><b>Due Date:</b> {frappe.utils.formatdate(self.due_date)}</p>
+				<br>
+				<p>Best Regards,<br>{org_name}</p>
+			</div>
+			"""
+			try:
+				frappe.sendmail(
+					recipients=customer_email,
+					subject=subject,
+					message=message,
+					reference_doctype=self.doctype,
+					reference_name=self.name,
+					attachments=[frappe.attach_print(self.doctype, self.name, print_format="Standard")]
+				)
+				self.db_set('email_delivery_status', 'Queued')
+			except:
+				self.db_set('email_delivery_status', 'Error')
 
 	def make_gl_entries(self):
 		from idli_book.idli_book.gl_engine import GLEngine
 		
+		# Helper to ensure account exists - ROBUST VERSION
+		def get_or_create_account(ac_type, ac_name, number, org_doc):
+			# 1. First, search by Account Name (since autoname is field:account_name)
+			existing_ac = frappe.db.get_value("IB Chart of Accounts", {"account_name": ac_name}, "name")
+			if existing_ac:
+				return existing_ac
+
+			# 2. If valid ID format was passed as ID previously, check that too
+			# (Logic removed as schema dictates name=account_name)
+			
+			# 3. Create if not exists
+			try:
+				valid_types = ["Asset", "Liability", "Equity", "Income", "Expense", "Bank", "Cash", "Receivable", "Payable"]
+				
+				root_map = {
+					"Receivable": "Asset",
+					"Payable": "Liability",
+					"Income": "Income",
+					"Expense": "Expense",
+					"Asset": "Asset",
+					"Liability": "Liability",
+					"Equity": "Equity",
+					"Tax": "Liability"
+				}
+				
+				# Determine Valid Account Type
+				final_ac_type = ac_type
+				if ac_type == "Tax": 
+					final_ac_type = "Liability"
+				elif ac_type not in valid_types:
+					final_ac_type = "" 
+				
+				new_ac = frappe.new_doc("IB Chart of Accounts")
+				new_ac.account_name = ac_name
+				new_ac.account_number = number
+				new_ac.account_type = final_ac_type
+				new_ac.root_type = root_map.get(ac_type, "Asset")
+				new_ac.insert(ignore_permissions=True)
+				
+				# Return the auto-generated name (which is account_name)
+				return new_ac.name
+				
+			except Exception as e:
+				# If it failed due to duplicate race condition, try fetching again
+				frappe.log_error(f"Account Creation Failed: {ac_name}", str(e))
+				existing = frappe.db.get_value("IB Chart of Accounts", {"account_name": ac_name}, "name")
+				if existing: return existing
+				
+				frappe.throw(f"Critical: Could not create Account {ac_name}. Error: {str(e)}")
+
 		gl_entries = []
+		# Ensure Org Exists
+		if not frappe.db.exists("IB Organization", "IB Organization"):
+			org = frappe.new_doc("IB Organization")
+			org.organization_name = "Idli Book"
+			org.save(ignore_permissions=True)
+			
 		org = frappe.get_doc("IB Organization", "IB Organization")
 		
-		# 1. Customer (Dr) = Grand Total
-		customer_acct = frappe.db.get_value("IB Customer", self.customer, "default_receivable_account") or org.default_receivable_account
+		# 1. Customer (Dr)
+		# Try Customer Default -> Org Default -> Create New
+		customer_acct = frappe.db.get_value("IB Customer", self.customer, "default_receivable_account")
+		if not customer_acct:
+			customer_acct = org.default_receivable_account
+		if not customer_acct:
+			customer_acct = get_or_create_account("Receivable", "Accounts Receivable", "1100", org)
+			
 		gl_entries.append({
 			"account": customer_acct,
 			"party_type": "IB Customer",
@@ -127,10 +229,12 @@ class IBSalesInvoice(Document):
 			"remarks": "Invoice " + self.name
 		})
 		
-		# 2. Income (Cr) = Subtotal (sum of line amounts after line discounts)
+		# 2. Income (Cr)
+		sales_acct_default = get_or_create_account("Income", "Sales Income", "4000", org)
+		
 		for row in self.items:
 			item_doc = frappe.get_doc("IB Item", row.item_code)
-			income_acct = item_doc.default_income_account or org.default_income_account
+			income_acct = item_doc.default_income_account or org.default_income_account or sales_acct_default
 			
 			gl_entries.append({
 				"account": income_acct,
@@ -139,13 +243,9 @@ class IBSalesInvoice(Document):
 				"remarks": f"Income - {row.item_code}"
 			})
 		
-		# 3. Tax (Cr) = Total Tax from line items
+		# 3. Tax (Cr)
 		if self.tax_amount > 0:
-			# Use organization's default tax account or first tax liability account
-			tax_acct = frappe.db.get_value("IB Chart of Accounts", {"account_type": "Tax"}, "name")
-			if not tax_acct:
-				tax_acct = org.default_expense_account  # Fallback
-			
+			tax_acct = get_or_create_account("Tax", "GST Payable", "2200", org)
 			gl_entries.append({
 				"account": tax_acct,
 				"debit": 0,
@@ -153,12 +253,9 @@ class IBSalesInvoice(Document):
 				"remarks": f"Tax on {self.name}"
 			})
 
-		# 4. Discount (Dr) - if header discount exists
+		# 4. Discount (Dr)
 		if self.discount_amount > 0:
-			discount_acct = frappe.db.get_value("IB Chart of Accounts", {"account_name": "Discount Given"}, "name")
-			if not discount_acct:
-				discount_acct = org.default_expense_account
-			
+			discount_acct = get_or_create_account("Expense", "Discount Given", "5100", org)
 			gl_entries.append({
 				"account": discount_acct,
 				"debit": self.discount_amount,
@@ -166,32 +263,105 @@ class IBSalesInvoice(Document):
 				"remarks": f"Discount on {self.name}"
 			})
 
-		# 5. Adjustment (Dr/Cr) - rounding
+		# 5. Adjustment
 		if self.adjustment:
-			round_off_acct = frappe.db.get_value("IB Chart of Accounts", {"account_name": "Round Off"}, "name")
-			if not round_off_acct:
-				round_off_acct = org.default_expense_account
-
+			round_off_acct = get_or_create_account("Expense", "Round Off", "5200", org)
+			entry = {
+				"account": round_off_acct,
+				"remarks": "Adjustment/Round Off"
+			}
 			if self.adjustment > 0:
-				gl_entries.append({
-					"account": round_off_acct,
-					"debit": 0,
-					"credit": self.adjustment,
-					"remarks": "Adjustment/Round Off"
-				})
+				entry.update({"debit": 0, "credit": self.adjustment})
 			else:
-				gl_entries.append({
-					"account": round_off_acct,
-					"debit": abs(self.adjustment),
-					"credit": 0,
-					"remarks": "Adjustment/Round Off"
-				})
+				entry.update({"debit": abs(self.adjustment), "credit": 0})
+			gl_entries.append(entry)
 
 		GLEngine.make_gl_entries(self, gl_entries)
 
 	def update_stock(self, factor):
+		# Use current user's email for alerts
+		org_email = frappe.session.user
+
 		for row in self.items:
-			if frappe.db.get_value("IB Item", row.item_code, "track_inventory"):
-				stock_qty = frappe.db.get_value("IB Item", row.item_code, "stock_quantity") or 0
-				new_qty = flt(stock_qty) + (flt(row.quantity) * factor)
+			# Fetch all needed fields in one query
+			item_data = frappe.db.get_value("IB Item", row.item_code, ["track_inventory", "stock_quantity", "reorder_level", "item_name"], as_dict=True)
+			
+			if item_data and item_data.track_inventory:
+				current_qty = flt(item_data.stock_quantity)
+				new_qty = current_qty + (flt(row.quantity) * factor)
+				
 				frappe.db.set_value("IB Item", row.item_code, "stock_quantity", new_qty)
+				
+				# Reorder Alert: Only trigger if stock drops below reorder level
+				if item_data.reorder_level and new_qty < flt(item_data.reorder_level):
+					self.send_reorder_alert(row.item_code, item_data.item_name, new_qty, item_data.reorder_level, org_email)
+
+	def send_reorder_alert(self, item_code, item_name, current_qty, reorder_level, user_email):
+		# Get all System Managers (organization admins)
+		admin_users = frappe.get_all("Has Role", 
+			filters={"role": "System Manager", "parenttype": "User"},
+			fields=["parent"]
+		)
+		
+		recipient_emails = [user.parent for user in admin_users]
+		if not recipient_emails:
+			recipient_emails = [user_email]  # Fallback to current user
+		
+		org_name = frappe.db.get_single_value('IB Organization', 'organization_name') or "Your Organization"
+		subject = f"⚠️ Low Stock Alert: {item_name}"
+		
+		message = f"""
+		<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+			<div style="background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin-bottom: 20px;">
+				<h2 style="color: #dc3545; margin: 0 0 10px 0;">⚠️ Low Stock Alert</h2>
+				<p style="color: #856404; margin: 0;">Immediate attention required for inventory replenishment</p>
+			</div>
+			
+			<p>Hello,</p>
+			<p>The stock for the following item has dropped below the reorder level:</p>
+			
+			<div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+				<h3 style="margin: 0 0 15px 0; color: #212529;">{item_name}</h3>
+				<p style="margin: 5px 0; color: #6c757d;"><strong>Item Code:</strong> {item_code}</p>
+				
+				<table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+					<tr style="border-bottom: 1px solid #dee2e6;">
+						<td style="padding: 10px 0; color: #6c757d;">Current Stock:</td>
+						<td style="padding: 10px 0; text-align: right;">
+							<span style="font-size: 24px; font-weight: bold; color: #dc3545;">{current_qty}</span>
+						</td>
+					</tr>
+					<tr style="border-bottom: 1px solid #dee2e6;">
+						<td style="padding: 10px 0; color: #6c757d;">Reorder Level:</td>
+						<td style="padding: 10px 0; text-align: right;">
+							<span style="font-size: 20px; font-weight: bold; color: #28a745;">{reorder_level}</span>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding: 10px 0; color: #6c757d;">Stock Deficit:</td>
+						<td style="padding: 10px 0; text-align: right;">
+							<span style="font-size: 18px; font-weight: bold; color: #ffc107;">{reorder_level - current_qty}</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div style="background-color: #d1ecf1; border-left: 5px solid #0c5460; padding: 15px; margin: 20px 0;">
+				<p style="margin: 0; color: #0c5460;"><strong>📝 Action Required:</strong> Please raise a Purchase Order to replenish stock immediately.</p>
+			</div>
+			
+			<p style="color: #6c757d; font-size: 12px; margin-top: 30px;">
+				Best Regards,<br>
+				<strong>{org_name}</strong><br>
+				<em>Automated Stock Alert System</em>
+			</p>
+		</div>
+		"""
+		try:
+			frappe.sendmail(
+				recipients=recipient_emails,
+				subject=subject,
+				message=message
+			)
+		except Exception as e:
+			frappe.log_error("Stock Alert Failed", str(e))

@@ -32,6 +32,8 @@
         "paid_amount",
         "outstanding_amount",
         "status",
+        "email_delivery_status",
+        "amended_from",
         "notes_section",
         "notes"
     ],
@@ -187,9 +189,26 @@
             "fieldname": "status",
             "fieldtype": "Select",
             "label": "Status",
-            "options": "Draft\nAwaiting Payment\nPartially Paid\nPaid\nCancelled",
+            "options": "Draft\nAwaiting Payment\nPartially Paid\nPaid\nCancelled\nOverdue",
             "default": "Draft",
             "read_only": 1
+        },
+        {
+            "fieldname": "email_delivery_status",
+            "fieldtype": "Select",
+            "label": "Email Status",
+            "options": "Not Sent\nQueued\nSent\nError",
+            "default": "Not Sent",
+            "read_only": 1
+        },
+        {
+            "fieldname": "amended_from",
+            "fieldtype": "Link",
+            "label": "Amended From",
+            "options": "IB Purchase Bill",
+            "read_only": 1,
+            "no_copy": 1,
+            "print_hide": 1
         },
         {
             "fieldname": "notes_section",

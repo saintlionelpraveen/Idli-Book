@@ -1,16 +1,20 @@
 frappe.ui.form.on('IB Estimate', {
     setup: function (frm) {
-        frm.add_fetch('tax', 'tax_rate', 'tax_rate');
+        // Map fields: Item Field -> Target Field
+        frm.add_fetch('item_code', 'item_name', 'item_name');
+        frm.add_fetch('item_code', 'sales_description', 'description');
+        frm.add_fetch('item_code', 'unit', 'uom');
+        frm.add_fetch('item_code', 'selling_price', 'rate');
+        frm.add_fetch('item_code', 'tax_percentage', 'tax_rate');
     },
+
     refresh: function (frm) {
-        // Add Create Sales Order button (only after submit)
+        // Create Sales Order Button
         if (frm.doc.docstatus === 1) {
             frm.add_custom_button(__('Create Sales Order'), function () {
                 frappe.call({
                     method: 'idli_book.idli_book.doctype.ib_estimate.ib_estimate.make_sales_order',
-                    args: {
-                        source_name: frm.doc.name
-                    },
+                    args: { source_name: frm.doc.name },
                     callback: function (r) {
                         if (r.message) {
                             frappe.model.sync(r.message);
@@ -21,144 +25,103 @@ frappe.ui.form.on('IB Estimate', {
             }, __('Create'));
         }
     },
-    discount_type: function (frm) {
-        calculate_totals(frm);
-    },
-    discount_percentage: function (frm) {
-        if (frm.doc.discount_type == 'Percentage') {
-            calculate_totals(frm);
-        }
-    },
-    discount_amount: function (frm) {
-        if (frm.doc.discount_type == 'Amount') {
-            calculate_totals(frm);
-        }
-    }
+
+    // Header Triggers
+    discount_type: function (frm) { calculate_totals(frm); },
+    discount_percentage: function (frm) { calculate_totals(frm); },
+    discount_amount: function (frm) { calculate_totals(frm); }
 });
 
 frappe.ui.form.on('IB Invoice Item', {
     item_code: function (frm, cdt, cdn) {
+        // Set default quantity 1 to enable row calc
         let row = locals[cdt][cdn];
-        if (row.item_code) {
-            frappe.call({
-                method: 'frappe.client.get',
-                args: {
-                    doctype: 'IB Item',
-                    name: row.item_code
-                },
-                callback: function (r) {
-                    if (r.message) {
-                        frappe.model.set_value(cdt, cdn, 'item_name', r.message.item_name);
-                        frappe.model.set_value(cdt, cdn, 'description', r.message.sales_description);
-                        frappe.model.set_value(cdt, cdn, 'uom', r.message.unit);
-                        frappe.model.set_value(cdt, cdn, 'rate', r.message.selling_price);
-                    }
-                }
-            });
-        }
+        if (!row.quantity) frappe.model.set_value(cdt, cdn, 'quantity', 1);
     },
-    quantity: function (frm, cdt, cdn) {
-        calculate_item_amount(frm, cdt, cdn);
-    },
-    rate: function (frm, cdt, cdn) {
-        calculate_item_amount(frm, cdt, cdn);
-    },
-    discount_type: function (frm, cdt, cdn) {
-        calculate_item_amount(frm, cdt, cdn);
-    },
-    discount_percentage: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        if (row.discount_type == 'Percentage') {
-            calculate_item_amount(frm, cdt, cdn);
-        } else {
-            calculate_item_amount(frm, cdt, cdn);
-        }
-    },
+
+    // Recalculate on ANY change
+    quantity: function (frm, cdt, cdn) { calculate_row(frm, cdt, cdn); },
+    rate: function (frm, cdt, cdn) { calculate_row(frm, cdt, cdn); },
+    tax_rate: function (frm, cdt, cdn) { calculate_row(frm, cdt, cdn); },
+
+    discount_type: function (frm, cdt, cdn) { calculate_row(frm, cdt, cdn); },
+    discount_percentage: function (frm, cdt, cdn) { calculate_row(frm, cdt, cdn); },
     discount_amount: function (frm, cdt, cdn) {
+        // Reverse calc percentage
         let row = locals[cdt][cdn];
-        let base_amount = row.quantity * row.rate;
-        if (base_amount > 0) {
-            frappe.model.set_value(cdt, cdn, 'discount_percentage', (row.discount_amount / base_amount) * 100);
+        let base = (row.quantity || 0) * (row.rate || 0);
+        if (base > 0) {
+            frappe.model.set_value(cdt, cdn, 'discount_percentage', (row.discount_amount / base) * 100);
         }
-        calculate_item_amount(frm, cdt, cdn, true);
-    },
-    tax: function (frm, cdt, cdn) {
-        // Trigger calculation after fetch
-        // Since add_fetch is async/event-based, we rely on tax_rate change or use timeout?
-        // Actually add_fetch sets value which triggers tax_rate change event.
-    },
-    tax_rate: function (frm, cdt, cdn) {
-        calculate_item_amount(frm, cdt, cdn);
+        calculate_row(frm, cdt, cdn, true);
     }
 });
 
-var calculate_item_amount = function (frm, cdt, cdn, skip_discount_amount_update) {
+var calculate_row = function (frm, cdt, cdn, skip_disc_amt) {
     let row = locals[cdt][cdn];
-    let base_amount = row.quantity * row.rate;
-    let discount = 0;
+    let qty = row.quantity || 0;
+    let rate = row.rate || 0;
+    let base_amount = qty * rate;
 
-    if (row.discount_type == 'Percentage') {
-        discount = (base_amount * row.discount_percentage) / 100;
-        if (!skip_discount_amount_update) {
-            frappe.model.set_value(cdt, cdn, 'discount_amount', discount);
+    // 1. Calculate Discount
+    let discount_amt = 0;
+    if (row.discount_type === 'Percentage') {
+        discount_amt = (base_amount * (row.discount_percentage || 0)) / 100;
+        if (!skip_disc_amt) {
+            frappe.model.set_value(cdt, cdn, 'discount_amount', discount_amt);
         }
     } else {
-        // Amount
-        discount = row.discount_amount;
-        // Update percentage for visibility
-        if (base_amount > 0 && !skip_discount_amount_update) {
-            frappe.model.set_value(cdt, cdn, 'discount_percentage', (discount / base_amount) * 100);
+        discount_amt = row.discount_amount || 0;
+        if (base_amount > 0 && !skip_disc_amt) {
+            frappe.model.set_value(cdt, cdn, 'discount_percentage', (discount_amt / base_amount) * 100);
         }
     }
 
-    let amount = base_amount - discount;
-    frappe.model.set_value(cdt, cdn, 'amount', amount);
+    // 2. Net Amount
+    let net_amount = base_amount - discount_amt;
+    frappe.model.set_value(cdt, cdn, 'amount', net_amount);
 
-    // Tax Calculation
+    // 3. Tax
     let tax_rate = row.tax_rate || 0;
-    let tax_amount = (amount * tax_rate) / 100;
-    frappe.model.set_value(cdt, cdn, 'tax_amount', tax_amount);
+    let tax_amt = (net_amount * tax_rate) / 100;
+    frappe.model.set_value(cdt, cdn, 'tax_amount', tax_amt);
 
+    // 4. Update Header Totals
     calculate_totals(frm);
 };
 
 var calculate_totals = function (frm) {
     let subtotal = 0;
-
-    // Subtotal = Sum of all line item amounts (already after line-level discounts)
-    frm.doc.items.forEach(function (item) {
-        subtotal += item.amount || 0;
-    });
-
-    // Header-level Discount
-    let discount_type = frm.doc.discount_type || 'Percentage';
-    let discount = 0;
-
-    if (discount_type == 'Percentage') {
-        discount = (subtotal * (frm.doc.discount_percentage || 0)) / 100;
-        frm.set_value('discount_amount', discount);
-    } else {
-        // Amount type
-        discount = frm.doc.discount_amount || 0;
-        if (subtotal > 0) {
-            frm.set_value('discount_percentage', (discount / subtotal) * 100);
-        }
-    }
-
-    // Net Total after discount
-    let net_total = subtotal - discount;
-
-    // Tax on Net Total (sum of line item taxes, which are already based on net line amounts)
     let total_tax = 0;
-    frm.doc.items.forEach(function (item) {
+
+    // Sum rows
+    (frm.doc.items || []).forEach(item => {
+        subtotal += item.amount || 0;
         total_tax += item.tax_amount || 0;
     });
 
-    // Grand Total
-    let grand_total = net_total + total_tax;
-
-    // Set Header Fields
     frm.set_value('subtotal', subtotal);
     frm.set_value('tax_amount', total_tax);
+
+    // Global Discount
+    let global_disc = 0;
+    if (frm.doc.discount_type === 'Percentage') {
+        global_disc = (subtotal * (frm.doc.discount_percentage || 0)) / 100;
+        frm.set_value('discount_amount', global_disc);
+    } else {
+        global_disc = frm.doc.discount_amount || 0;
+        if (subtotal > 0) {
+            frm.set_value('discount_percentage', (global_disc / subtotal) * 100);
+        }
+    }
+
+    let grand_total = subtotal - global_disc + total_tax;
     frm.set_value('grand_total', grand_total);
+
+    // Force Visual Refresh
+    frm.refresh_field('subtotal');
+    frm.refresh_field('tax_amount');
+    frm.refresh_field('discount_amount');
+    frm.refresh_field('grand_total');
+    frm.refresh_field('items');
 };

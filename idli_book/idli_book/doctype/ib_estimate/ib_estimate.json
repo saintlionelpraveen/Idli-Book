@@ -92,17 +92,20 @@
             "default": "Percentage",
             "fieldname": "discount_type",
             "fieldtype": "Select",
+            "hidden": 1,
             "label": "Discount Type",
             "options": "Percentage\nAmount"
         },
         {
             "fieldname": "discount_percentage",
             "fieldtype": "Percent",
+            "hidden": 1,
             "label": "Discount %"
         },
         {
             "fieldname": "discount_amount",
             "fieldtype": "Currency",
+            "hidden": 1,
             "label": "Discount Amount"
         },
         {
@@ -130,6 +133,22 @@
             "options": "Draft\nSent\nAccepted\nInvoiced\nDeclined\nExpired",
             "default": "Draft",
             "read_only": 1
+        },
+        {
+            "fieldname": "email_delivery_status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Email Status",
+            "options": "Not Sent\nQueued\nSent\nError",
+            "default": "Not Sent",
+            "read_only": 1
+        },
+        {
+            "fieldname": "customer_opinion",
+            "fieldtype": "Data",
+            "label": "Customer Opinion",
+            "read_only": 1,
+            "hidden": 0
         },
         {
             "fieldname": "terms_section",

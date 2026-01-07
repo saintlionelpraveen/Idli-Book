@@ -100,17 +100,20 @@
             "default": "Percentage",
             "fieldname": "discount_type",
             "fieldtype": "Select",
+            "hidden": 1,
             "label": "Discount Type",
             "options": "Percentage\nAmount"
         },
         {
             "fieldname": "discount_percentage",
             "fieldtype": "Percent",
+            "hidden": 1,
             "label": "Discount %"
         },
         {
             "fieldname": "discount_amount",
             "fieldtype": "Currency",
+            "hidden": 1,
             "label": "Discount Amount"
         },
         {
@@ -134,9 +137,19 @@
         {
             "fieldname": "status",
             "fieldtype": "Select",
+            "in_list_view": 1,
             "label": "Status",
-            "options": "Draft\nConfirmed\nInvoiced\nClosed\nVoid",
-            "default": "Draft",
+            "no_copy": 1,
+            "options": "Draft\nTo Bill\nTo Deliver\nCompleted\nCancelled\nOverdue",
+            "read_only": 1
+        },
+        {
+            "fieldname": "email_delivery_status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Email Status",
+            "options": "Not Sent\nQueued\nSent\nError",
+            "default": "Not Sent",
             "read_only": 1
         },
         {

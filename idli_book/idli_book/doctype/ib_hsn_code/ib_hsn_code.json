@@ -1,0 +1,69 @@
+{
+    "actions": [],
+    "allow_import": 1,
+    "autoname": "field:hsn_code",
+    "creation": "2025-01-06 23:25:00",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "hsn_code",
+        "description",
+        "tax_rate",
+        "item_category"
+    ],
+    "fields": [
+        {
+            "fieldname": "hsn_code",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "HSN Code",
+            "length": 8,
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "description",
+            "fieldtype": "Small Text",
+            "in_list_view": 1,
+            "label": "Description",
+            "reqd": 1
+        },
+        {
+            "fieldname": "tax_rate",
+            "fieldtype": "Percent",
+            "label": "Tax Rate (%)",
+            "reqd": 1
+        },
+        {
+            "fieldname": "item_category",
+            "fieldtype": "Data",
+            "label": "Category"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2026-01-06 23:51:02.928609",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB HSN Code",
+    "naming_rule": "By fieldname",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "row_format": "Dynamic",
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

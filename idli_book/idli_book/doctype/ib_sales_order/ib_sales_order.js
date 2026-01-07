@@ -1,7 +1,7 @@
 // Copy the same calculation logic from Estimate to Sales Order
 frappe.ui.form.on('IB Sales Order', {
     setup: function (frm) {
-        frm.add_fetch('tax', 'tax_rate', 'tax_rate');
+        // Native fetching configured in DocType JSON for best performance
     },
     refresh: function (frm) {
         // Add Create Invoice button (only after submit)
@@ -22,42 +22,28 @@ frappe.ui.form.on('IB Sales Order', {
             }, __('Create'));
         }
     },
+    validate: function (frm) {
+        if (frm.doc.shipment_date && frm.doc.order_date) {
+            if (frm.doc.shipment_date < frm.doc.order_date) {
+                frappe.msgprint(__('Shipment Date cannot be before Order Date'));
+                frappe.validated = false;
+            }
+        }
+    },
     discount_type: function (frm) {
         calculate_totals(frm);
     },
     discount_percentage: function (frm) {
-        if (frm.doc.discount_type == 'Percentage') {
-            calculate_totals(frm);
-        }
+        calculate_totals(frm);
     },
     discount_amount: function (frm) {
-        if (frm.doc.discount_type == 'Amount') {
-            calculate_totals(frm);
-        }
+        calculate_totals(frm);
     }
 });
 
 frappe.ui.form.on('IB Invoice Item', {
-    item_code: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        if (row.item_code) {
-            frappe.call({
-                method: 'frappe.client.get',
-                args: {
-                    doctype: 'IB Item',
-                    name: row.item_code
-                },
-                callback: function (r) {
-                    if (r.message) {
-                        frappe.model.set_value(cdt, cdn, 'item_name', r.message.item_name);
-                        frappe.model.set_value(cdt, cdn, 'description', r.message.sales_description);
-                        frappe.model.set_value(cdt, cdn, 'uom', r.message.unit);
-                        frappe.model.set_value(cdt, cdn, 'rate', r.message.selling_price);
-                    }
-                }
-            });
-        }
-    },
+    // item_code trigger removed - handled by add_fetch in setup
+
     quantity: function (frm, cdt, cdn) {
         calculate_item_amount(frm, cdt, cdn);
     },
@@ -68,20 +54,10 @@ frappe.ui.form.on('IB Invoice Item', {
         calculate_item_amount(frm, cdt, cdn);
     },
     discount_percentage: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        if (row.discount_type == 'Percentage') {
-            calculate_item_amount(frm, cdt, cdn);
-        } else {
-            calculate_item_amount(frm, cdt, cdn);
-        }
+        calculate_item_amount(frm, cdt, cdn);
     },
     discount_amount: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        let base_amount = row.quantity * row.rate;
-        if (base_amount > 0) {
-            frappe.model.set_value(cdt, cdn, 'discount_percentage', (row.discount_amount / base_amount) * 100);
-        }
-        calculate_item_amount(frm, cdt, cdn, true);
+        calculate_item_amount(frm, cdt, cdn);
     },
     tax: function (frm, cdt, cdn) {
         // Tax rate auto-fetches
@@ -91,32 +67,41 @@ frappe.ui.form.on('IB Invoice Item', {
     }
 });
 
-var calculate_item_amount = function (frm, cdt, cdn, skip_discount_amount_update) {
+var calculate_item_amount = function (frm, cdt, cdn, skip_sync) {
     let row = locals[cdt][cdn];
+
+    // Guard against invalid data
+    if (!row || !row.quantity || !row.rate) return;
+
     let base_amount = row.quantity * row.rate;
     let discount = 0;
 
     if (row.discount_type == 'Percentage') {
-        discount = (base_amount * row.discount_percentage) / 100;
-        if (!skip_discount_amount_update) {
-            frappe.model.set_value(cdt, cdn, 'discount_amount', discount);
-        }
+        discount = (base_amount * (row.discount_percentage || 0)) / 100;
+        // Use SILENT update to prevent triggering discount_amount event
+        frappe.model.set_value(cdt, cdn, 'discount_amount', discount, null, true);
     } else {
-        discount = row.discount_amount;
-        if (base_amount > 0 && !skip_discount_amount_update) {
-            frappe.model.set_value(cdt, cdn, 'discount_percentage', (discount / base_amount) * 100);
+        discount = row.discount_amount || 0;
+        if (base_amount > 0) {
+            // Use SILENT update to prevent triggering discount_percentage event
+            frappe.model.set_value(cdt, cdn, 'discount_percentage', (discount / base_amount) * 100, null, true);
         }
     }
 
     let amount = base_amount - discount;
-    frappe.model.set_value(cdt, cdn, 'amount', amount);
 
     // Tax Calculation
     let tax_rate = row.tax_rate || 0;
     let tax_amount = (amount * tax_rate) / 100;
-    frappe.model.set_value(cdt, cdn, 'tax_amount', tax_amount);
 
-    calculate_totals(frm);
+    // Batch update with silent flag
+    frappe.model.set_value(cdt, cdn, 'amount', amount, null, true);
+    frappe.model.set_value(cdt, cdn, 'tax_amount', tax_amount, null, true);
+
+    // Only recalculate totals if not in a sync operation
+    if (!skip_sync) {
+        calculate_totals(frm);
+    }
 };
 
 var calculate_totals = function (frm) {

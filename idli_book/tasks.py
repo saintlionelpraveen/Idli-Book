@@ -1,93 +1,108 @@
-# apps/idli_book/idli_book/tasks.py
 import frappe
-from frappe.utils import getdate, today
-from frappe import enqueue
 
-def daily_tasks():
-    """Run daily automations: recurring invoices, due reminders, low stock alerts."""
-    try:
-        generate_recurring_invoices()
-        send_due_reminders()
-        low_stock_alerts()
-    except Exception:
-        frappe.log_error(frappe.get_traceback(), "idli_book.daily_tasks")
+def sync_email_statuses():
+    """
+    Cron Job: Syncs Email Queue status to [IB Estimate, IB Sales Order, IB Sales Invoice].
+    Runs every few minutes.
+    """
+    doctypes = ["IB Estimate", "IB Sales Order", "IB Sales Invoice"]
+    
+    # Check Queued items in Email Queue
+    # We look for ANY email sent recently that is linked to our doctypes
+    
+    for dt in doctypes:
+        # Find documents that are 'Queued' locally but might be 'Sent' in Email Queue
+        # Or generally just sync the latest status from Email Queue
+        
+        # Get emails from Queue linked to this doctype, updated in last 1 hour to be efficient
+        email_queue_entries = frappe.db.sql(f"""
+            SELECT reference_name, status 
+            FROM `tabEmail Queue` 
+            WHERE reference_doctype = '{dt}' 
+            AND modified > DATE_SUB(NOW(), INTERVAL 24 HOUR)
+            ORDER BY modified DESC
+        """, as_dict=True)
+        
+        # We only care about the LATEST email for each doc
+        latest_status = {}
+        for entry in email_queue_entries:
+            if entry.reference_name not in latest_status:
+                latest_status[entry.reference_name] = entry.status
+        
+        # Update Doctype
+        for docname, status in latest_status.items():
+            mapped_status = "Queued"
+            if status == "Sent": mapped_status = "Sent"
+            elif status == "Error" or status == "Expired": mapped_status = "Error"
+            
+            # Check current and update if diff (Direct SQL for speed, no events)
+            frappe.db.sql(f"""
+                UPDATE `tab{dt}` 
+                SET email_delivery_status = %s 
+                WHERE name = %s AND email_delivery_status != %s
+            """, (mapped_status, docname, mapped_status))
+            
+    frappe.db.commit()
 
-def hourly_tasks():
-    pass
-
-def generate_recurring_invoices():
-    docs = frappe.get_all("IB Invoice", filters={
-        "is_recurring": 1,
-        "next_recurring_date": getdate(today())
-    }, fields=["name"])
-    for d in docs:
-        enqueue("idli_book.tasks.create_recurring_invoice", queue="short", kwargs={"docname": d.name})
-
-def create_recurring_invoice(docname):
-    doc = frappe.get_doc("IB Invoice", docname)
-    new = frappe.copy_doc(doc, ignore_children=False)
-    # new will have same name; convert to a new draft
-    new.name = None
-    new.posting_date = None
-    new.status = "Draft"
-    new.is_recurring = 0
-    new.invoice_no = None
-    new.insert()
-    # compute next date for original
-    next_date = _compute_next_date(doc.next_recurring_date, doc.recurring_interval)
-    frappe.db.set_value("IB Invoice", docname, "next_recurring_date", next_date)
-    # optionally auto-submit and email
-    if doc.send_email:
-        try:
-            new.submit()
-            frappe.sendmail(recipients=[doc.contact], subject=f"Invoice {new.name}", message=f"Invoice {new.name} created")
-        except Exception:
-            frappe.log_error(frappe.get_traceback(), "idli_book.create_recurring_invoice")
-
-def _compute_next_date(current_date, interval):
-    from frappe.utils import add_days, add_months, getdate
-    d = getdate(current_date)
-    if interval == "Weekly":
-        return add_days(d, 7)
-    if interval == "Monthly":
-        return add_months(d, 1)
-    if interval == "Yearly":
-        return add_months(d, 12)
-    return add_days(d, 30)
-
-def send_due_reminders():
-    docs = frappe.get_all("IB Invoice", filters={"status":"Submitted"}, fields=["name","contact","due_date","total"])
-    for d in docs:
-        if d.due_date and getdate(d.due_date) <= getdate(today()):
-            enqueue("idli_book.tasks.send_reminder_email", queue="short", kwargs={"docname": d.name})
-
-def send_reminder_email(docname):
-    try:
-        doc = frappe.get_doc("IB Invoice", docname)
-        if doc.contact:
-            frappe.sendmail(recipients=[doc.contact], subject=f"Payment Reminder for {doc.name}",
-                            message=f"Your invoice {doc.name} is due. Amount: {doc.total}")
-    except Exception:
-        frappe.log_error(frappe.get_traceback(), "idli_book.send_reminder_email")
-
-def low_stock_alerts():
-    # Creates ToDo entries for items at or below reorder level and not already alerted today.
-    items = frappe.get_all("IB Item", fields=["name", "item_name", "opening_stock", "low_stock"])
-    for it in items:
-        try:
-            if it.low_stock is not None and it.opening_stock <= it.low_stock:
-                # avoid duplicate todos within 1 day
-                existing = frappe.get_all("ToDo", filters={
-                    "description": ("like", f"%Low stock alert for {it.item_name}%")
-                }, fields=["name"], limit_page_length=1)
-                if not existing:
-                    frappe.get_doc({
-                        "doctype":"ToDo",
-                        "description": f"Low stock alert for {it.item_name} ({it.name}) - current {it.opening_stock}",
-                        "assigned_by": "Administrator",
-                        "owner": "Administrator",
-                        "status": "Open"
-                    }).insert(ignore_permissions=True)
-        except Exception:
-            frappe.log_error(frappe.get_traceback(), "idli_book.low_stock_alerts")
-
+def send_payment_reminders():
+    """Run daily to send reminders for overdue invoices every 5 days"""
+    from frappe.utils import today, date_diff, add_days
+    
+    current_date = today()
+    
+    # Get all invoices that are submitted but not fully paid
+    invoices = frappe.get_all("IB Sales Invoice", 
+        filters={
+            "docstatus": 1,
+            "status": ["in", ["Partially Paid", "Awaiting Payment", "Overdue"]],
+            "outstanding_amount": [">", 0]
+        }, 
+        fields=["name", "customer", "due_date", "outstanding_amount", "grand_total"]
+    )
+    
+    org_name = frappe.db.get_single_value('IB Organization', 'organization_name') or "Our Company"
+    
+    for inv in invoices:
+        if not inv.due_date: continue
+        
+        # Calculate days overdue
+        days_overdue = date_diff(current_date, inv.due_date)
+        
+        # Logic: Send reminder if it's strictly overdue (days > 0) AND multiple of 5
+        if days_overdue > 0 and days_overdue % 5 == 0:
+            
+            customer_email = frappe.db.get_value("IB Customer", inv.customer, "email")
+            if not customer_email: continue
+            
+            subject = f"Reminder: Invoice #{inv.name} is Overdue by {int(days_overdue)} Days"
+            
+            message = f"""
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h3>Payment Reminder</h3>
+                <p>Hello {inv.customer},</p>
+                <p>This is a gentle reminder that payment for Invoice <b>#{inv.name}</b> was due on <b>{frappe.utils.formatdate(inv.due_date)}</b>.</p>
+                
+                <div style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                    <p style="margin: 0;"><strong>Days Overdue:</strong> {int(days_overdue)}</p>
+                    <p style="margin: 5px 0 0 0;"><strong>Outstanding Amount:</strong> {frappe.format(inv.outstanding_amount, {'fieldtype': 'Currency'})}</p>
+                </div>
+                
+                <p>Please arrange for payment at your earliest convenience to avoid interruptions.</p>
+                <p>If you have already made the payment, please disregard this email.</p>
+                <br>
+                <p>Best Regards,<br>{org_name}</p>
+            </div>
+            """
+            
+            try:
+                frappe.sendmail(
+                    recipients=customer_email,
+                    subject=subject,
+                    message=message,
+                    reference_doctype="IB Sales Invoice",
+                    reference_name=inv.name,
+                    attachments=[frappe.attach_print("IB Sales Invoice", inv.name, print_format="Standard")]
+                )
+                frappe.log_error(f"Sent Reminder for {inv.name}", "Payment Reminder")
+            except Exception as e:
+                frappe.log_error(f"Failed Reminder for {inv.name}", str(e))

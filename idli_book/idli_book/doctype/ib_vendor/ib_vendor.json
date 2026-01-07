@@ -19,7 +19,11 @@
         "shipping_address",
         "settings_section",
         "payment_terms",
-        "default_payable_account"
+        "default_payable_account",
+        "gst_section",
+        "gstin",
+        "state",
+        "pincode"
     ],
     "fields": [
         {
@@ -54,7 +58,7 @@
         },
         {
             "fieldname": "phone",
-            "fieldtype": "Data",
+            "fieldtype": "Phone",
             "label": "Phone"
         },
         {
@@ -99,6 +103,29 @@
             "label": "Payable Account",
             "options": "IB Chart of Accounts",
             "description": "Account to track what you owe this vendor"
+        },
+        {
+            "fieldname": "gst_section",
+            "fieldtype": "Section Break",
+            "label": "GST Details"
+        },
+        {
+            "fieldname": "gstin",
+            "fieldtype": "Data",
+            "label": "GSTIN",
+            "length": 15
+        },
+        {
+            "fieldname": "state",
+            "fieldtype": "Link",
+            "label": "State",
+            "options": "IB State"
+        },
+        {
+            "fieldname": "pincode",
+            "fieldtype": "Data",
+            "label": "Pincode",
+            "length": 6
         }
     ],
     "index_web_pages_for_search": 1,

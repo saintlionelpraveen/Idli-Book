@@ -47,6 +47,16 @@
             "in_list_view": 1
         },
         {
+            "fieldname": "billing_address",
+            "fieldtype": "Small Text",
+            "label": "Vendor Address"
+        },
+        {
+            "fieldname": "shipping_address",
+            "fieldtype": "Small Text",
+            "label": "Ship To Address"
+        },
+        {
             "fieldname": "order_date",
             "fieldtype": "Date",
             "label": "Order Date",
@@ -115,6 +125,14 @@
             "label": "Status",
             "options": "Draft\nIssued\nBilled\nClosed\nCancelled",
             "default": "Draft",
+            "read_only": 1
+        },
+        {
+            "fieldname": "email_delivery_status",
+            "fieldtype": "Select",
+            "label": "Email Status",
+            "options": "Not Sent\nQueued\nSent\nError",
+            "default": "Not Sent",
             "read_only": 1
         },
         {
