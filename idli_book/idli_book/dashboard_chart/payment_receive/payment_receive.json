@@ -1,0 +1,39 @@
+{
+ "based_on": "modified",
+ "chart_name": "Payment Receive",
+ "chart_type": "Sum",
+ "color": "#aecce8",
+ "creation": "2026-01-08 15:26:39.504674",
+ "currency": "INR",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "document_type": "IB Payment",
+ "dynamic_filters_json": "[]",
+ "filters_json": "[[\"IB Payment\",\"payment_type\",\"=\",\"Receive\",false]]",
+ "group_by_type": "Count",
+ "idx": 1,
+ "is_public": 1,
+ "is_standard": 1,
+ "last_synced_on": "2026-01-08 15:27:13.533141",
+ "modified": "2026-01-09 11:16:59.528505",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "Payment Receive",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "parent_document_type": "",
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ],
+ "show_values_over_chart": 1,
+ "source": "",
+ "time_interval": "Yearly",
+ "timeseries": 1,
+ "timespan": "Last Year",
+ "type": "Line",
+ "use_report_chart": 0,
+ "value_based_on": "amount",
+ "y_axis": []
+}

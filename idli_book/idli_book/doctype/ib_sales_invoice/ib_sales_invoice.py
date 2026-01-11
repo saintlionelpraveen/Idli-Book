@@ -122,6 +122,17 @@ class IBSalesInvoice(Document):
 
 	def send_invoice_email(self):
 		customer_email = frappe.db.get_value("IB Customer", self.customer, "email")
+		
+		# Validate Email
+		if customer_email:
+			from frappe.utils import validate_email_address
+			try:
+				validate_email_address(customer_email, throw=True)
+			except:
+				frappe.log_error("Invalid Email", f"Customer: {self.customer}, Email: {customer_email}")
+				frappe.msgprint(f"Warning: Setup valid email for customer {self.customer} to send invoice.")
+				return
+
 		if customer_email:
 			org_name = frappe.db.get_single_value('IB Organization', 'organization_name') or "Our Company"
 			subject = f"Invoice #{self.name} from {org_name}"
@@ -133,6 +144,34 @@ class IBSalesInvoice(Document):
 				<p>Please find attached invoice for <b>{frappe.format(self.grand_total, {'fieldtype': 'Currency'})}</b>.</p>
 				<p><b>Status:</b> {self.status}</p>
 				<p><b>Due Date:</b> {frappe.utils.formatdate(self.due_date)}</p>
+				"""
+			
+			# Check Payment Gateway (Razorpay) - Optional
+			settings = frappe.get_single("IB Payment Settings")
+			
+			# Primary: UPI QR Payment Page
+			if getattr(settings, 'enable_upi_qr', False) and self.outstanding_amount > 0:
+				pay_url = frappe.utils.get_url(f"/invoice_payment?invoice={self.name}")
+				message += f"""
+				<div style="margin: 20px 0; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px;">
+					<a href="{pay_url}" style="background-color: white; color: #667eea; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px;">
+						📱 Pay Now via UPI: {frappe.format(self.outstanding_amount, {'fieldtype': 'Currency'})}
+					</a>
+					<p style="color: white; margin-top: 10px; font-size: 12px;">Scan QR code with any UPI app</p>
+				</div>
+				"""
+			elif settings.enable_payment_gateway and self.outstanding_amount > 0:
+				# Fallback: Razorpay (if configured)
+				pay_url = frappe.utils.get_url(f"/pay?invoice={self.name}")
+				message += f"""
+				<div style="margin: 20px 0;">
+					<a href="{pay_url}" style="background-color: #5b45ff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+						Pay Now: {frappe.format(self.outstanding_amount, {'fieldtype': 'Currency'})}
+					</a>
+				</div>
+				"""
+
+			message += f"""
 				<br>
 				<p>Best Regards,<br>{org_name}</p>
 			</div>

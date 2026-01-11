@@ -1,0 +1,71 @@
+{
+ "charts": [
+  {
+   "chart_name": "Top 5 Expense",
+   "label": "Top 5 Expense Items"
+  }
+ ],
+ "content": "[{\"id\":\"HmKIpyIp_0\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"IB item flow\",\"col\":12}},{\"id\":\"gtnQD83BHj\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Items\",\"col\":3}},{\"id\":\"UwO1-eL_z2\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Inventory Tracked\",\"col\":3}},{\"id\":\"mZUg5zW3qi\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Low Stock\",\"col\":3}},{\"id\":\"hIWvukgWgE\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"kzYHkJB1S1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Add Items</b></span>\",\"col\":12}},{\"id\":\"eDWwWY4DMF\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Add Items\",\"col\":3}},{\"id\":\"1ynZ9crP21\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"tg0Q7nzlvH\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>View Items</b></span>\",\"col\":12}},{\"id\":\"TyThgMgRTy\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Product LIst\",\"col\":4}},{\"id\":\"BElBhreysk\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Top 5 Expense Items\",\"col\":10}}]",
+ "creation": "2026-01-08 13:20:18.399542",
+ "custom_blocks": [
+  {
+   "custom_block_name": "IB item flow",
+   "label": "IB item flow"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "shortcut",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Items",
+ "links": [],
+ "modified": "2026-01-09 15:57:20.666915",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "Items",
+ "number_cards": [
+  {
+   "label": "Inventory Tracked",
+   "number_card_name": "Inventory Tracked"
+  },
+  {
+   "label": "Low Stock",
+   "number_card_name": "Low Stock !"
+  },
+  {
+   "label": "Total Items",
+   "number_card_name": "Total Items"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "IDLI BOOK",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "IB Item",
+   "label": "Product LIst",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Green",
+   "doc_view": "New",
+   "label": "Add Items",
+   "link_to": "IB Item",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Items"
+}

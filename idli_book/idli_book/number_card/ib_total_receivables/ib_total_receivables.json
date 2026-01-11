@@ -1,0 +1,22 @@
+{
+    "aggregate_function_based_on": "outstanding_amount",
+    "color": "#3498db",
+    "creation": "2026-01-08 17:52:00.000000",
+    "docstatus": 0,
+    "doctype": "Number Card",
+    "document_type": "IB Sales Invoice",
+    "filters_config": "{\"docstatus\": [\"=\", 1], \"outstanding_amount\": [\">\", 0]}",
+    "function": "Sum",
+    "idx": 0,
+    "is_public": 1,
+    "is_standard": 1,
+    "label": "IB Total Receivables",
+    "modified": "2026-01-08 17:52:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Total Receivables",
+    "owner": "Administrator",
+    "show_percentage_stats": 0,
+    "stats_time_interval": "Daily",
+    "type": "Aggregate"
+}

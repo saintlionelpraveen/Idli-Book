@@ -1,0 +1,39 @@
+{
+ "based_on": "modified",
+ "chart_name": "Sales Invoice",
+ "chart_type": "Count",
+ "color": "#ff0000",
+ "creation": "2026-01-08 14:43:33.432418",
+ "currency": "INR",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "document_type": "IB Sales Invoice",
+ "dynamic_filters_json": "[]",
+ "filters_json": "[]",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "last_synced_on": "2026-01-08 14:50:18.844007",
+ "modified": "2026-01-08 14:51:34.416203",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "Sales Invoice",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "parent_document_type": "",
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ],
+ "show_values_over_chart": 0,
+ "source": "",
+ "time_interval": "Daily",
+ "timeseries": 1,
+ "timespan": "Last Month",
+ "type": "Donut",
+ "use_report_chart": 0,
+ "value_based_on": "",
+ "y_axis": []
+}

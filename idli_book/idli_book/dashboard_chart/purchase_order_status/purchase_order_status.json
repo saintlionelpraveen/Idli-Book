@@ -1,0 +1,33 @@
+{
+ "chart_name": "Purchase Order Status",
+ "chart_type": "Report",
+ "creation": "2026-01-09 14:30:10.464869",
+ "currency": "",
+ "custom_options": "{\"type\": \"pie\", \"colors\": [\"#28a745\", \"#ffc107\", \"#dc3545\", \"#17a2b8\"], \"axisOptions\": {\"shortenYAxisNumbers\": 1}, \"height\": 280}",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "filters_json": "{\"from_date\":\"2025-10-09\",\"to_date\":\"2026-01-09\"}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "modified": "2026-01-09 14:34:03.473325",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "Purchase Order Status",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "IB Purchase Order Status",
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ],
+ "show_values_over_chart": 0,
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Line",
+ "use_report_chart": 1,
+ "y_axis": []
+}

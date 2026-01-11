@@ -1,0 +1,89 @@
+{
+    "actions": [],
+    "creation": "2024-05-20 12:00:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "enable_payment_gateway",
+        "razorpay_section",
+        "razorpay_key_id",
+        "razorpay_key_secret",
+        "enable_upi_qr",
+        "upi_section",
+        "upi_id",
+        "payee_name"
+    ],
+    "fields": [
+        {
+            "default": "0",
+            "fieldname": "enable_payment_gateway",
+            "fieldtype": "Check",
+            "label": "Enable Payment Gateway"
+        },
+        {
+            "fieldname": "razorpay_section",
+            "fieldtype": "Section Break",
+            "label": "Razorpay Settings"
+        },
+        {
+            "fieldname": "razorpay_key_id",
+            "fieldtype": "Data",
+            "label": "Key ID"
+        },
+        {
+            "fieldname": "razorpay_key_secret",
+            "fieldtype": "Password",
+            "label": "Key Secret"
+        },
+        {
+            "default": "0",
+            "fieldname": "enable_upi_qr",
+            "fieldtype": "Check",
+            "label": "Enable UPI QR Code"
+        },
+        {
+            "fieldname": "upi_section",
+            "fieldtype": "Section Break",
+            "label": "UPI Settings",
+            "depends_on": "enable_upi_qr"
+        },
+        {
+            "fieldname": "upi_id",
+            "fieldtype": "Data",
+            "label": "UPI ID (VPA)",
+            "description": "e.g. business@upi",
+            "reqd": 1,
+            "depends_on": "enable_upi_qr"
+        },
+        {
+            "fieldname": "payee_name",
+            "fieldtype": "Data",
+            "label": "Payee Name",
+            "description": "Name as registered in bank",
+            "reqd": 1,
+            "depends_on": "enable_upi_qr"
+        }
+    ],
+    "issingle": 1,
+    "links": [],
+    "modified": "2024-05-20 12:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Payment Settings",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

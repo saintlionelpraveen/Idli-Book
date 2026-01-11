@@ -1,0 +1,23 @@
+{
+ "content": null,
+ "creation": "2026-01-08 10:28:21.934714",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-01-08 10:28:28.667130",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "ib-dash",
+ "owner": "Administrator",
+ "page_name": "ib-dash",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 1,
+ "title": "IB Dash"
+}

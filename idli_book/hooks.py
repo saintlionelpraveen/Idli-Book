@@ -254,7 +254,7 @@ app_description = "Minimal accounting app for Idli Book"
 app_version = "0.0.1"
 
 # include client side js (optional)
-app_include_js = "/assets/idli_book/js/timezone_autoset.js"
+# app_include_js = "/assets/idli_book/js/timezone_autoset.js"
 
 # Scheduler tasks
 scheduler_events = {

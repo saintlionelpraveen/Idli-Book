@@ -1,0 +1,54 @@
+{
+ "charts": [
+  {
+   "chart_name": "Vendor Payment Status",
+   "label": "Payment Status to the Vendors"
+  }
+ ],
+ "content": "[{\"id\":\"bH_uNDb5k7\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vendors</b></span>\",\"col\":12}},{\"id\":\"A4y5W1j92k\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"LVsjYHJ5vU\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Vendors\",\"col\":4}},{\"id\":\"ZOqDSr8bag\",\"type\":\"spacer\",\"data\":{\"col\":8}},{\"id\":\"AuonqOal2k\",\"type\":\"paragraph\",\"data\":{\"text\":\"Create Vendors\",\"col\":3}},{\"id\":\"tGbq3pRFur\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"PpC1Gzu6a7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Vendors\",\"col\":3}},{\"id\":\"FN5qh9Tv4z\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"r1Y2JK4_TR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vendors Payment Status</b></span>\",\"col\":12}},{\"id\":\"1LiErK1xNk\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Sci0VftGz0\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Payment Status to the Vendors\",\"col\":12}},{\"id\":\"3JMVIe7HXY\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"kP49JLbX0P\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vendors Details</b></span>\",\"col\":12}},{\"id\":\"VAXs4a0Fuu\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Vendors List\",\"col\":4}}]",
+ "creation": "2026-01-08 16:44:43.759920",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "share",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Vendors",
+ "links": [],
+ "modified": "2026-01-09 14:55:00.370368",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "Vendors",
+ "number_cards": [
+  {
+   "label": "Vendors",
+   "number_card_name": "Vendors"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "Purchase",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "IB Vendor",
+   "label": "Vendors List",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 4.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "New",
+   "label": "Create Vendors",
+   "link_to": "IB Vendor",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Vendors"
+}

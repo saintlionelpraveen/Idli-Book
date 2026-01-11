@@ -59,10 +59,15 @@ class IBPayment(Document):
 					# For Bank Transfer/Cheque
 					# For Bank Transfer/Cheque
 					if not self.paid_to_account:
-						bank_account = frappe.db.get_value("IB Chart of Accounts", {"account_type": "Bank"})
-						if not bank_account:
-							bank_account = self.get_or_create_bank_account()
-						self.paid_to_account = bank_account
+						# 1. Try Organization Default
+						if hasattr(org, 'default_bank_account') and org.default_bank_account:
+							self.paid_to_account = org.default_bank_account
+						else:
+							# 2. Find any Bank Account
+							bank_account = frappe.db.get_value("IB Chart of Accounts", {"account_type": "Bank"})
+							if not bank_account:
+								bank_account = self.get_or_create_bank_account()
+							self.paid_to_account = bank_account
 			
 			elif self.payment_type == "Pay":
 				# PAY: We pay vendor

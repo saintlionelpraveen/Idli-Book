@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Workflow</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; background-color: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+
+    <div
+        style="max-width: 100%; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h3 style="text-align: center; color: #4a5568; margin-bottom: 40px; font-weight: 500; font-size: 18px;">Life
+            cycle of Sales</h3>
+
+        <div style="display: flex; justify-content: center; align-items: flex-start; gap: 0;">
+
+            <!-- Quote -->
+            <div style="display: flex; align-items: center;">
+                <div
+                    style="background: white; border: 1.5px solid #63b3ed; border-radius: 8px; padding: 12px 25px; display: flex; align-items: center; gap: 10px; min-width: 160px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <span style="font-size: 20px; color: #63b3ed;">📝</span>
+                    <span
+                        style="font-weight: 600; color: #4a5568; font-size: 14px; text-transform: uppercase;">Quote</span>
+                </div>
+                <!-- Connector -->
+                <div style="width: 40px; height: 2px; border-top: 2px dashed #cbd5e0; position: relative; top: 0;">
+                    <span style="position: absolute; right: -5px; top: -11px; color: #cbd5e0; font-size: 10px;">►</span>
+                </div>
+            </div>
+
+            <!-- Sent -->
+            <div style="display: flex; align-items: center; margin-right: 40px;">
+                <div
+                    style="background: white; border: 1.5px solid #805ad5; border-radius: 8px; padding: 12px 25px; display: flex; align-items: center; gap: 10px; min-width: 200px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <span style="font-size: 20px; color: #805ad5;">✉️</span>
+                    <span style="font-weight: 600; color: #4a5568; font-size: 14px; text-transform: uppercase;">Sent to
+                        Customer</span>
+                </div>
+                <!-- Branch Connector Start -->
+                <div style="width: 40px; height: 2px; border-top: 2px dashed #cbd5e0; position: relative;"></div>
+            </div>
+
+            <!-- Branching Section -->
+            <div style="display: flex; flex-direction: column; gap: 40px; position: relative; top: -25px;">
+
+                <!-- Top Branch (Accept) -->
+                <div style="display: flex; align-items: center;">
+                    <!-- Vertical line up connection -->
+                    <div
+                        style="position: absolute; left: -40px; top: 25px; bottom: auto; width: 42px; height: 50px; border-left: 2px dashed #cbd5e0; border-top: 2px dashed #cbd5e0; border-top-left-radius: 0;">
+                    </div>
+
+                    <div style="display: flex; align-items: center;">
+                        <div style="position: absolute; left: -5px; top: 21px; color: #cbd5e0; font-size: 10px;">►</div>
+                        <div
+                            style="background: white; border: 1.5px solid #48bb78; border-radius: 8px; padding: 12px 25px; display: flex; align-items: center; gap: 10px; min-width: 160px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); z-index: 1;">
+                            <span style="font-size: 20px; color: #48bb78;">✅</span>
+                            <span
+                                style="font-weight: 600; color: #4a5568; font-size: 14px; text-transform: uppercase;">Accept</span>
+                        </div>
+                        <!-- Connector to Invoice -->
+                        <div style="width: 30px; height: 2px; border-top: 2px dashed #cbd5e0; position: relative;">
+                            <span
+                                style="position: absolute; right: -5px; top: -11px; color: #cbd5e0; font-size: 10px;">►</span>
+                        </div>
+                        <div
+                            style="background: white; border: 1.5px solid #63b3ed; border-radius: 8px; padding: 12px 25px; display: flex; align-items: center; gap: 10px; min-width: 160px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <span style="font-size: 20px; color: #63b3ed;">📄</span>
+                            <span
+                                style="font-weight: 600; color: #4a5568; font-size: 14px; text-transform: uppercase;">Invoice</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Branch (Reject) -->
+                <div style="display: flex; align-items: center;">
+                    <!-- Vertical line down connection -->
+                    <div
+                        style="position: absolute; left: -40px; top: 25px; height: 60px; border-left: 2px dashed #cbd5e0; border-bottom: 2px dashed #cbd5e0;">
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin-top: 10px;">
+                        <div style="position: absolute; left: -5px; top: 81px; color: #cbd5e0; font-size: 10px;">►</div>
+                        <div
+                            style="background: white; border: 1.5px solid #f56565; border-radius: 8px; padding: 12px 25px; display: flex; align-items: center; gap: 10px; min-width: 160px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <span style="font-size: 20px; color: #f56565;">❌</span>
+                            <span
+                                style="font-weight: 600; color: #4a5568; font-size: 14px; text-transform: uppercase;">Reject</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

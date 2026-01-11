@@ -1,0 +1,54 @@
+{
+ "charts": [
+  {
+   "chart_name": "Purchase Order Status",
+   "label": "Order status"
+  }
+ ],
+ "content": "[{\"id\":\"CmzKbitlpw\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Purchase Orders</span>\",\"col\":12}},{\"id\":\"zELrmK8bGK\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Mu25grBQvV\",\"type\":\"paragraph\",\"data\":{\"text\":\"Total Purchased Products\",\"col\":12}},{\"id\":\"6zDQeTrQy3\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Purchased Products\",\"col\":3}},{\"id\":\"cxBKd0x7gX\",\"type\":\"paragraph\",\"data\":{\"text\":\"Click below shortcut to make your Purchase Order.. !\",\"col\":12}},{\"id\":\"HOYyNKlpaA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create\",\"col\":3}},{\"id\":\"XEfbnW_vkz\",\"type\":\"spacer\",\"data\":{\"col\":10}},{\"id\":\"9W-mGtklxZ\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Order status\",\"col\":11}},{\"id\":\"jsyhZwc-D2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"LSsg99bdH0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Purchase Order List</b></span>\",\"col\":12}},{\"id\":\"EjQdxQhvNV\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Purchase order \",\"col\":4}}]",
+ "creation": "2026-01-08 16:46:14.881890",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "stock",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Purchase Orders",
+ "links": [],
+ "modified": "2026-01-09 15:05:00.239556",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "Purchase Orders",
+ "number_cards": [
+  {
+   "label": "Purchased Products",
+   "number_card_name": "Purchased Products"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "Purchase",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "IB Purchase Order",
+   "label": "Purchase order ",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 5.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "New",
+   "label": "Create",
+   "link_to": "IB Purchase Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Purchase Orders"
+}

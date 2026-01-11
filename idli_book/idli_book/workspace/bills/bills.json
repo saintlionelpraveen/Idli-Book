@@ -1,0 +1,49 @@
+{
+ "charts": [
+  {
+   "chart_name": "Purchased Bill Status",
+   "label": "Bill status"
+  }
+ ],
+ "content": "[{\"id\":\"wyGYDxZU06\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Bills Details</span>\",\"col\":12}},{\"id\":\"MwPah-ESgd\",\"type\":\"paragraph\",\"data\":{\"text\":\"Make the Purchase Bills using the below Shortcut..\",\"col\":12}},{\"id\":\"EtXrDmtPK6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Bills\",\"col\":3}},{\"id\":\"NdrHJK8yUJ\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Ojdob5p5cc\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Bill Status</b></span>\",\"col\":12}},{\"id\":\"VgC26ajUO1\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Bill status\",\"col\":7}},{\"id\":\"jTpRU21Z1R\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Bills List\",\"col\":5}}]",
+ "creation": "2026-01-08 16:47:00.379209",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "criticize",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Bills",
+ "links": [],
+ "modified": "2026-01-09 16:53:44.986158",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "Bills",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "Purchase",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "IB Purchase Bill",
+   "label": "Bills List",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 6.0,
+ "shortcuts": [
+  {
+   "color": "Red",
+   "doc_view": "New",
+   "label": "Create Bills",
+   "link_to": "IB Purchase Bill",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Bills"
+}

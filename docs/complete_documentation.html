@@ -1,0 +1,1830 @@
+<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Idli Book Documentation</title><style>body{font-family:Arial,sans-serif;max-width:1200px;margin:40px auto;padding:20px;line-height:1.6}h1{color:#2c3e50;border-bottom:3px solid #3498db}h2{color:#34495e;border-bottom:2px solid #ecf0f1;padding-bottom:10px}h3{color:#7f8c8d}table{border-collapse:collapse;width:100%;margin:20px 0}th,td{border:1px solid #ddd;padding:12px;text-align:left}th{background-color:#3498db;color:white}tr:nth-child(even){background-color:#f2f2f2}code{background-color:#f4f4f4;padding:2px 6px;border-radius:3px;font-family:Consolas,monospace}pre{background-color:#2c3e50;color:#ecf0f1;padding:15px;border-radius:5px;overflow-x:auto}pre code{background:none;color:#ecf0f1}</style></head><body><h1>Idli Book - Complete System Documentation</h1>
+<blockquote>
+<p><strong>Version</strong>: 0.0.1<br />
+<strong>Last Updated</strong>: January 11, 2026<br />
+<strong>Platform</strong>: Frappe Framework v15</p>
+</blockquote>
+<hr />
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#1-module-overview">Module Overview</a></li>
+<li><a href="#2-doctypes-reference">DocTypes Reference</a></li>
+<li><a href="#3-reports-documentation">Reports Documentation</a></li>
+<li><a href="#4-workspaces-guide">Workspaces Guide</a></li>
+<li><a href="#5-chart-of-accounts">Chart of Accounts</a></li>
+<li><a href="#6-apis--features">APIs &amp; Features</a></li>
+<li><a href="#7-tax--calculations">Tax &amp; Calculations</a></li>
+<li><a href="#8-workflows">Workflows</a></li>
+</ol>
+<hr />
+<h2>1. Module Overview</h2>
+<p>Idli Book is a minimal yet powerful accounting application built on the Frappe Framework. It provides essential features for managing sales, purchases, inventory, and accounts without the complexity of full-featured ERP systems.</p>
+<h3>Core Modules</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Purpose</th>
+<th>Key Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sales</strong></td>
+<td>Manage customer transactions</td>
+<td>Estimates, Sales Orders, Sales Invoices</td>
+</tr>
+<tr>
+<td><strong>Purchase</strong></td>
+<td>Handle vendor transactions</td>
+<td>Purchase Orders, Purchase Bills</td>
+</tr>
+<tr>
+<td><strong>Inventory</strong></td>
+<td>Track stock levels</td>
+<td>Item management, stock tracking</td>
+</tr>
+<tr>
+<td><strong>Accounting</strong></td>
+<td>Financial management</td>
+<td>Chart of Accounts, Journal Entries, GL</td>
+</tr>
+<tr>
+<td><strong>Payments</strong></td>
+<td>Payment processing</td>
+<td>UPI QR Codes, Payment tracking</td>
+</tr>
+<tr>
+<td><strong>Reports</strong></td>
+<td>Business intelligence</td>
+<td>Financial &amp; operational reports</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>2. DocTypes Reference</h2>
+<h3>2.1 Master Data DocTypes</h3>
+<h4>IB Organization</h4>
+<p><strong>Purpose</strong>: Single DocType storing organization-level settings and defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>organization_name</code></td>
+<td>Data</td>
+<td>Company name</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>gstin</code></td>
+<td>Data</td>
+<td>GST Number</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>address_line1</code></td>
+<td>Data</td>
+<td>Address</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>address_line2</code></td>
+<td>Data</td>
+<td>Address continuation</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>city</code></td>
+<td>Data</td>
+<td>City</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>Link</td>
+<td>State</td>
+<td>IB State</td>
+</tr>
+<tr>
+<td><code>country</code></td>
+<td>Link</td>
+<td>Country</td>
+<td>Country (Frappe)</td>
+</tr>
+<tr>
+<td><code>pincode</code></td>
+<td>Data</td>
+<td>PIN Code</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Data</td>
+<td>Organization email</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>Data</td>
+<td>Contact number</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>base_currency</code></td>
+<td>Link</td>
+<td>Default currency</td>
+<td>Currency (Frappe)</td>
+</tr>
+<tr>
+<td><code>financial_year_start</code></td>
+<td>Date</td>
+<td>FY start date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>financial_year_end</code></td>
+<td>Date</td>
+<td>FY end date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>default_receivable_account</code></td>
+<td>Link</td>
+<td>AR default</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>default_payable_account</code></td>
+<td>Link</td>
+<td>AP default</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>default_income_account</code></td>
+<td>Link</td>
+<td>Income default</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>default_expense_account</code></td>
+<td>Link</td>
+<td>Expense default</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>default_bank_account</code></td>
+<td>Link</td>
+<td>Bank default</td>
+<td>IB Chart of Accounts</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Features</strong>:
+- Single record for entire organization
+- Provides defaults for all financial transactions
+- Links to master Chart of Accounts</p>
+<hr />
+<h4>IB Customer</h4>
+<p><strong>Purpose</strong>: Store customer master data and defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>customer_name</code></td>
+<td>Data</td>
+<td>Customer display name</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Data</td>
+<td>Contact email</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>Data</td>
+<td>Phone number</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>gstin</code></td>
+<td>Data</td>
+<td>Customer GST number</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>billing_address</code></td>
+<td>Text</td>
+<td>Billing address</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>shipping_address</code></td>
+<td>Text</td>
+<td>Shipping address (if different)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>city</code></td>
+<td>Data</td>
+<td>City</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>Link</td>
+<td>State</td>
+<td>IB State</td>
+</tr>
+<tr>
+<td><code>pincode</code></td>
+<td>Data</td>
+<td>PIN Code</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>default_receivable_account</code></td>
+<td>Link</td>
+<td>Customer AR account</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>credit_limit</code></td>
+<td>Currency</td>
+<td>Maximum credit allowed</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>payment_terms</code></td>
+<td>Data</td>
+<td>Payment terms</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Auto-Creation Feature</strong>:
+- When saved, automatically creates a dedicated receivable account: <code>[Customer Name] - Receivable</code>
+- Links this account to the customer record</p>
+<hr />
+<h4>IB Vendor</h4>
+<p><strong>Purpose</strong>: Store vendor/supplier master data.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vendor_name</code></td>
+<td>Data</td>
+<td>Vendor display name</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Data</td>
+<td>Contact email</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>Data</td>
+<td>Phone number</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>gstin</code></td>
+<td>Data</td>
+<td>Vendor GST number</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>address</code></td>
+<td>Text</td>
+<td>Vendor address</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>city</code></td>
+<td>Data</td>
+<td>City</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>Link</td>
+<td>State</td>
+<td>IB State</td>
+</tr>
+<tr>
+<td><code>pincode</code></td>
+<td>Data</td>
+<td>PIN Code</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>default_payable_account</code></td>
+<td>Link</td>
+<td>Vendor AP account</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>payment_terms</code></td>
+<td>Data</td>
+<td>Payment terms</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Auto-Creation Feature</strong>:
+- Creates dedicated payable account: <code>[Vendor Name] - Payable</code>
+- Auto-links to vendor record</p>
+<hr />
+<h4>IB Item</h4>
+<p><strong>Purpose</strong>: Product/Service master with inventory tracking.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>item_name</code></td>
+<td>Data</td>
+<td>Product/service name</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>item_code</code></td>
+<td>Data</td>
+<td>Unique identifier</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Text</td>
+<td>Item description</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>item_type</code></td>
+<td>Select</td>
+<td>Product/Service</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>track_inventory</code></td>
+<td>Check</td>
+<td>Enable stock tracking</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>current_stock</code></td>
+<td>Float</td>
+<td>Available quantity</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>reorder_level</code></td>
+<td>Float</td>
+<td>Low stock alert level</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>unit_of_measurement</code></td>
+<td>Data</td>
+<td>UOM (pcs, kg, etc.)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>standard_rate</code></td>
+<td>Currency</td>
+<td>Selling price</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>purchase_rate</code></td>
+<td>Currency</td>
+<td>Buy price</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>hsn_code</code></td>
+<td>Link</td>
+<td>HSN/SAC code</td>
+<td>IB HSN Code</td>
+</tr>
+<tr>
+<td><code>tax_rate</code></td>
+<td>Float</td>
+<td>Applicable GST %</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>is_active</code></td>
+<td>Check</td>
+<td>Active status</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Inventory Tracking</strong>:
+- Stock updated on Sales Invoice/Purchase Bill submission
+- Debit Note/Credit Note reverse stock movements</p>
+<hr />
+<h3>2.2 Transaction DocTypes</h3>
+<h4>IB Estimate</h4>
+<p><strong>Purpose</strong>: Quotation/Proforma invoice for customers.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>customer</code></td>
+<td>Link</td>
+<td>Customer</td>
+<td>IB Customer</td>
+</tr>
+<tr>
+<td><code>estimate_date</code></td>
+<td>Date</td>
+<td>Quote date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>valid_till</code></td>
+<td>Date</td>
+<td>Validity period</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Select</td>
+<td>Draft/Sent/Converted</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>Table</td>
+<td>Line items</td>
+<td>IB Invoice Item</td>
+</tr>
+<tr>
+<td><code>subtotal</code></td>
+<td>Currency</td>
+<td>Pre-tax total</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>tax_total</code></td>
+<td>Currency</td>
+<td>Total tax</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>grand_total</code></td>
+<td>Currency</td>
+<td>Final amount</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>notes</code></td>
+<td>Text</td>
+<td>Terms &amp; conditions</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Status Flow</strong>: Draft → Sent → Converted to Sales Order</p>
+<hr />
+<h4>IB Sales Order</h4>
+<p><strong>Purpose</strong>: Confirmed customer order.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>customer</code></td>
+<td>Link</td>
+<td>Customer</td>
+<td>IB Customer</td>
+</tr>
+<tr>
+<td><code>order_date</code></td>
+<td>Date</td>
+<td>SO date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>delivery_date</code></td>
+<td>Date</td>
+<td>Expected delivery</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Select</td>
+<td>Draft/Confirmed/Billed</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>Table</td>
+<td>Line items</td>
+<td>IB Invoice Item</td>
+</tr>
+<tr>
+<td><code>subtotal</code></td>
+<td>Currency</td>
+<td>Pre-tax total</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>tax_total</code></td>
+<td>Currency</td>
+<td>Total tax</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>grand_total</code></td>
+<td>Currency</td>
+<td>Final amount</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>estimate</code></td>
+<td>Link</td>
+<td>Source estimate (optional)</td>
+<td>IB Estimate</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Status Flow</strong>: Draft → Confirmed → Billed (via Sales Invoice)</p>
+<hr />
+<h4>IB Sales Invoice</h4>
+<p><strong>Purpose</strong>: Final bill to customer with accounting integration.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>customer</code></td>
+<td>Link</td>
+<td>Customer</td>
+<td>IB Customer</td>
+</tr>
+<tr>
+<td><code>invoice_date</code></td>
+<td>Date</td>
+<td>Invoice date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>due_date</code></td>
+<td>Date</td>
+<td>Payment due date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Select</td>
+<td>Draft/Submitted/Paid/Partial</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>Table</td>
+<td>Line items</td>
+<td>IB Invoice Item</td>
+</tr>
+<tr>
+<td><code>subtotal</code></td>
+<td>Currency</td>
+<td>Pre-tax total</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>tax_total</code></td>
+<td>Currency</td>
+<td>Total tax</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>grand_total</code></td>
+<td>Currency</td>
+<td>Final amount</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>paid_amount</code></td>
+<td>Currency</td>
+<td>Amount received</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>outstanding_amount</code></td>
+<td>Currency</td>
+<td>Balance due</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>sales_order</code></td>
+<td>Link</td>
+<td>Source SO (optional)</td>
+<td>IB Sales Order</td>
+</tr>
+<tr>
+<td><code>email_delivery_status</code></td>
+<td>Data</td>
+<td>Email sent status</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Features</strong>:
+- Creates GL entries on submission (DR: AR, CR: Income + Tax)
+- Updates stock for tracked items
+- Sends email with UPI payment link
+- Auto-updates status based on payments</p>
+<hr />
+<h4>IB Purchase Order</h4>
+<p><strong>Purpose</strong>: Order placed with vendor.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vendor</code></td>
+<td>Link</td>
+<td>Vendor</td>
+<td>IB Vendor</td>
+</tr>
+<tr>
+<td><code>order_date</code></td>
+<td>Date</td>
+<td>PO date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>delivery_date</code></td>
+<td>Date</td>
+<td>Expected delivery</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Select</td>
+<td>Draft/Confirmed/Billed</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>Table</td>
+<td>Line items</td>
+<td>IB Purchase Item</td>
+</tr>
+<tr>
+<td><code>subtotal</code></td>
+<td>Currency</td>
+<td>Pre-tax total</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>tax_total</code></td>
+<td>Currency</td>
+<td>Total tax</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>grand_total</code></td>
+<td>Currency</td>
+<td>Final amount</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4>IB Purchase Bill</h4>
+<p><strong>Purpose</strong>: Vendor invoice with accounting integration.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vendor</code></td>
+<td>Link</td>
+<td>Vendor</td>
+<td>IB Vendor</td>
+</tr>
+<tr>
+<td><code>bill_date</code></td>
+<td>Date</td>
+<td>Bill date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>due_date</code></td>
+<td>Date</td>
+<td>Payment due date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Select</td>
+<td>Status</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td>Table</td>
+<td>Line items</td>
+<td>IB Purchase Item</td>
+</tr>
+<tr>
+<td><code>subtotal</code></td>
+<td>Currency</td>
+<td>Pre-tax total</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>tax_total</code></td>
+<td>Currency</td>
+<td>Total tax</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>grand_total</code></td>
+<td>Currency</td>
+<td>Final amount</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>paid_amount</code></td>
+<td>Currency</td>
+<td>Amount paid</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>outstanding_amount</code></td>
+<td>Currency</td>
+<td>Balance</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>purchase_order</code></td>
+<td>Link</td>
+<td>Source PO (optional)</td>
+<td>IB Purchase Order</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Features</strong>:
+- Creates GL entries: DR: Expense + Tax, CR: AP
+- Updates stock for tracked items</p>
+<hr />
+<h3>2.3 Accounting DocTypes</h3>
+<h4>IB Chart of Accounts</h4>
+<p><strong>Purpose</strong>: Ledger account master.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>account_name</code></td>
+<td>Data</td>
+<td>Account name (also ID)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>account_number</code></td>
+<td>Data</td>
+<td>Account code</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>account_type</code></td>
+<td>Select</td>
+<td>Asset/Liability/Income/Expense/etc.</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>root_type</code></td>
+<td>Select</td>
+<td>Balance Sheet / P&amp;L</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>is_group</code></td>
+<td>Check</td>
+<td>Group/Ledger</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>parent_account</code></td>
+<td>Link</td>
+<td>Parent group</td>
+<td>IB Chart of Accounts</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Account Types</strong>:
+- Asset, Liability, Equity, Income, Expense
+- Bank, Cash, Receivable, Payable
+- Tax</p>
+<p><strong>Auto-Creation</strong>:
+- Customer receivable accounts
+- Vendor payable accounts</p>
+<hr />
+<h4>IB GL Entry</h4>
+<p><strong>Purpose</strong>: General ledger transaction record.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>posting_date</code></td>
+<td>Date</td>
+<td>Transaction date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>account</code></td>
+<td>Link</td>
+<td>Account affected</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>debit</code></td>
+<td>Currency</td>
+<td>Debit amount</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>credit</code></td>
+<td>Currency</td>
+<td>Credit amount</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>voucher_type</code></td>
+<td>Link</td>
+<td>Source DocType</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>voucher_no</code></td>
+<td>Dynamic Link</td>
+<td>Source document</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>remarks</code></td>
+<td>Text</td>
+<td>Description</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>is_cancelled</code></td>
+<td>Check</td>
+<td>Reversal flag</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Created By</strong>:
+- Sales Invoice
+- Purchase Bill
+- Payment Entry
+- Journal Entry
+- Debit/Credit Notes</p>
+<hr />
+<h4>IB Payment</h4>
+<p><strong>Purpose</strong>: Customer/Vendor payment record.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>payment_type</code></td>
+<td>Select</td>
+<td>Receive/Pay</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>party_type</code></td>
+<td>Select</td>
+<td>Customer/Vendor</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>party</code></td>
+<td>Dynamic Link</td>
+<td>Customer/Vendor</td>
+<td>IB Customer/Vendor</td>
+</tr>
+<tr>
+<td><code>payment_date</code></td>
+<td>Date</td>
+<td>Payment date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>Currency</td>
+<td>Payment amount</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>mode_of_payment</code></td>
+<td>Select</td>
+<td>Cash/Bank/UPI</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>reference_no</code></td>
+<td>Data</td>
+<td>Cheque/UTR number</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>paid_from_account</code></td>
+<td>Link</td>
+<td>Source account (for Pay)</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>paid_to_account</code></td>
+<td>Link</td>
+<td>Destination account (for Receive)</td>
+<td>IB Chart of Accounts</td>
+</tr>
+<tr>
+<td><code>references</code></td>
+<td>Table</td>
+<td>Invoice allocations</td>
+<td>IB Payment Reference</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Features</strong>:
+- Creates GL entries: DR/CR based on payment type
+- Updates invoice <code>paid_amount</code> and <code>outstanding_amount</code>
+- Updates invoice status (Paid/Partially Paid)</p>
+<hr />
+<h4>IB Journal Entry</h4>
+<p><strong>Purpose</strong>: Manual accounting adjustments.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>posting_date</code></td>
+<td>Date</td>
+<td>JE date</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>voucher_type</code></td>
+<td>Select</td>
+<td>Journal Entry type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>accounts</code></td>
+<td>Table</td>
+<td>Account entries</td>
+<td>IB Journal Entry Account</td>
+</tr>
+<tr>
+<td><code>total_debit</code></td>
+<td>Currency</td>
+<td>Sum of debits</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>total_credit</code></td>
+<td>Currency</td>
+<td>Sum of credits</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>remarks</code></td>
+<td>Text</td>
+<td>Description</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Child Table (IB Journal Entry Account)</strong>:
+- <code>account</code>: Link to IB Chart of Accounts
+- <code>debit</code>: Debit amount
+- <code>credit</code>: Credit amount</p>
+<hr />
+<h4>IB Debit Note / IB Credit Note</h4>
+<p><strong>Purpose</strong>: Sales/Purchase returns.</p>
+<p><strong>Debit Note</strong> (Purchase Return):
+- Reverses Purchase Bill
+- Reduces payable
+- Reverses stock (if tracked)</p>
+<p><strong>Credit Note</strong> (Sales Return):
+- Reverses Sales Invoice
+- Reduces receivable<br />
+- Reverses stock (if tracked)</p>
+<hr />
+<h3>2.4 Configuration DocTypes</h3>
+<h4>IB Payment Settings</h4>
+<p><strong>Purpose</strong>: Payment gateway and UPI configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enable_payment_gateway</code></td>
+<td>Check</td>
+<td>Enable Razorpay</td>
+</tr>
+<tr>
+<td><code>razorpay_key_id</code></td>
+<td>Data</td>
+<td>API Key</td>
+</tr>
+<tr>
+<td><code>razorpay_key_secret</code></td>
+<td>Password</td>
+<td>API Secret</td>
+</tr>
+<tr>
+<td><code>enable_upi_qr</code></td>
+<td>Check</td>
+<td>Enable UPI QR</td>
+</tr>
+<tr>
+<td><code>upi_id</code></td>
+<td>Data</td>
+<td>UPI VPA</td>
+</tr>
+<tr>
+<td><code>payee_name</code></td>
+<td>Data</td>
+<td>UPI payee name</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4>IB Tax</h4>
+<p><strong>Purpose</strong>: Tax rate master (CGST, SGST, IGST).</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tax_name</code></td>
+<td>Data</td>
+<td>Tax name</td>
+</tr>
+<tr>
+<td><code>tax_rate</code></td>
+<td>Float</td>
+<td>Tax percentage</td>
+</tr>
+<tr>
+<td><code>account</code></td>
+<td>Link</td>
+<td>Tax GL account</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4>IB State</h4>
+<p><strong>Purpose</strong>: State master for GST (CGST+SGST vs IGST logic).</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state_name</code></td>
+<td>Data</td>
+<td>State name</td>
+</tr>
+<tr>
+<td><code>state_code</code></td>
+<td>Data</td>
+<td>GST state code</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4>IB HSN Code / IB SAC Code</h4>
+<p><strong>Purpose</strong>: HSN/SAC code masters for GST compliance.</p>
+<hr />
+<h3>2.5 Child Table DocTypes</h3>
+<h4>IB Invoice Item</h4>
+<p><strong>Child of</strong>: Estimate, Sales Order, Sales Invoice</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>item</code></td>
+<td>Link</td>
+<td>Product/Service</td>
+<td>IB Item</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Text</td>
+<td>Item description</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td>Float</td>
+<td>Qty</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>rate</code></td>
+<td>Currency</td>
+<td>Unit price</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>Currency</td>
+<td>Line total (qty × rate)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>tax_rate</code></td>
+<td>Float</td>
+<td>GST %</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>tax_amount</code></td>
+<td>Currency</td>
+<td>Tax value</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4>IB Purchase Item</h4>
+<p><strong>Child of</strong>: Purchase Order, Purchase Bill</p>
+<p>Similar to IB Invoice Item, tailored for purchase documents.</p>
+<hr />
+<h4>IB Payment Reference</h4>
+<p><strong>Child of</strong>: IB Payment</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Links To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reference_doctype</code></td>
+<td>Link</td>
+<td>Invoice type</td>
+<td>DocType</td>
+</tr>
+<tr>
+<td><code>reference_name</code></td>
+<td>Dynamic Link</td>
+<td>Invoice ID</td>
+<td>Sales Invoice/Purchase Bill</td>
+</tr>
+<tr>
+<td><code>allocated_amount</code></td>
+<td>Currency</td>
+<td>Payment allocation</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>outstanding_amount</code></td>
+<td>Currency</td>
+<td>Invoice balance</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. Reports Documentation</h2>
+<h3>3.1 Financial Reports</h3>
+<h4>IB Profit and Loss</h4>
+<ul>
+<li><strong>Type</strong>: Script Report</li>
+<li><strong>Purpose</strong>: Income Statement</li>
+<li><strong>Columns</strong>: Account, Debit, Credit, Balance</li>
+<li><strong>Filters</strong>: From Date, To Date</li>
+<li><strong>Logic</strong>: Summarizes Income and Expense accounts</li>
+</ul>
+<hr />
+<h4>IB Balance Sheet</h4>
+<ul>
+<li><strong>Type</strong>: Script Report</li>
+<li><strong>Purpose</strong>: Financial position statement</li>
+<li><strong>Columns</strong>: Account, Amount</li>
+<li><strong>Filters</strong>: As On Date</li>
+<li><strong>Logic</strong>: Assets = Liabilities + Equity</li>
+</ul>
+<hr />
+<h4>IB Trial Balance</h4>
+<ul>
+<li><strong>Type</strong>: Script Report  </li>
+<li><strong>Purpose</strong>: Account-wise debit/credit summary</li>
+<li><strong>Columns</strong>: Account, Opening, Debit, Credit, Closing</li>
+<li><strong>Filters</strong>: From Date, To Date</li>
+</ul>
+<hr />
+<h3>3.2 Sales Reports</h3>
+<h4>IB Sales Invoice Status</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: Invoice tracking</li>
+<li><strong>Columns</strong>: Invoice, Customer, Date, Amount, Paid, Outstanding, Status</li>
+<li><strong>Summary</strong>: Total Outstanding</li>
+</ul>
+<hr />
+<h4>IB Estimate Status</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: Quote tracking</li>
+<li><strong>Columns</strong>: Estimate, Customer, Date, Amount, Status, Valid Till</li>
+</ul>
+<hr />
+<h4>IB Best Selling Product</h4>
+<ul>
+<li><strong>Type</strong>: Script Report</li>
+<li><strong>Purpose</strong>: Top-selling items</li>
+<li><strong>Columns</strong>: Item, Qty Sold, Revenue</li>
+<li><strong>Filters</strong>: From Date, To Date</li>
+</ul>
+<hr />
+<h4>IB Customer Payment Status</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: AR aging</li>
+<li><strong>Columns</strong>: Customer, Total Invoiced, Paid, Outstanding</li>
+</ul>
+<hr />
+<h3>3.3 Purchase Reports</h3>
+<h4>IB Purchase Order Status</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: PO tracking</li>
+<li><strong>Columns</strong>: PO, Vendor, Date, Amount, Status</li>
+</ul>
+<hr />
+<h4>IB Purchase Bill Status</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: Bill tracking</li>
+<li><strong>Columns</strong>: Bill, Vendor, Date, Amount, Paid, Outstanding, Status</li>
+</ul>
+<hr />
+<h4>IB Vendor Payment Status</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: AP aging</li>
+<li><strong>Columns</strong>: Vendor, Total Billed, Paid, Outstanding</li>
+</ul>
+<hr />
+<h4>IB Total Purchased Products</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: Purchase analysis</li>
+<li><strong>Columns</strong>: Item, Qty Purchased, Total Cost</li>
+</ul>
+<hr />
+<h3>3.4 Inventory Reports</h3>
+<h4>IB Inventory Tracked Items</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: Current stock levels</li>
+<li><strong>Columns</strong>: Item, UOM, Stock, Reorder Level</li>
+</ul>
+<hr />
+<h4>IB Low Stock Items</h4>
+<ul>
+<li><strong>Type</strong>: Query Report</li>
+<li><strong>Purpose</strong>: Reorder alerts</li>
+<li><strong>Columns</strong>: Item, Current Stock, Reorder Level</li>
+<li><strong>Filter</strong>: Stock &lt; Reorder Level</li>
+</ul>
+<hr />
+<h3>3.5 Summary Reports (Number Cards)</h3>
+<ul>
+<li><strong>IB Total Customers</strong>: Customer count</li>
+<li><strong>IB Total Vendors</strong>: Vendor count</li>
+<li><strong>IB Total Items</strong>: Item count</li>
+<li><strong>IB Total Estimates</strong>: Estimate count</li>
+<li><strong>IB Total Sales Orders</strong>: SO count</li>
+<li><strong>IB Total Income</strong>: Revenue total</li>
+<li><strong>IB Total Expenses</strong>: Expense total</li>
+<li><strong>IB Total Receivables</strong>: AR total</li>
+<li><strong>IB Total Amount Payable</strong>: AP total</li>
+<li><strong>IB Top 5 Expenses</strong>: Expense breakdown</li>
+</ul>
+<hr />
+<h2>4. Workspaces Guide</h2>
+<h3>Idli Book (Main)</h3>
+<ul>
+<li><strong>Purpose</strong>: Central dashboard</li>
+<li><strong>Quick Access</strong>: Recent transactions, shortcuts</li>
+<li><strong>Charts</strong>: Revenue, Expenses</li>
+</ul>
+<h3>Sales</h3>
+<ul>
+<li><strong>Shortcuts</strong>: Estimate, Sales Order, Sales Invoice, Customer</li>
+<li><strong>Reports</strong>: Sales Invoice Status, Customer Payment Status</li>
+</ul>
+<h3>Purchase</h3>
+<ul>
+<li><strong>Shortcuts</strong>: Purchase Order, Purchase Bill, Vendor</li>
+<li><strong>Reports</strong>: Purchase Bill Status, Vendor Payment Status</li>
+</ul>
+<h3>Items</h3>
+<ul>
+<li><strong>Shortcuts</strong>: New Item</li>
+<li><strong>Reports</strong>: Inventory, Low Stock</li>
+</ul>
+<h3>Payment / Receive / Pay</h3>
+<ul>
+<li><strong>Shortcuts</strong>: Record Payment, Record Receipt</li>
+<li><strong>Reports</strong>: Payment tracking</li>
+</ul>
+<h3>Customers / Vendors</h3>
+<ul>
+<li><strong>Shortcuts</strong>: Add new</li>
+<li><strong>Reports</strong>: Aging, payment status</li>
+</ul>
+<h3>Bills / Purchase Orders / Sales Invoices / Sales Orders / Estimates</h3>
+<ul>
+<li><strong>Purpose</strong>: Dedicated transaction views</li>
+<li><strong>Features</strong>: List view, filters, bulk actions</li>
+</ul>
+<hr />
+<h2>5. Chart of Accounts</h2>
+<h3>Account Structure</h3>
+<pre><code>Root
+├── Assets
+│   ├── Current Assets
+│   │   ├── Cash
+│   │   ├── Bank Accounts
+│   │   └── Accounts Receivable
+│   │       └── [Customer Name] - Receivable (auto-created)
+│   └── Fixed Assets
+├── Liabilities
+│   ├── Current Liabilities
+│   │   ├── Accounts Payable
+│   │   │   └── [Vendor Name] - Payable (auto-created)
+│   │   └── Tax Payable
+│   │       ├── CGST Payable
+│   │       ├── SGST Payable
+│   │       └── IGST Payable
+│   └── Long-term Liabilities
+├── Equity
+│   └── Opening Balance Equity
+├── Income
+│   ├── Sales Income
+│   └── Other Income
+└── Expense
+    ├── Cost of Goods Sold
+    ├── Operating Expenses
+    └── Tax Expenses
+</code></pre>
+<h3>Auto-Created Accounts</h3>
+<h4>Customer Receivable Accounts</h4>
+<ul>
+<li><strong>Format</strong>: <code>[Customer Name] - Receivable</code></li>
+<li><strong>Created</strong>: On customer save</li>
+<li><strong>Type</strong>: Receivable (Asset)</li>
+<li><strong>Linked to</strong>: Customer record</li>
+</ul>
+<h4>Vendor Payable Accounts</h4>
+<ul>
+<li><strong>Format</strong>: <code>[Vendor Name] - Payable</code></li>
+<li><strong>Created</strong>: On vendor save</li>
+<li><strong>Type</strong>: Payable (Liability)</li>
+<li><strong>Linked to</strong>: Vendor record</li>
+</ul>
+<h3>Default Accounts (IB Organization)</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default Receivable</td>
+<td>AR for customers without specific account</td>
+<td>Accounts Receivable</td>
+</tr>
+<tr>
+<td>Default Payable</td>
+<td>AP for vendors without specific account</td>
+<td>Accounts Payable</td>
+</tr>
+<tr>
+<td>Default Income</td>
+<td>Revenue recognition</td>
+<td>Sales Income</td>
+</tr>
+<tr>
+<td>Default Expense</td>
+<td>Expense recognition</td>
+<td>Operating Expenses</td>
+</tr>
+<tr>
+<td>Default Bank Account</td>
+<td>Payment processing</td>
+<td>Main Bank Account</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>6. APIs &amp; Features</h2>
+<h3>6.1 UPI QR Code Payment</h3>
+<p><strong>Implementation</strong>: <code>invoice_payment.py</code>, <code>invoice_payment.html</code></p>
+<p><strong>Flow</strong>:
+1. Customer receives invoice email with "Pay Now" button
+2. Clicks button → Opens <code>/invoice_payment?invoice=INV-001</code>
+3. Page generates dynamic UPI QR code:
+   <code>upi://pay?pa={upi_id}&amp;pn={payee_name}&amp;tr={invoice_name}&amp;tn=Invoice {invoice_name}&amp;am={amount}&amp;cu=INR</code>
+4. Customer scans with any UPI app (GPay, PhonePe, etc.)
+5. Payment pre-filled, customer completes</p>
+<p><strong>Configuration</strong> (IB Payment Settings):
+- Enable UPI QR Code: ✓
+- UPI ID (VPA): <code>business@okicici</code>
+- Payee Name: <code>Your Company Name</code></p>
+<p><strong>Dependencies</strong>:
+- Python library: <code>qrcode[pil]</code>
+- Install: <code>./env/bin/pip install qrcode[pil]</code></p>
+<p><strong>Code Reference</strong>:</p>
+<pre><code class="language-python"># Generate QR
+upi_uri = f&quot;upi://pay?pa={upi_id}&amp;pn={payee_name}&amp;tr={invoice.name}&amp;tn=Invoice {invoice.name}&amp;am={amount}&amp;cu=INR&quot;
+qr = qrcode.QRCode(version=1, box_size=10, border=4)
+qr.add_data(upi_uri)
+qr.make(fit=True)
+img = qr.make_image(fill_color=&quot;black&quot;, back_color=&quot;white&quot;)
+</code></pre>
+<hr />
+<h3>6.2 Razorpay Integration (Optional)</h3>
+<p><strong>Implementation</strong>: <code>api.py</code>, <code>pay.html</code>, <code>pay.py</code></p>
+<p><strong>APIs</strong>:
+- <code>get_payment_details(invoice_name)</code>: Fetch invoice info
+- <code>create_razorpay_order(invoice_name)</code>: Create payment order
+- <code>verify_payment(...)</code>: Verify signature &amp; record payment</p>
+<p><strong>Configuration</strong>:
+- Enable Payment Gateway: ✓
+- Razorpay Key ID: <code>rzp_test_...</code>
+- Razorpay Key Secret: <code>***</code></p>
+<hr />
+<h3>6.3 Email Features</h3>
+<p><strong>Auto-Email on Invoice Submission</strong>:</p>
+<pre><code class="language-python">def send_invoice_email(self):
+    customer_email = frappe.db.get_value(&quot;IB Customer&quot;, self.customer, &quot;email&quot;)
+    # Validate email
+    # Include payment link if UPI enabled
+    # Attach PDF
+    frappe.sendmail(...)
+</code></pre>
+<p><strong>Features</strong>:
+- Email validation
+- PDF attachment
+- UPI payment link (if enabled)
+- Status tracking (<code>email_delivery_status</code>)</p>
+<hr />
+<h3>6.4 API Endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/method/idli_book.idli_book.api.get_payment_details</code></td>
+<td>GET</td>
+<td>Invoice details</td>
+</tr>
+<tr>
+<td><code>/api/method/idli_book.idli_book.api.create_razorpay_order</code></td>
+<td>POST</td>
+<td>Create order</td>
+</tr>
+<tr>
+<td><code>/api/method/idli_book.idli_book.api.verify_payment</code></td>
+<td>POST</td>
+<td>Verify payment</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>7. Tax &amp; Calculations</h2>
+<h3>7.1 GST Logic</h3>
+<p><strong>Same State</strong>: CGST + SGST
+<strong>Interstate</strong>: IGST</p>
+<p><strong>Tax Rates</strong>:
+- 18% = 9% CGST + 9% SGST (same state)
+- 18% = 18% IGST (interstate)</p>
+<h3>7.2 Sales Invoice Calculation</h3>
+<p><strong>Example</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Qty</th>
+<th>Rate</th>
+<th>Amount</th>
+<th>Tax Rate</th>
+<th>Tax Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product A</td>
+<td>2</td>
+<td>₹1,000</td>
+<td>₹2,000</td>
+<td>18%</td>
+<td>₹360</td>
+</tr>
+<tr>
+<td>Service B</td>
+<td>1</td>
+<td>₹500</td>
+<td>₹500</td>
+<td>18%</td>
+<td>₹90</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calculation</strong>:</p>
+<pre><code>Subtotal = ₹2,500
+CGST @ 9% = ₹225
+SGST @ 9% = ₹225
+Grand Total = ₹2,950
+</code></pre>
+<p><strong>GL Entries (Same State)</strong>:</p>
+<pre><code>DR Accounts Receivable - Customer A    ₹2,950
+   CR Sales Income                              ₹2,500
+   CR CGST Payable                              ₹225
+   CR SGST Payable                              ₹225
+</code></pre>
+<p><strong>GL Entries (Interstate)</strong>:</p>
+<pre><code>DR Accounts Receivable - Customer A    ₹2,950
+   CR Sales Income                              ₹2,500
+   CR IGST Payable                              ₹450
+</code></pre>
+<h3>7.3 Purchase Bill Calculation</h3>
+<p><strong>GL Entries</strong>:</p>
+<pre><code>DR Cost of Goods Sold                  ₹2,500
+DR CGST Paid                           ₹225
+DR SGST Paid                           ₹225
+   CR Accounts Payable - Vendor X              ₹2,950
+</code></pre>
+<h3>7.4 Payment Entry</h3>
+<p><strong>Customer Payment (Receive)</strong>:</p>
+<pre><code>DR Bank Account                        ₹2,950
+   CR Accounts Receivable - Customer A         ₹2,950
+</code></pre>
+<p><strong>Vendor Payment (Pay)</strong>:</p>
+<pre><code>DR Accounts Payable - Vendor X         ₹2,950
+   CR Bank Account                             ₹2,950
+</code></pre>
+<hr />
+<h2>8. Workflows</h2>
+<h3>8.1 Sales Workflow</h3>
+<pre><code class="language-mermaid">graph LR
+    A[Estimate] --&gt; B[Sales Order]
+    B --&gt; C[Sales Invoice]
+    C --&gt; D[Payment]
+    D --&gt; E[Invoice Paid]
+</code></pre>
+<p><strong>Detailed Flow</strong>:</p>
+<ol>
+<li><strong>Create Estimate</strong></li>
+<li>Add customer</li>
+<li>Add items</li>
+<li>Submit</li>
+<li>
+<p>Send email</p>
+</li>
+<li>
+<p><strong>Convert to Sales Order</strong></p>
+</li>
+<li>Create from Estimate (optional)</li>
+<li>Or create directly</li>
+<li>
+<p>Confirm order</p>
+</li>
+<li>
+<p><strong>Create Sales Invoice</strong></p>
+</li>
+<li>Create from SO (optional)</li>
+<li>Or create directly</li>
+<li>Submit → GL entries created</li>
+<li>Stock reduced</li>
+<li>
+<p>Email sent with UPI link</p>
+</li>
+<li>
+<p><strong>Record Payment</strong></p>
+</li>
+<li>Customer pays via UPI/Bank</li>
+<li>Create Payment Entry</li>
+<li>Allocate to invoice</li>
+<li>Submit → GL entries created</li>
+<li>Invoice status updated</li>
+</ol>
+<h3>8.2 Purchase Workflow</h3>
+<pre><code class="language-mermaid">graph LR
+    A[Purchase Order] --&gt; B[Purchase Bill]
+    B --&gt; C[Payment]
+    C --&gt; D[Bill Paid]
+</code></pre>
+<p><strong>Detailed Flow</strong>:</p>
+<ol>
+<li><strong>Create Purchase Order</strong></li>
+<li>Add vendor</li>
+<li>Add items</li>
+<li>
+<p>Submit</p>
+</li>
+<li>
+<p><strong>Create Purchase Bill</strong></p>
+</li>
+<li>Create from PO (optional)</li>
+<li>Submit → GL entries</li>
+<li>
+<p>Stock increased</p>
+</li>
+<li>
+<p><strong>Make Payment</strong></p>
+</li>
+<li>Create Payment Entry (Pay)</li>
+<li>Allocate to bill</li>
+<li>Submit → GL entries</li>
+<li>Bill status updated</li>
+</ol>
+<h3>8.3 Payment Workflow</h3>
+<p><strong>Customer Payment</strong>:
+1. Customer → Sales Invoice created
+2. Email sent with UPI QR link
+3. Customer scans → Pays
+4. Record Payment Entry (manually or via Razorpay webhook)
+5. Invoice marked Paid</p>
+<p><strong>Vendor Payment</strong>:
+1. Vendor → Purchase Bill created
+2. Due date tracking
+3. Create Payment Entry before/on due date
+4. Bill marked Paid</p>
+<h3>8.4 Accounting Workflow</h3>
+<p><strong>Month-End Close</strong>:
+1. Run Trial Balance
+2. Verify balances
+3. Check Profit &amp; Loss
+4. Review Balance Sheet
+5. Journal entries for adjustments (if needed)</p>
+<hr />
+<h2>Appendix: Installation &amp; Setup</h2>
+<h3>Prerequisites</h3>
+<ul>
+<li>Frappe v15</li>
+<li>Python 3.10+</li>
+<li>MariaDB/PostgreSQL</li>
+</ul>
+<h3>Installation</h3>
+<pre><code class="language-bash">bench get-app https://github.com/your-repo/idli_book
+bench --site site1.local install-app idli_book
+bench --site site1.local migrate
+</code></pre>
+<h3>Initial Setup</h3>
+<ol>
+<li><strong>IB Organization</strong>: Configure company details</li>
+<li><strong>Chart of Accounts</strong>: Review/customize</li>
+<li><strong>Customers &amp; Vendors</strong>: Import master data</li>
+<li><strong>Items</strong>: Add products/services</li>
+<li><strong>Payment Settings</strong>: Configure UPI/Gateway</li>
+</ol>
+<h3>Library Dependencies</h3>
+<pre><code class="language-bash">cd /path/to/frappe-bench
+./env/bin/pip install qrcode[pil]
+</code></pre>
+<hr />
+<h2>Support &amp; Resources</h2>
+<ul>
+<li><strong>Documentation</strong>: This file</li>
+<li><strong>Issue Tracker</strong>: GitHub Issues</li>
+<li><strong>Email</strong>: support@idlibook.com</li>
+</ul>
+<hr />
+<p><strong>End of Documentation</strong></p></body></html>

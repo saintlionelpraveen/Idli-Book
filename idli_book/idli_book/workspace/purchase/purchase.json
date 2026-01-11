@@ -1,0 +1,141 @@
+{
+ "charts": [
+  {
+   "chart_name": "Purchased Bill Status",
+   "label": "Bill status"
+  },
+  {
+   "chart_name": "Purchase Order Status",
+   "label": "Purchase Order Status"
+  }
+ ],
+ "content": "[{\"id\":\"1W86USEZOu\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Purchase</b></span>\",\"col\":12}},{\"id\":\"dKEBHjhwa2\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"IB Purchase Flow\",\"col\":12}},{\"id\":\"rQUQzTE1jB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"ASel_PoUgs\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Purchased Products\",\"col\":4}},{\"id\":\"_ss3WxTFh1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Vendors\",\"col\":4}},{\"id\":\"ao3JlKvk2N\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"MFKWqDZlVA\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Order Status</b></span>\",\"col\":12}},{\"id\":\"GHZEJqvPqd\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Purchase Order Status\",\"col\":12}},{\"id\":\"tsiQ0kPidk\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Bill Status</b></span>\",\"col\":12}},{\"id\":\"hG1t8oBE8C\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Bill status\",\"col\":12}}]",
+ "creation": "2026-01-08 15:02:10.969133",
+ "custom_blocks": [
+  {
+   "custom_block_name": "IB Purchase Flow",
+   "label": "IB Purchase Flow"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "retail",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Purchase",
+ "links": [
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dashboard",
+   "link_count": 0,
+   "link_to": "idli-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item",
+   "link_count": 0,
+   "link_to": "IB Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Order",
+   "link_count": 0,
+   "link_to": "IB Sales Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice",
+   "link_count": 0,
+   "link_to": "IB Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer",
+   "link_count": 0,
+   "link_to": "IB Customer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vendor",
+   "link_count": 0,
+   "link_to": "IB Vendor",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Order",
+   "link_count": 0,
+   "link_to": "IB Purchase Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-01-09 15:57:52.317892",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "Purchase",
+ "number_cards": [
+  {
+   "label": "Purchased Products",
+   "number_card_name": "Purchased Products"
+  },
+  {
+   "label": "Vendors",
+   "number_card_name": "Vendors"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "IDLI BOOK",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ],
+ "sequence_id": 3.0,
+ "shortcuts": [],
+ "title": "Purchase"
+}
