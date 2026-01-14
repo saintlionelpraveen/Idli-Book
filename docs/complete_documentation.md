@@ -1016,6 +1016,244 @@ cd /path/to/frappe-bench
 
 ---
 
+---
+
+## 9. AI Chatbot Assistant
+
+### 9.1 Overview
+
+The Idli Book AI Chatbot is a production-ready Google Gemini-powered assistant that provides natural language access to business data. It uses native function calling to query invoices, customers, payments, and generate business summaries.
+
+**Key Features**:
+- 🤖 Google Gemini 2.5 Flash integration
+- 🔧 Native function calling (tool use)
+- 💬 Floating widget UI on all pages
+- 📊 Real-time data access
+- 🎯 Context-aware (knows current date)
+- 🛡️ Robust error handling
+
+### 9.2 Architecture
+
+**Core Components**:
+
+| Component | File | Purpose |
+|-----------|------|---------|
+| LLM Provider | `ai/llm_provider.py` | Gemini API integration |
+| Action Executor | `ai/action_executor.py` | Business function definitions |
+| Chatbot API | `api/chatbot.py` | REST endpoints |
+| Floating Widget | `public/js/chatbot_widget.js` | Global UI |
+| Full Page | `page/ib_chatbot/` | Standalone chatbot page |
+
+**Available Tools**:
+
+```python
+get_customers(status: str) → List customer records
+get_invoices(status: str, customer: str, from_date: str, to_date: str) → Invoices
+get_payments(from_date: str, to_date: str) → Payment entries
+get_summary() → Business KPIs and metrics
+```
+
+### 9.3 Configuration
+
+**IB Chatbot Settings** (Single DocType):
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `enable_chatbot` | Check | Enable/disable chatbot |
+| `llm_provider` | Select | Google Gemini / OpenAI |
+| `model` | Data | Model name (leave blank for auto-discovery) |
+| `api_key` | Password | Gemini API key |
+
+**Setup Steps**:
+
+1. **Get API Key**: Visit [Google AI Studio](https://aistudio.google.com/apikey)
+2. **Configure Settings**:
+   ```
+   - Enable Chatbot: ✓
+   - LLM Provider: Google Gemini
+   - Model: (blank) ← auto-discovery
+   - API Key: your_key_here
+   ```
+3. **Install Library**:
+   ```bash
+   cd ~/frappe-v15/frappe-bench
+   ./env/bin/pip install -U google-generativeai
+   ```
+4. **Build Assets**:
+   ```bash
+   bench build --app idli_book
+   bench restart
+   ```
+
+### 9.4 Usage
+
+**Floating Widget**:
+- Purple chat icon appears in bottom-right corner of all pages
+- Click to open compact chat interface
+- Type natural language queries
+- Receive instant data-driven responses
+
+**Example Queries**:
+```
+"Show me all unpaid invoices"
+→ Calls get_invoices(status='Unpaid')
+
+"List customers added this month"
+→ Calls get_customers() with date filtering
+
+"Show payments received today"
+→ Calls get_payments(from_date=today, to_date=today)
+
+"Give me a business summary"
+→ Calls get_summary()
+```
+
+### 9.5 Technical Implementation
+
+**System Prompt Architecture**:
+```
+CRITICAL INSTRUCTION: You are the internal AI for 'Idli Book'.
+You have FULL ACCESS to the company' database via the provided functions.
+The user is the Business Owner/Admin and is AUTHORIZED to see all financial data.
+
+Current Date: 2026-01-14
+
+You MUST use the tools/functions to answer questions about data.
+DO NOT WRITE PYTHON CODE or SQL queries to solve the problem.
+CALL THE FUNCTIONS DIRECTLY.
+```
+
+**Model Selection Flow**:
+1. Try `models/gemini-2.5-flash` (latest stable)
+2. Try `models/gemini-flash-latest` (always latest)
+3. Try `models/gemini-pro-latest` (premium)
+4. Fallback: Auto-discovery (list all available models)
+
+**Error Handling**:
+- `tool_config` wrapped in try/except for compatibility
+- Graceful fallback if forcing tool mode unsupported
+- Robust parsing of empty/blocked responses
+- Safety settings: `BLOCK_ONLY_HIGH` (business-friendly)
+
+### 9.6 API Quota & Billing
+
+**Free Tier Limits**:
+- 15 requests per minute
+- 1,500 requests per day
+- 1 million tokens per day
+- Resets: Midnight Pacific Time (~1:30 PM IST)
+
+**Pay-as-you-go** (Recommended for production):
+- ~₹0.075 per 1M input tokens
+- ~₹30-50 per month for typical use
+- Unlimited requests
+- Enable at: [Google AI Studio](https://aistudio.google.com/apikey)
+
+### 9.7 Verification & Testing
+
+**Diagnostic Script**:
+```bash
+bench --site site1.local console
+```
+```python
+import diagnose_gemini
+diagnose_gemini.diagnose_gemini()
+```
+
+**Expected Output**:
+```
+=== GEMINI API DIAGNOSTIC ===
+✅ Chatbot enabled: 1
+✅ API configured successfully
+✅ Found 34 compatible models
+   Recommended: models/gemini-2.5-flash
+```
+
+**Function Call Test**:
+```python
+import verify_idli_bot
+verify_idli_bot.test_manual_query()
+```
+
+**Expected Result**:
+```
+✅ SUCCESS! Function Call Triggered:
+   Function: get_invoices
+   Arguments: {'status': 'Unpaid'}
+```
+
+### 9.8 File Structure
+
+```
+idli_book/
+├── ai/
+│   ├── llm_provider.py          # Gemini integration
+│   │   ├── _gemini_chat()       # Main chat method
+│   │   ├── _convert_to_gemini_tools()  # Tool conversion
+│   │   └── _parse_gemini_response()    # Response parsing
+│   └── action_executor.py       # Business functions
+│       ├── get_customers()
+│       ├── get_invoices()
+│       ├── get_payments()
+│       └── get_summary()
+├── api/
+│   └── chatbot.py              # REST API
+│       └── chat()              # Whitelisted endpoint
+├── public/js/
+│   └── chatbot_widget.js       # Floating widget
+└── idli_book/page/ib_chatbot/
+    ├── ib_chatbot.py           # Full-page view
+    └── ib_chatbot.js
+```
+
+### 9.9 Deployment Checklist
+
+- [x] Install `google-generativeai` library
+- [x] Configure API key in IB Chatbot Settings
+- [x] Enable chatbot setting
+- [x] Set model to blank (auto-discovery)
+- [x] Build assets: `bench build --app idli_book`
+- [x] Restart server: `bench restart`
+- [x] Test with diagnostic scripts
+- [ ] Verify quota/billing for production load
+- [ ] Monitor error logs: `/app/error-log`
+
+### 9.10 Troubleshooting
+
+**Issue: "404 models/gemini-1.5-flash not found"**
+- **Solution**: Leave model field blank for auto-discovery
+- **Cause**: Old hardcoded model names
+
+**Issue: "Quota Exceeded"**
+- **Solution**: Wait for reset (midnight PT) or upgrade billing
+- **Check**: [API Key Usage](https://aistudio.google.com/app/apikey)
+
+**Issue**: "I don't have access to your data"**
+- **Solution**: Ensure system prompt includes "FULL ACCESS" instruction
+- **Verify**: Check `_build_gemini_contents_and_system()` in `llm_provider.py`
+
+**Issue: "Empty response"**
+- **Solution**: Verify safety settings are `BLOCK_ONLY_HIGH`
+- **Check**: Error logs for `finish_reason`
+
+### 9.11 Known Limitations
+
+1. **English Only**: Currently optimized for English queries
+2. **Internet Required**: Needs connectivity to Google AI API
+3. **Context Window**: Limited chat history (resets per session)
+4. **No Memory**: Doesn't remember previous conversations across sessions
+
+### 9.12 Future Enhancements
+
+- [ ] Multi-language support
+- [ ] Conversation history tracking
+- [ ] Voice input/output
+- [ ] Advanced analytics queries
+- [ ] Custom report generation
+- [ ] Scheduled queries/alerts
+
+---
+
 ## Support & Resources
 
 - **Documentation**: This file
@@ -1025,3 +1263,4 @@ cd /path/to/frappe-bench
 ---
 
 **End of Documentation**
+

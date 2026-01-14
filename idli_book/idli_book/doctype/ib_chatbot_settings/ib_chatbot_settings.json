@@ -1,0 +1,111 @@
+{
+    "actions": [],
+    "allow_rename": 0,
+    "creation": "2026-01-14 11:10:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "enable_chatbot",
+        "section_break_api",
+        "llm_provider",
+        "api_key",
+        "column_break_api",
+        "model",
+        "temperature",
+        "max_tokens",
+        "section_break_features",
+        "enable_suggestions",
+        "enable_voice_input"
+    ],
+    "fields": [
+        {
+            "default": "0",
+            "fieldname": "enable_chatbot",
+            "fieldtype": "Check",
+            "label": "Enable Chatbot"
+        },
+        {
+            "fieldname": "section_break_api",
+            "fieldtype": "Section Break",
+            "label": "LLM Configuration"
+        },
+        {
+            "default": "OpenAI",
+            "fieldname": "llm_provider",
+            "fieldtype": "Select",
+            "label": "LLM Provider",
+            "options": "OpenAI\nGoogle Gemini\nAnthropic Claude"
+        },
+        {
+            "fieldname": "api_key",
+            "fieldtype": "Password",
+            "label": "API Key",
+            "mandatory_depends_on": "enable_chatbot"
+        },
+        {
+            "fieldname": "column_break_api",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "gpt-3.5-turbo",
+            "fieldname": "model",
+            "fieldtype": "Data",
+            "label": "Model",
+            "description": "e.g., gpt-4, gpt-3.5-turbo"
+        },
+        {
+            "default": "0.7",
+            "fieldname": "temperature",
+            "fieldtype": "Float",
+            "label": "Temperature",
+            "description": "0-1, higher = more creative"
+        },
+        {
+            "default": "1000",
+            "fieldname": "max_tokens",
+            "fieldtype": "Int",
+            "label": "Max Tokens"
+        },
+        {
+            "fieldname": "section_break_features",
+            "fieldtype": "Section Break",
+            "label": "Features"
+        },
+        {
+            "default": "1",
+            "fieldname": "enable_suggestions",
+            "fieldtype": "Check",
+            "label": "Enable Quick Suggestions"
+        },
+        {
+            "default": "0",
+            "fieldname": "enable_voice_input",
+            "fieldtype": "Check",
+            "label": "Enable Voice Input"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "issingle": 1,
+    "links": [],
+    "modified": "2026-01-14 11:10:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Chatbot Settings",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}
