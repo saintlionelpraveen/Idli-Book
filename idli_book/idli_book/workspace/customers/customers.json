@@ -1,6 +1,11 @@
 {
- "charts": [],
- "content": "[{\"id\":\"nH9fsE47eC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Customers</span>\",\"col\":12}}]",
+ "charts": [
+  {
+   "chart_name": "Customer Trend Chart",
+   "label": "Customers Trend Chart"
+  }
+ ],
+ "content": "[{\"id\":\"nH9fsE47eC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Customers</span>\",\"col\":12}},{\"id\":\"CYepC6PBbH\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Customers\",\"col\":3}},{\"id\":\"JE1p7xXJpG\",\"type\":\"paragraph\",\"data\":{\"text\":\"Create your new Customer using this shortcut.\",\"col\":12}},{\"id\":\"KeZkG4bTAK\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Customer\",\"col\":3}},{\"id\":\"F5yXaRZ05B\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"pQ0V2fO0gX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Customers Trends</b></span>\",\"col\":12}},{\"id\":\"njXe93Gxao\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Customers Trend Chart\",\"col\":12}},{\"id\":\"NtNb5i5E29\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"5UFDhBC9Ve\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Customer Details</b></span>\",\"col\":12}},{\"id\":\"dsU7Qqn2yi\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Customer List\",\"col\":4}}]",
  "creation": "2026-01-08 15:47:40.015606",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,17 +18,37 @@
  "is_hidden": 0,
  "label": "Customers",
  "links": [],
- "modified": "2026-01-08 17:20:18.169378",
+ "modified": "2026-01-13 19:12:47.578617",
  "modified_by": "Administrator",
  "module": "Idli Book",
  "name": "Customers",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Customers",
+   "number_card_name": "Total Customers"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "Sales",
  "public": 1,
- "quick_lists": [],
+ "quick_lists": [
+  {
+   "document_type": "IB Customer",
+   "label": "Customer List",
+   "quick_list_filter": "[]"
+  }
+ ],
  "roles": [],
  "sequence_id": 8.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "color": "Green",
+   "doc_view": "New",
+   "label": "Create Customer",
+   "link_to": "IB Customer",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
  "title": "Customers"
 }

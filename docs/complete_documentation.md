@@ -1,8 +1,8 @@
 # Idli Book - Complete System Documentation
 
-> **Version**: 0.0.1  
-> **Last Updated**: January 11, 2026  
-> **Platform**: Frappe Framework v15
+> **Version**: 1.0.1  
+> **Last Updated**: January 14, 2026  
+> **Total DocTypes**: 27 | **Reports**: 30 | **Workspaces**: 14
 
 ---
 
@@ -38,7 +38,95 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 
 ## 2. DocTypes Reference
 
-### 2.1 Master Data DocTypes
+**Total DocTypes: 27**
+
+### DocType Overview
+
+| Category | DocType | Purpose |
+|----------|---------|---------|
+| **Core Masters (3)** | | |
+| | IB Currency | Independent currency master (50+ currencies) |
+| | IB UOM | Unit of measurement master (17 UOMs) |
+| | IB Country | Country master (60 countries) |
+| **Master Data (7)** | | |
+| | IB Organization | Organization settings and defaults (Single) |
+| | IB Customer | Customer master with auto-created AR accounts |
+| | IB Vendor | Vendor/Supplier master with auto-created AP accounts |
+| | IB Item | Product/Service master with inventory tracking |
+| | IB Tax | Tax rate master (CGST, SGST, IGST) |
+| | IB State | State master for GST compliance |
+| | IB HSN Code | HSN code master for products |
+| | IB SAC Code | SAC code master for services |
+| **Transaction DocTypes (9)** | | |
+| | IB Estimate | Quotation/Proforma invoice |
+| | IB Sales Order | Confirmed customer order |
+| | IB Sales Invoice | Final customer bill with GL integration |
+| | IB Purchase Order | Vendor purchase order |
+| | IB Purchase Bill | Vendor bill with GL integration |
+| | IB Credit Note | Sales return/reversal |
+| | IB Debit Note | Purchase return/reversal |
+| | IB Payment | Customer/Vendor payment entry |
+| | IB Journal Entry | Manual accounting adjustments |
+| **Accounting (2)** | | |
+| | IB Chart of Accounts | Ledger account master |
+| | IB GL Entry | General ledger transaction records |
+| **Configuration (1)** | | |
+| | IB Payment Settings | Payment gateway & UPI configuration (Single) |
+| **Child Tables (3)** | | |
+| | IB Invoice Item | Line items for sales documents |
+| | IB Purchase Item | Line items for purchase documents |
+| | IB Payment Reference | Invoice allocation in payment entry |
+| | IB Journal Entry Account | Account lines in journal entry |
+
+---
+
+### 2.1 Core Master DocTypes
+
+#### IB Currency
+**Purpose**: Independent currency master (no external dependencies).
+
+| Field Name | Type | Purpose |
+|------------|------|---------|
+| `currency_code` | Data | ISO 4217 code (e.g., INR, USD) - Naming field |
+| `currency_name` | Data | Full currency name |
+| `symbol` | Data | Currency symbol |
+| `fraction` | Data | Smallest unit name |
+| `number_format` | Data | Display format pattern |
+| `smallest_currency_fraction_value` | Float | Minimum decimal value |
+| `is_active` | Check | Enable/disable |
+
+**Pre-loaded Data**: 50+ global currencies including INR, USD, EUR, GBP, JPY, CNY, AED, and more.
+
+---
+
+#### IB UOM
+**Purpose**: Unit of Measurement master (independent).
+
+| Field Name | Type | Purpose |
+|------------|------|---------|
+| `uom_name` | Data | UOM name - Naming field |
+| `uom_abbreviation` | Data | Short form (e.g., Kg, Ltr) |
+| `uom_type` | Select | Quantity/Weight/Length/Volume/Area/Time/Other |
+| `is_active` | Check | Enable/disable |
+
+**Pre-loaded Data**: 17 common UOMs (Nos, Kg, Ltr, Box, Meter, etc.)
+
+---
+
+#### IB Country
+**Purpose**: Country master (independent).
+
+| Field Name | Type | Purpose |
+|------------|------|---------|
+| `country_name` | Data | Country name - Naming field |
+| `country_code` | Data | ISO 3166-1 alpha-2 code |
+| `is_active` | Check | Enable/disable |
+
+**Pre-loaded Data**: 60 major countries worldwide.
+
+---
+
+### 2.2 Master Data DocTypes
 
 #### IB Organization
 **Purpose**: Single DocType storing organization-level settings and defaults.
@@ -51,11 +139,11 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 | `address_line2` | Data | Address continuation | - |
 | `city` | Data | City | - |
 | `state` | Link | State | IB State |
-| `country` | Link | Country | Country (Frappe) |
+| `country` | Link | Country | IB Country |
 | `pincode` | Data | PIN Code | - |
 | `email` | Data | Organization email | - |
 | `phone` | Data | Contact number | - |
-| `base_currency` | Link | Default currency | Currency (Frappe) |
+| `base_currency` | Link | Default currency | IB Currency |
 | `financial_year_start` | Date | FY start date | - |
 | `financial_year_end` | Date | FY end date | - |
 | `default_receivable_account` | Link | AR default | IB Chart of Accounts |
@@ -536,6 +624,15 @@ Similar to IB Invoice Item, tailored for purchase documents.
 - **Purpose**: Reorder alerts
 - **Columns**: Item, Current Stock, Reorder Level
 - **Filter**: Stock < Reorder Level
+
+---
+
+#### IB Customer Growth
+- **Type**: Script Report
+- **Purpose**: Customer acquisition trends with chart
+- **Columns**: Period, New Customers, Total Customers, Growth Rate, Active Customers
+- **Filters**: From Date, To Date, Period (Monthly/Quarterly/Yearly)
+- **Chart**: Mixed chart with bars (new) and lines (total/active)
 
 ---
 

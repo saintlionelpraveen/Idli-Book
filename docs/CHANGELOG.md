@@ -5,6 +5,45 @@ All notable changes to Idli Book will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-01-14
+
+### Added
+
+#### Independent Master DocTypes
+- **IB Currency** - Self-contained currency master
+  - 50+ pre-loaded global currencies (INR, USD, EUR, GBP, JPY, CNY, etc.)
+  - Fields: Currency Code, Name, Symbol, Fraction, Number Format
+  - Removes dependency on Frappe Currency master
+  
+- **IB UOM** - Unit of Measurement master
+  - 17 pre-loaded common UOMs (Nos, Kg, Ltr, Box, Meter, etc.)
+  - Types: Quantity, Weight, Length, Volume, Area, Time, Other
+  - Removes dependency on external UOM master
+  
+- **IB Country** - Country master
+  - 60 pre-loaded major countries worldwide
+  - ISO 3166-1 alpha-2 country codes
+  - Removes dependency on Frappe Country master
+
+#### Reports
+- **IB Customer Growth** - Customer acquisition analysis
+  - Time-series chart showing customer growth trends
+  - Filters: Date range, Period (Monthly/Quarterly/Yearly)
+  - Metrics: New Customers, Total Customers, Growth Rate, Active Customers
+  - Mixed chart visualization (bars + lines)
+
+### Changed
+- **IB Organization**: `base_currency` now links to IB Currency (was Currency)
+- **IB Organization**: `country` now links to IB Country (was Country)
+- **IB Item**: `unit_of_measurement` now links to IB UOM (was Data field)
+
+### Technical
+- Migration patch: `create_default_currency_uom` auto-creates all master data
+- All new DocTypes under "Idli Book" module for consistency
+- Complete independence from ERPNext/external modules
+
+---
+
 ## [1.0.0] - 2026-01-11
 
 ### Added
@@ -188,6 +227,7 @@ idli_book/
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 1.0.1 | 2026-01-14 | Independent master data (Currency, UOM, Country) |
 | 1.0.0 | 2026-01-11 | Initial production release |
 
 ---

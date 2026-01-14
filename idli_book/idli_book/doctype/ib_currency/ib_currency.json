@@ -1,0 +1,104 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "field:currency_code",
+    "creation": "2026-01-14 09:17:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "currency_name",
+        "currency_code",
+        "symbol",
+        "fraction",
+        "number_format",
+        "smallest_currency_fraction_value",
+        "is_active"
+    ],
+    "fields": [
+        {
+            "fieldname": "currency_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Currency Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "currency_code",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Currency Code",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "symbol",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Symbol",
+            "reqd": 1
+        },
+        {
+            "fieldname": "fraction",
+            "fieldtype": "Data",
+            "label": "Fraction",
+            "description": "Smallest unit (e.g., Paisa for INR)"
+        },
+        {
+            "fieldname": "number_format",
+            "fieldtype": "Data",
+            "label": "Number Format",
+            "default": "#,##,###.##",
+            "description": "Format pattern for currency display"
+        },
+        {
+            "fieldname": "smallest_currency_fraction_value",
+            "fieldtype": "Float",
+            "label": "Smallest Currency Fraction Value",
+            "default": "0.01",
+            "precision": "9"
+        },
+        {
+            "fieldname": "is_active",
+            "fieldtype": "Check",
+            "label": "Is Active",
+            "default": "1"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2026-01-14 09:17:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Currency",
+    "naming_rule": "By fieldname",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Accounts Manager",
+            "share": 1
+        }
+    ],
+    "quick_entry": 1,
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "track_changes": 1
+}

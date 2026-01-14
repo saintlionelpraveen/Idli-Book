@@ -1,0 +1,44 @@
+// Copyright (c) 2026, Praveen and contributors
+// For license information, please see license.txt
+
+frappe.query_reports["IB Customer Growth"] = {
+    "filters": [
+        {
+            "fieldname": "from_date",
+            "label": __("From Date"),
+            "fieldtype": "Date",
+            "default": frappe.datetime.add_months(frappe.datetime.get_today(), -12),
+            "reqd": 1
+        },
+        {
+            "fieldname": "to_date",
+            "label": __("To Date"),
+            "fieldtype": "Date",
+            "default": frappe.datetime.get_today(),
+            "reqd": 1
+        },
+        {
+            "fieldname": "period",
+            "label": __("Period"),
+            "fieldtype": "Select",
+            "options": "Monthly\nQuarterly\nYearly",
+            "default": "Monthly"
+        }
+    ],
+
+    "formatter": function (value, row, column, data, default_formatter) {
+        value = default_formatter(value, row, column, data);
+
+        // Color code the growth rate
+        if (column.fieldname === "growth_rate" && data) {
+            let rate = parseFloat(data.growth_rate);
+            if (rate > 0) {
+                value = `<span style="color: green; font-weight: bold;">${data.growth_rate}</span>`;
+            } else if (rate < 0) {
+                value = `<span style="color: red; font-weight: bold;">${data.growth_rate}</span>`;
+            }
+        }
+
+        return value;
+    }
+};
