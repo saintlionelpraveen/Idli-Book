@@ -245,7 +245,8 @@ class LLMProvider:
 			system_instruction += "If the user asks for 'status', 'list', or 'show', assume they mean the data in the database.\n"
 			# We don't need to append function descriptions manually if we use native tools!
 			# But keeping a brief list doesn't hurt for context.
-			system_instruction += "Available tools: " + ", ".join([f['name'] for f in functions])
+			if functions:
+				system_instruction += "Available tools: " + ", ".join([f['name'] for f in functions])
 		
 		# Define Tool Config to force/encourage tool use
 		# We use 'auto' which is default, but explicit config can help some models

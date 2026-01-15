@@ -43,11 +43,28 @@ def chat(message, session_id=None):
 			# Execute the function
 			result = ActionExecutor.execute(func_name, func_args)
 			
-			# Format result for better display
-			formatted_result = format_response(func_name, result)
+			# --- Loopback Mechanism ---
+			# Feed the result back to the LLM to get a natural language response
+			
+			# 0. Add the Model's turn (Critical for Gemini Strict Turn Order)
+			# We insert a thought/action message to satisfy User -> Model -> User flow
+			messages.append({
+				"role": "assistant",
+				"content": f"I will call the function '{func_name}' to retrieve the data."
+			})
+
+			# 1. Add the tool execution result to history
+			# We use 'user' role to represent the system/environment providing data to the model
+			messages.append({
+				"role": "user", 
+				"content": f"Function '{func_name}' executed successfully.\nResult: {json.dumps(result, default=str)}\n\nPlease summarize this for the user."
+			})
+			
+			# 2. Get the final natural language response
+			final_response = llm.chat(messages)
 			
 			return {
-				"response": formatted_result,
+				"response": final_response.get("content", ""),
 				"data": result.get("data"),
 				"session_id": session_id or frappe.generate_hash(length=10)
 			}
@@ -62,58 +79,34 @@ def chat(message, session_id=None):
 	except Exception as e:
 		frappe.log_error(f"Chatbot Error: {str(e)}", "Chatbot Error")
 		return {
-			"response": _("I'm sorry, I encountered an error. Please try again."),
+			"response": f"I'm sorry, I encountered an error: {str(e)}",
 			"error": str(e),
 			"session_id": session_id
 		}
 
-def format_response(func_name, result):
-	"""Format function result into human-readable response"""
-	if not result.get("success"):
-		return result.get("message", "No results found")
-	
-	data = result.get("data", [])
-	message = result.get("message", "")
-	
-	if func_name == "get_invoices":
-		count = len(data) if isinstance(data, list) else 0
-		total_outstanding = result.get("summary", {}).get("total_outstanding", 0)
-		return f"Found {count} invoices. Total Outstanding: ₹{total_outstanding:,.2f}\n\n{message}"
-	
-	elif func_name == "get_customers":
-		count = len(data) if isinstance(data, list) else 0
-		return f"Found {count} customers.\n\n{message}"
-	
-	elif func_name == "get_payments":
-		count = len(data) if isinstance(data, list) else 0
-		total = result.get("summary", {}).get("total_amount", 0)
-		return f"Found {count} payments. Total Amount: ₹{total:,.2f}\n\n{message}"
-	
-	elif func_name == "get_summary":
-		return message
-	
-	return message
-
 def build_context(message, session_id=None):
 	"""Build conversation context"""
 	
+	# Get Dynamic Schema
+	schema_info = get_doctype_schema()
+
 	system_prompt = """You are an AI assistant for Idli Book, an accounting software.
 
+You have access to the following Tables (DocTypes):
+{schema}
+
 You help users with:
-- Querying business data (customers, invoices, payments)
-- Getting business insights and summaries
-- Navigating the system
+- Querying business data
+- getting details of records
+- Getting business insights
 
-Be concise, professional, and helpful. When showing data, format it clearly.
-
-Available functions:
-- get_customers: List customers
-- get_invoices: List sales invoices
-- get_payments: List payment entries
-- get_summary: Get business metrics
+Be concise, professional, and helpful. 
+When asked to list or find records, use `get_table_list`.
+When asked for specific details of a record, use `get_record_details`.
+If unsure about which table to use, check the list above.
 
 Current date: {today}
-""".format(today=frappe.utils.today())
+""".format(schema=schema_info, today=frappe.utils.today())
 	
 	messages = [
 		{"role": "system", "content": system_prompt},
@@ -137,6 +130,29 @@ def get_suggestions():
 			"List top 5 customers",
 		]
 	}
+
+def get_doctype_schema():
+	"""Fetch schema for all 'IB' DocTypes"""
+	schema = []
+	try:
+		# Get all DocTypes starting with IB
+		doctypes = frappe.get_all("DocType", filters={"name": ["like", "IB %"], "istable": 0}, pluck="name")
+		
+		for dt in doctypes:
+			meta = frappe.get_meta(dt)
+			# Get key fields (searchable or in list view)
+			fields = [f.fieldname for f in meta.fields if f.in_list_view or f.bold]
+			# Ensure name is there
+			fields = ["name"] + fields[:5] # Limit to top 5 key fields to save tokens
+			
+			description = f"- {dt}: ({', '.join(fields)})"
+			schema.append(description)
+			
+	except Exception as e:
+		frappe.log_error(f"Schema Fetch Error: {str(e)}")
+		return "Error fetching schema"
+		
+	return "\n".join(schema)
 
 @frappe.whitelist()
 def clear_session(session_id):

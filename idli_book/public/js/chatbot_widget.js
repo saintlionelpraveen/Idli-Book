@@ -6,257 +6,82 @@ frappe.ui.ChatbotWidget = class ChatbotWidget {
     }
 
     setup() {
-        this.make_widget();
+        this.make_components();
         this.bind_events();
-    }
-
-    make_widget() {
-        // Create floating button
-        this.$button = $(`
-			<div class="chatbot-widget-button" title="Idli Book Assistant">
-				<svg style="width: 28px; height: 28px; fill: white;" viewBox="0 0 24 24">
-					<path d="M12,3C6.5,3 2,6.58 2,11C2.05,13.15 3.06,15.17 4.75,16.5C4.75,17.1 4.33,18.67 2,21C4.37,20.89 6.64,20 8.47,18.5C9.61,18.83 10.81,19 12,19C17.5,19 22,15.42 22,11C22,6.58 17.5,3 12,3M12,17C7.58,17 4,14.31 4,11C4,7.69 7.58,5 12,5C16.42,5 20,7.69 20,11C20,14.31 16.42,17 12,17Z"/>
-				</svg>
-			</div>
-		`).appendTo('body');
-
-        // Create chat popup
-        this.$popup = $(`
-			<div class="chatbot-widget-popup" style="display: none;">
-				<div class="chatbot-widget-header">
-					<div class="chatbot-widget-title">
-						<svg style="width: 20px; height: 20px; fill: white; margin-right: 8px;" viewBox="0 0 24 24">
-							<path d="M12,3C6.5,3 2,6.58 2,11C2.05,13.15 3.06,15.17 4.75,16.5C4.75,17.1 4.33,18.67 2,21C4.37,20.89 6.64,20 8.47,18.5C9.61,18.83 10.81,19 12,19C17.5,19 22,15.42 22,11C22,6.58 17.5,3 12,3M12,17C7.58,17 4,14.31 4,11C4,7.69 7.58,5 12,5C16.42,5 20,7.69 20,11C20,14.31 16.42,17 12,17Z"/>
-						</svg>
-						<span>Idli Book Assistant</span>
-					</div>
-					<button class="chatbot-widget-close">&times;</button>
-				</div>
-				<div class="chatbot-widget-messages"></div>
-				<div class="chatbot-widget-input-area">
-					<input type="text" class="chatbot-widget-input" placeholder="Ask me anything..." />
-					<button class="chatbot-widget-send">
-						<svg style="width: 20px; height: 20px; fill: white;" viewBox="0 0 24 24">
-							<path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
-						</svg>
-					</button>
-				</div>
-			</div>
-		`).appendTo('body');
-
-        this.$messages = this.$popup.find('.chatbot-widget-messages');
-        this.$input = this.$popup.find('.chatbot-widget-input');
-        this.$send = this.$popup.find('.chatbot-widget-send');
-
         this.add_styles();
     }
 
-    add_styles() {
-        if ($('#chatbot-widget-styles').length) return;
+    make_components() {
+        // 1. Create Floating Action Button (FAB)
+        this.$fab = $(`
+            <div class="aibot-fab" title="Idli Book Assistant">
+                <div class="aibot-fab-icon">
+                     <!-- Assistant Icon -->
+                     <svg style="width: 28px; height: 28px; fill: white;" viewBox="0 0 24 24">
+                        <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z" />
+                    </svg>
+                </div>
+            </div>
+        `).appendTo('body');
 
-        $('head').append(`
-			<style id="chatbot-widget-styles">
-				.chatbot-widget-button {
-					position: fixed;
-					bottom: 20px;
-					right: 20px;
-					width: 60px;
-					height: 60px;
-					background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-					border-radius: 50%;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					cursor: pointer;
-					box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-					z-index: 9998;
-					transition: all 0.3s ease;
-				}
+        // 2. Create Chat Container (Hidden by default)
+        this.$container = $(`
+            <div class="aibot-widget-container" style="display: none;">
+                <div class="aibot-header">
+                    <div class="aibot-header-title">
+                        <svg style="width: 20px; height: 20px; fill: white; margin-right: 8px;" viewBox="0 0 24 24">
+                            <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z" />
+                        </svg>
+                        <span class="aibot-title-text">Idli Book Assistant</span>
+                    </div>
+                    <button class="aibot-close-btn">&times;</button>
+                </div>
+                <div class="aibot-content">
+                    <div class="aibot-chat-interface">
+                        <div class="aibot-messages"></div>
+                        <div class="aibot-input-area">
+                            <input type="text" class="aibot-input" placeholder="Ask anything..." />
+                            <button class="aibot-send-btn">
+                                <svg style="width: 20px; height: 20px; fill: white;" viewBox="0 0 24 24">
+                                    <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).appendTo('body');
 
-				.chatbot-widget-button:hover {
-					transform: scale(1.1);
-					box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-				}
-
-				.chatbot-widget-popup {
-					position: fixed;
-					bottom: 90px;
-					right: 20px;
-					width: 380px;
-					height: 500px;
-					background: white;
-					border-radius: 12px;
-					box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-					z-index: 9999;
-					display: flex;
-					flex-direction: column;
-					overflow: hidden;
-				}
-
-				.chatbot-widget-header {
-					background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-					color: white;
-					padding: 16px 20px;
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-				}
-
-				.chatbot-widget-title {
-					display: flex;
-					align-items: center;
-					font-weight: 600;
-					font-size: 16px;
-				}
-
-				.chatbot-widget-close {
-					background: none;
-					border: none;
-					color: white;
-					font-size: 28px;
-					cursor: pointer;
-					line-height: 1;
-					padding: 0;
-					width: 30px;
-					height: 30px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					border-radius: 4px;
-					transition: background 0.2s;
-				}
-
-				.chatbot-widget-close:hover {
-					background: rgba(255, 255, 255, 0.2);
-				}
-
-				.chatbot-widget-messages {
-					flex: 1;
-					overflow-y: auto;
-					padding: 20px;
-					background: #f8f9fa;
-				}
-
-				.chatbot-message {
-					margin-bottom: 16px;
-					display: flex;
-					gap: 8px;
-				}
-
-				.chatbot-message.user {
-					flex-direction: row-reverse;
-				}
-
-				.chatbot-message-bubble {
-					max-width: 75%;
-					padding: 12px 16px;
-					border-radius: 12px;
-					word-wrap: break-word;
-				}
-
-				.chatbot-message.user .chatbot-message-bubble {
-					background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-					color: white;
-					border-bottom-right-radius: 4px;
-				}
-
-				.chatbot-message.assistant .chatbot-message-bubble {
-					background: white;
-					color: #333;
-					border-bottom-left-radius: 4px;
-					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-				}
-
-				.chatbot-widget-input-area {
-					display: flex;
-					gap: 8px;
-					padding: 16px;
-					background: white;
-					border-top: 1px solid #e0e0e0;
-				}
-
-				.chatbot-widget-input {
-					flex: 1;
-					padding: 10px 16px;
-					border: 1px solid #e0e0e0;
-					border-radius: 20px;
-					outline: none;
-					font-size: 14px;
-				}
-
-				.chatbot-widget-input:focus {
-					border-color: #667eea;
-				}
-
-				.chatbot-widget-send {
-					width: 40px;
-					height: 40px;
-					background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-					border: none;
-					border-radius: 50%;
-					cursor: pointer;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					transition: all 0.2s;
-				}
-
-				.chatbot-widget-send:hover {
-					transform: scale(1.05);
-				}
-
-				.chatbot-widget-send:disabled {
-					opacity: 0.5;
-					cursor: not-allowed;
-				}
-
-				.chatbot-typing {
-					display: flex;
-					gap: 4px;
-					padding: 12px 16px;
-				}
-
-				.chatbot-typing span {
-					width: 8px;
-					height: 8px;
-					background: #999;
-					border-radius: 50%;
-					animation: typing 1.4s infinite;
-				}
-
-				.chatbot-typing span:nth-child(2) { animation-delay: 0.2s; }
-				.chatbot-typing span:nth-child(3) { animation-delay: 0.4s; }
-
-				@keyframes typing {
-					0%, 60%, 100% { transform: translateY(0); }
-					30% { transform: translateY(-10px); }
-				}
-			</style>
-		`);
+        // References for easy access
+        this.$messages = this.$container.find('.aibot-messages');
+        this.$input = this.$container.find('.aibot-input');
+        this.$send_btn = this.$container.find('.aibot-send-btn');
     }
 
     bind_events() {
-        // Toggle popup
-        this.$button.on('click', () => this.toggle_popup());
-        this.$popup.find('.chatbot-widget-close').on('click', () => this.hide_popup());
+        // Toggle Widget
+        this.$fab.on('click', () => this.toggle_widget());
 
-        // Send message
-        this.$send.on('click', () => this.send_message());
+        // Close Widget
+        this.$container.find('.aibot-close-btn').on('click', () => this.close_widget());
+
+        // Send Message
+        this.$send_btn.on('click', () => this.send_message());
         this.$input.on('keypress', (e) => {
             if (e.which === 13) this.send_message();
         });
     }
 
-    toggle_popup() {
-        if (this.$popup.is(':visible')) {
-            this.hide_popup();
+    toggle_widget() {
+        if (this.$container.is(':visible')) {
+            this.close_widget();
         } else {
-            this.show_popup();
+            this.open_widget();
         }
     }
 
-    show_popup() {
-        this.$popup.fadeIn(200);
+    open_widget() {
+        this.$container.fadeIn(200);
         this.$input.focus();
 
         // Welcome message if first time
@@ -265,73 +90,135 @@ frappe.ui.ChatbotWidget = class ChatbotWidget {
         }
     }
 
-    hide_popup() {
-        this.$popup.fadeOut(200);
+    close_widget() {
+        this.$container.fadeOut(200);
     }
 
-    add_message(role, content) {
-        const $message = $(`
-			<div class="chatbot-message ${role}">
-				<div class="chatbot-message-bubble">${frappe.utils.escape_html(content)}</div>
-			</div>
-		`);
-        this.$messages.append($message);
+    add_message(role, text) {
+        const bubble = $(`<div class="aibot-msg ${role}"><div class="bubble">${frappe.utils.escape_html(text)}</div></div>`);
+        this.$messages.append(bubble);
         this.$messages.scrollTop(this.$messages[0].scrollHeight);
-    }
-
-    show_typing() {
-        const $typing = $(`
-			<div class="chatbot-message assistant chatbot-typing-indicator">
-				<div class="chatbot-message-bubble chatbot-typing">
-					<span></span><span></span><span></span>
-				</div>
-			</div>
-		`);
-        this.$messages.append($typing);
-        this.$messages.scrollTop(this.$messages[0].scrollHeight);
-    }
-
-    hide_typing() {
-        this.$messages.find('.chatbot-typing-indicator').remove();
     }
 
     async send_message() {
-        const message = this.$input.val().trim();
-        if (!message) return;
+        const msg = this.$input.val().trim();
+        if (!msg) return;
 
-        // Add user message
-        this.add_message('user', message);
+        // User Message
+        this.add_message('user', msg);
         this.$input.val('');
-        this.$send.prop('disabled', true);
 
-        // Show typing
-        this.show_typing();
+        // Disable send while waiting
+        this.$send_btn.prop('disabled', true);
+
+        // Typing indicator
+        const $typing = $(`<div class="aibot-msg assistant typing"><span>.</span><span>.</span><span>.</span></div>`).appendTo(this.$messages);
+        this.$messages.scrollTop(this.$messages[0].scrollHeight);
 
         try {
             const response = await frappe.call({
                 method: 'idli_book.api.chatbot.chat',
-                args: { message }
+                args: { message: msg }
             });
 
-            this.hide_typing();
+            $typing.remove();
 
-            if (response.message.response) {
-                this.add_message('assistant', response.message.response);
-            } else {
-                this.add_message('assistant', 'Sorry, I couldn\'t process that request.');
-            }
-        } catch (error) {
-            this.hide_typing();
-            this.add_message('assistant', 'Sorry, I encountered an error. Please try again.');
-            console.error('Chatbot error:', error);
+            const reply = response.message.response || "I didn't understand that.";
+            this.add_message('assistant', reply);
+
+        } catch (e) {
+            $typing.remove();
+            this.add_message('assistant', 'Error connecting to server. Please try again.');
+            console.error(e);
         } finally {
-            this.$send.prop('disabled', false);
+            this.$send_btn.prop('disabled', false);
             this.$input.focus();
         }
     }
+
+    add_styles() {
+        if ($('#aibot-styles').length) return;
+        $('head').append(`
+            <style id="aibot-styles">
+                /* FAB */
+                .aibot-fab {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    width: 60px;
+                    height: 60px;
+                    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                    z-index: 10001;
+                    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
+                .aibot-fab:hover { transform: scale(1.05); }
+                
+                /* Widget Container */
+                .aibot-widget-container {
+                    position: fixed;
+                    bottom: 90px;
+                    right: 20px;
+                    width: 380px;
+                    height: 500px;
+                    background: white;
+                    border-radius: 16px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                    z-index: 10002;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    font-family: 'Inter', sans-serif;
+                }
+
+                .aibot-header {
+                    padding: 16px;
+                    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+                    color: white;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .aibot-header-title { display: flex; align-items: center; font-weight: 600; font-size: 16px; }
+                .aibot-close-btn { background:none; border:none; color:white; font-size:24px; cursor:pointer; padding:0; line-height:1; }
+                
+                .aibot-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+                /* Chat Styles */
+                .aibot-chat-interface { display:flex; flex-direction:column; height:100%; }
+                .aibot-messages { flex:1; padding:15px; overflow-y:auto; background:#f4f6f9; display:flex; flex-direction:column; gap:10px; }
+                .aibot-msg { display:flex; margin-bottom:5px; }
+                .aibot-msg.user { flex-direction:row-reverse; }
+                .aibot-msg .bubble { max-width:80%; padding:10px 14px; border-radius:12px; font-size:14px; line-height:1.4; }
+                .aibot-msg.user .bubble { background:linear-gradient(135deg, #2c3e50, #4ca1af); color:white; border-bottom-right-radius:2px; }
+                .aibot-msg.assistant .bubble { background:white; color:#333; border-bottom-left-radius:2px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
+                
+                .aibot-input-area { padding:15px; border-top:1px solid #eee; display:flex; gap:10px; }
+                .aibot-input { flex:1; border:1px solid #ddd; padding:10px 15px; border-radius:20px; outline:none; transition:border 0.2s; }
+                .aibot-input:focus { border-color:#2c3e50; }
+                .aibot-send-btn { width:40px; height:40px; background:linear-gradient(135deg, #2c3e50, #4ca1af); border:none; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+                .aibot-send-btn:hover { transform:scale(1.05); }
+                .aibot-send-btn:disabled { opacity:0.6; cursor:not-allowed; }
+
+                /* Typing Animation */
+                .aibot-msg.typing span { animation: typing 1.4s infinite; display:inline-block; margin:0 1px; }
+                .aibot-msg.typing span:nth-child(2) { animation-delay: 0.2s; }
+                .aibot-msg.typing span:nth-child(3) { animation-delay: 0.4s; }
+                
+                @keyframes typing {
+                    0%, 60%, 100% { transform: translateY(0); }
+                    30% { transform: translateY(-5px); }
+                }
+            </style>
+        `);
+    }
 };
 
-// Initialize on page load
 $(document).on('app_ready', function () {
     frappe.chatbot_widget = new frappe.ui.ChatbotWidget();
 });

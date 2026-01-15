@@ -45,7 +45,6 @@ def get_data(filters):
 		FROM `tabIB Purchase Bill` pb
 		WHERE pb.docstatus = 1 
 			AND pb.outstanding_amount > 0
-			AND pb.bill_date BETWEEN %(from_date)s AND %(to_date)s
 			{conditions}
 	"""
 	

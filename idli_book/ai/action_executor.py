@@ -18,11 +18,13 @@ class ActionExecutor:
 		
 		# Map function names to methods
 		function_map = {
-			"get_customers": ActionExecutor.get_customers,
+			"get_table_list": ActionExecutor.get_table_list,
+			"get_record_details": ActionExecutor.get_record_details,
+			"get_summary": ActionExecutor.get_summary,
+            # Legacy/Specific helpers can remain if needed, or be deprecated
+            "get_customers": ActionExecutor.get_customers,
 			"get_invoices": ActionExecutor.get_invoices,
 			"get_payments": ActionExecutor.get_payments,
-			"get_reports": ActionExecutor.get_reports,
-			"get_summary": ActionExecutor.get_summary
 		}
 		
 		if function_name not in function_map:
@@ -33,7 +35,72 @@ class ActionExecutor:
 		except Exception as e:
 			frappe.log_error(f"Action Executor Error: {str(e)}")
 			return {"error": str(e)}
-	
+
+	@staticmethod
+	def get_table_list(doctype, filters=None, search=None, limit=5, order_by=None):
+		"""Generic function to list records from any DocType"""
+		try:
+			# Security: Ensure we only access IB DocTypes or allowed modules
+			if not doctype.startswith("IB "):
+				return {"error": "Access denied. Can only query 'IB' (Idli Book) DocTypes."}
+
+			if not filters: filters = {}
+			
+			# Basic search implementation
+			if search:
+				# Try to find a 'name' or 'title' like field
+				meta = frappe.get_meta(doctype)
+				title_field = meta.title_field or "name"
+				filters[title_field] = ["like", f"%{search}%"]
+
+			fields = ["name"]
+            # Try to fetch list_view fields if available, else standard fields
+			meta = frappe.get_meta(doctype)
+			if meta.title_field and meta.title_field != 'name':
+				fields.append(meta.title_field)
+            
+			# Add some sensible defaults if not specified
+			if "status" in [d.fieldname for d in meta.fields]:
+				fields.append("status")
+			if "grand_total" in [d.fieldname for d in meta.fields]:
+				fields.append("grand_total")
+
+			data = frappe.get_all(
+				doctype,
+				filters=filters,
+				fields=fields,
+				limit=limit,
+				order_by=order_by or "modified desc"
+			)
+			
+			return {
+				"success": True,
+				"data": data,
+				"message": f"Found {len(data)} records in {doctype}"
+			}
+		except Exception as e:
+			return {"error": str(e)}
+
+	@staticmethod
+	def get_record_details(doctype, name):
+		"""Generic function to get full details of a record"""
+		try:
+			if not doctype.startswith("IB "):
+				return {"error": "Access denied."}
+
+			if not frappe.db.exists(doctype, name):
+				return {"error": f"{doctype} '{name}' found."}
+				
+			doc = frappe.get_doc(doctype, name)
+			return {
+				"success": True,
+				"data": doc.as_dict(),
+				"message": f"Details for {name}"
+			}
+		except Exception as e:
+			return {"error": str(e)}
+
+	# ... (Keep existing specific methods for backwards compatibility or high-level summaries logic) ...
 	@staticmethod
 	def get_customers(limit=10, search=None):
 		"""Get customer list"""
@@ -183,77 +250,44 @@ class ActionExecutor:
 		"""Return function definitions for LLM (OpenAI 1.0+ format)"""
 		return [
 			{
-				"name": "get_customers",
-				"description": "Get list of customers",
+				"name": "get_table_list",
+				"description": "Get a list of records for a specific Table/DocType. Use this to find names of documents/records.",
 				"parameters": {
 					"type": "object",
 					"properties": {
-						"limit": {
-							"type": "number",
-							"description": "Maximum number of results"
+						"doctype": {
+							"type": "string",
+							"description": "Exact name of the DocType (e.g., 'IB Sales Invoice', 'IB Customer')"
+						},
+						"filters": {
+							"type": "object",
+							"description": "Dictionary of filters (e.g., {'status': 'Unpaid'})"
 						},
 						"search": {
 							"type": "string",
-							"description": "Search by customer name"
-						}
-					}
+							"description": "Search term for the name or title"
+						},
+                        "limit": { "type": "number" }
+					},
+					"required": ["doctype"]
 				}
 			},
 			{
-				"name": "get_invoices",
-				"description": "Get sales invoices",
+				"name": "get_record_details",
+				"description": "Get valid details for a specific record.",
 				"parameters": {
 					"type": "object",
 					"properties": {
-						"status": {
-							"type": "string",
-							"enum": ["Draft", "Submitted", "Paid", "Unpaid", "Partially Paid"],
-							"description": "Invoice status"
-						},
-						"customer": {
-							"type": "string",
-							"description": "Filter by customer name"
-						},
-						"from_date": {
-							"type": "string",
-							"description": "Start date (YYYY-MM-DD)"
-						},
-						"to_date": {
-							"type": "string",
-							"description": "End date (YYYY-MM-DD)"
-						},
-						"limit": {
-							"type": "number",
-							"description": "Maximum results"
-						}
-					}
+						"doctype": { "type": "string" },
+						"name": { "type": "string", "description": "The ID/Name of the record (e.g. 'INV-001')" }
+					},
+					"required": ["doctype", "name"]
 				}
 			},
-			{
-				"name": "get_payments",
-				"description": "Get payment entries",
-				"parameters": {
-					"type": "object",
-					"properties": {
-						"from_date": {
-							"type": "string",
-							"description": "Start date"
-						},
-						"to_date": {
-							"type": "string",
-							"description": "End date"
-						},
-						"payment_type": {
-							"type": "string",
-							"enum": ["Receive", "Pay"],
-							"description": "Payment type"
-						}
-					}
-				}
-			},
+			# Keep summary as it's a useful aggregation
 			{
 				"name": "get_summary",
-				"description": "Get business summary metrics",
+				"description": "Get business summary metrics (totals)",
 				"parameters": {
 					"type": "object",
 					"properties": {
