@@ -164,49 +164,95 @@ def get_next_period_start(date, period):
 	return add_months(date, 1)
 
 def get_chart_data(data, filters):
-	"""Generate chart configuration"""
+	"""Generate chart configuration with proper formatting for production use"""
 	if not data:
 		return None
 	
-	labels = [row["period"] for row in data]
-	new_customers = [row["new_customers"] for row in data]
-	total_customers = [row["total_customers"] for row in data]
-	active_customers = [row["active_customers"] for row in data]
+	# Sort data by date to ensure proper chronological order
+	sorted_data = sorted(data, key=lambda x: parse_period_to_date(x["period"], filters.get("period", "Monthly")))
+	
+	labels = [row["period"] for row in sorted_data]
+	new_customers = [row["new_customers"] for row in sorted_data]
+	total_customers = [row["total_customers"] for row in sorted_data]
+	active_customers = [row["active_customers"] for row in sorted_data]
+	
+	# Calculate dynamic Y-axis max to avoid duplicate tick labels
+	max_value = max(max(new_customers) if new_customers else 0,
+					max(total_customers) if total_customers else 0,
+					max(active_customers) if active_customers else 0)
+	
+	# Ensure at least 5 for better axis display
+	y_max = max(max_value + 2, 5)
 	
 	chart = {
 		"data": {
 			"labels": labels,
 			"datasets": [
 				{
-					"name": "New Customers",
+					"name": _("New Customers"),
 					"values": new_customers,
 					"chartType": "bar"
 				},
 				{
-					"name": "Total Customers",
+					"name": _("Total Customers"),
 					"values": total_customers,
 					"chartType": "line"
 				},
 				{
-					"name": "Active Customers",
+					"name": _("Active Customers"),
 					"values": active_customers,
 					"chartType": "line"
 				}
 			]
 		},
 		"type": "axis-mixed",
-		"colors": ["#5e64ff", "#29cd42", "#ffa00a"],
+		"colors": ["#4299e1", "#9f7aea", "#48bb78"],
 		"axisOptions": {
-			"xIsSeries": 1
+			"xIsSeries": 1,
+			"shortenYAxisNumbers": 0,
+			"xAxisMode": "tick"
 		},
 		"barOptions": {
-			"stacked": 0
+			"stacked": 0,
+			"spaceRatio": 0.4
 		},
 		"lineOptions": {
 			"regionFill": 1,
-			"hideDots": 0
+			"hideDots": 0,
+			"dotSize": 4,
+			"heatline": 0
 		},
-		"height": 300
+		"tooltipOptions": {
+			"formatTooltipX": "d => d"
+		},
+		"height": 320,
+		"animate": 1,
+		"truncateLegends": 0
 	}
 	
 	return chart
+
+
+def parse_period_to_date(period_str, period_type):
+	"""Parse period string back to date for proper sorting"""
+	from datetime import datetime
+	
+	try:
+		if period_type == "Monthly":
+			# Format: "Jan 2025"
+			return datetime.strptime(period_str, "%b %Y")
+		elif period_type == "Quarterly":
+			# Format: "Q1 2025"
+			quarter = int(period_str[1])
+			year = int(period_str.split()[1])
+			month = (quarter - 1) * 3 + 1
+			return datetime(year, month, 1)
+		elif period_type == "Yearly":
+			# Format: "2025"
+			return datetime(int(period_str), 1, 1)
+	except (ValueError, IndexError):
+		pass
+	
+	# Fallback - return current date
+	return datetime.now()
+

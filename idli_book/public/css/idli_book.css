@@ -1,54 +1,347 @@
-/* Custom Styles for Idli Book Workspace Shortcuts */
+/* ==========================================================================
+   Idli Book - Production Ready Premium Workspace Styles
+   Beautiful design with clean hover effects - Spacers excluded
+   ========================================================================== */
 
-/* Target all main widget types globally */
-.widget,
-.shortcut-widget-box,
-.number-card-box,
-.links-card,
-.onboarding-widget-box,
-.chart-widget-box {
-    border-radius: 16px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
-    border: 1px solid var(--border-color, #e2e8f0);
-    background-color: var(--card-bg, #fff);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    overflow: hidden;
-    /* Ensures child elements don't overflow the radius */
+/* --------------------------------------------------------------------------
+   CSS Variables - Premium Color Palette
+   -------------------------------------------------------------------------- */
+:root {
+    --ib-primary: #3b82f6;
+    --ib-primary-light: #60a5fa;
+    --ib-primary-dark: #2563eb;
+    --ib-success: #10b981;
+    --ib-warning: #f59e0b;
+    --ib-danger: #ef4444;
+    --ib-purple: #8b5cf6;
+    --ib-text-dark: #1f2937;
+    --ib-text-muted: #6b7280;
+    --ib-border: #e5e7eb;
+    --ib-border-hover: #d1d5db;
+    --ib-bg-white: #ffffff;
+    --ib-bg-light: #f9fafb;
+    --ib-bg-hover: #f3f4f6;
+    --ib-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --ib-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --ib-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --ib-shadow-hover: 0 8px 25px rgba(59, 130, 246, 0.15);
+    --ib-radius-sm: 8px;
+    --ib-radius-md: 12px;
+    --ib-radius-lg: 16px;
+    --ib-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hover effects for all widgets */
-.widget:hover,
-.shortcut-widget-box:hover,
-.number-card-box:hover,
-.links-card:hover,
-.onboarding-widget-box:hover,
-.chart-widget-box:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+/* Dark mode variables */
+[data-theme="dark"] {
+    --ib-text-dark: #f9fafb;
+    --ib-text-muted: #9ca3af;
+    --ib-border: #374151;
+    --ib-border-hover: #4b5563;
+    --ib-bg-white: #1f2937;
+    --ib-bg-light: #111827;
+    --ib-bg-hover: #374151;
 }
 
-/* Specific Logic for Link Lists (The "Add Items" style links) */
-.links-card .link-item,
-.widget-body .link-item,
-.shortcuts-section .shortcut-item {
-    border-radius: 8px;
-    transition: background-color 0.1s ease;
-    padding: 8px;
-    /* Ensure click area is nice */
+/* --------------------------------------------------------------------------
+   SPACERS - EXCLUDED - Keep completely invisible
+   -------------------------------------------------------------------------- */
+.workspace-container .spacer-widget-box,
+.workspace-container .widget.spacer,
+.workspace-container [data-block-type="spacer"],
+.workspace-container .spacer-block {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
 }
 
-.links-card .link-item:hover,
-.widget-body .link-item:hover {
-    background-color: var(--fg-hover-color, #f0f4f8);
+.workspace-container .spacer-widget-box:hover,
+.workspace-container .widget.spacer:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
 }
 
-/* Ensure the header radius matches */
-.widget-head {
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
+/* --------------------------------------------------------------------------
+   HEADER BLOCKS - Clean text, no box styling
+   -------------------------------------------------------------------------- */
+.workspace-container .header-widget-box,
+.workspace-container [data-block-type="header"],
+.workspace-container .header-block {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
 }
 
-/* Fix for any shadow artifacts */
-.widget .widget-body {
-    background: transparent;
+.workspace-container .header-widget-box .widget-head .h4,
+.workspace-container .header-block .h4 {
+    font-weight: 700 !important;
+    color: var(--ib-text-dark) !important;
+    font-size: 18px !important;
+    margin: 16px 0 8px 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   PARAGRAPH BLOCKS - Clean text, no box styling
+   -------------------------------------------------------------------------- */
+.workspace-container .paragraph-widget-box,
+.workspace-container [data-block-type="paragraph"],
+.workspace-container .paragraph-block {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   NUMBER CARDS - Premium styled cards
+   -------------------------------------------------------------------------- */
+.workspace-container .number-card-box,
+.workspace-container .number-widget-box {
+    background: var(--ib-bg-white) !important;
+    border: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) !important;
+    box-shadow: var(--ib-shadow-sm) !important;
+    transition: var(--ib-transition) !important;
+    overflow: hidden !important;
+}
+
+.workspace-container .number-card-box:hover,
+.workspace-container .number-widget-box:hover {
+    border-color: var(--ib-primary) !important;
+    box-shadow: var(--ib-shadow-hover) !important;
+    transform: translateY(-2px) !important;
+}
+
+.workspace-container .number-card-box .widget-head,
+.workspace-container .number-widget-box .widget-head {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   SHORTCUT BUTTONS - Modern button design
+   -------------------------------------------------------------------------- */
+.workspace-container .shortcut-widget-box {
+    background: var(--ib-bg-white) !important;
+    border: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) !important;
+    box-shadow: var(--ib-shadow-sm) !important;
+    transition: var(--ib-transition) !important;
+    overflow: hidden !important;
+}
+
+.workspace-container .shortcut-widget-box:hover {
+    border-color: var(--ib-primary) !important;
+    box-shadow: var(--ib-shadow-hover) !important;
+    transform: translateY(-2px) !important;
+    background: var(--ib-bg-white) !important;
+}
+
+.workspace-container .shortcut-widget-box .widget-head {
+    background: transparent !important;
+    border: none !important;
+    padding: 14px 18px !important;
+}
+
+.workspace-container .shortcut-widget-box .shortcut-label,
+.workspace-container .shortcut-widget-box .widget-title {
+    font-weight: 600 !important;
+    color: var(--ib-text-dark) !important;
+    font-size: 14px !important;
+}
+
+/* --------------------------------------------------------------------------
+   QUICK LISTS - Clean card design
+   -------------------------------------------------------------------------- */
+.workspace-container .quick-list-widget-box {
+    background: var(--ib-bg-white) !important;
+    border: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) !important;
+    box-shadow: var(--ib-shadow-sm) !important;
+    transition: var(--ib-transition) !important;
+    overflow: hidden !important;
+}
+
+.workspace-container .quick-list-widget-box:hover {
+    border-color: var(--ib-primary) !important;
+    box-shadow: var(--ib-shadow-hover) !important;
+    transform: translateY(-2px) !important;
+}
+
+.workspace-container .quick-list-widget-box .widget-head {
+    background: var(--ib-bg-light) !important;
+    border-bottom: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) var(--ib-radius-md) 0 0 !important;
+    padding: 12px 16px !important;
+}
+
+.workspace-container .quick-list-widget-box .widget-title {
+    font-weight: 600 !important;
+    color: var(--ib-text-dark) !important;
+}
+
+.workspace-container .quick-list-widget-box .widget-body {
+    background: var(--ib-bg-white) !important;
+    padding: 0 !important;
+}
+
+.workspace-container .quick-list-widget-box .quick-list-item {
+    border-bottom: 1px solid var(--ib-border) !important;
+    padding: 10px 16px !important;
+    transition: background 0.15s ease !important;
+}
+
+.workspace-container .quick-list-widget-box .quick-list-item:hover {
+    background: var(--ib-bg-hover) !important;
+}
+
+.workspace-container .quick-list-widget-box .quick-list-item:last-child {
+    border-bottom: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   CHARTS - Premium chart container
+   -------------------------------------------------------------------------- */
+.workspace-container .chart-widget-box {
+    background: var(--ib-bg-white) !important;
+    border: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) !important;
+    box-shadow: var(--ib-shadow-sm) !important;
+    transition: var(--ib-transition) !important;
+    overflow: hidden !important;
+}
+
+.workspace-container .chart-widget-box:hover {
+    border-color: var(--ib-primary) !important;
+    box-shadow: var(--ib-shadow-hover) !important;
+    transform: translateY(-2px) !important;
+}
+
+.workspace-container .chart-widget-box .widget-head {
+    background: var(--ib-bg-light) !important;
+    border-bottom: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) var(--ib-radius-md) 0 0 !important;
+    padding: 14px 18px !important;
+}
+
+.workspace-container .chart-widget-box .widget-title {
+    font-weight: 600 !important;
+    color: var(--ib-text-dark) !important;
+    font-size: 15px !important;
+}
+
+.workspace-container .chart-widget-box .widget-body {
+    background: var(--ib-bg-white) !important;
+    padding: 16px !important;
+}
+
+/* Frappe chart styling */
+.frappe-chart {
+    background: transparent !important;
+}
+
+.frappe-chart .chart-legend {
+    padding: 12px 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   LINKS WIDGET - Clean list design
+   -------------------------------------------------------------------------- */
+.workspace-container .links-widget-box {
+    background: var(--ib-bg-white) !important;
+    border: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) !important;
+    box-shadow: var(--ib-shadow-sm) !important;
+    transition: var(--ib-transition) !important;
+    overflow: hidden !important;
+}
+
+.workspace-container .links-widget-box:hover {
+    border-color: var(--ib-primary) !important;
+    box-shadow: var(--ib-shadow-hover) !important;
+    transform: translateY(-2px) !important;
+}
+
+.workspace-container .links-widget-box .widget-head {
+    background: var(--ib-bg-light) !important;
+    border-bottom: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) var(--ib-radius-md) 0 0 !important;
+    padding: 12px 16px !important;
+}
+
+.workspace-container .links-widget-box .widget-body {
+    background: var(--ib-bg-white) !important;
+}
+
+.workspace-container .links-widget-box .link-item {
+    padding: 10px 16px !important;
+    border-bottom: 1px solid var(--ib-border) !important;
+    transition: background 0.15s ease !important;
+}
+
+.workspace-container .links-widget-box .link-item:hover {
+    background: var(--ib-bg-hover) !important;
+}
+
+.workspace-container .links-widget-box .link-item:last-child {
+    border-bottom: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   ONBOARDING WIDGET - Premium onboarding cards
+   -------------------------------------------------------------------------- */
+.workspace-container .onboarding-widget-box {
+    background: var(--ib-bg-white) !important;
+    border: 1px solid var(--ib-border) !important;
+    border-radius: var(--ib-radius-md) !important;
+    box-shadow: var(--ib-shadow-sm) !important;
+    transition: var(--ib-transition) !important;
+    overflow: hidden !important;
+}
+
+.workspace-container .onboarding-widget-box:hover {
+    border-color: var(--ib-primary) !important;
+    box-shadow: var(--ib-shadow-hover) !important;
+    transform: translateY(-2px) !important;
+}
+
+.workspace-container .onboarding-widget-box .widget-head {
+    background: linear-gradient(135deg, var(--ib-primary) 0%, var(--ib-purple) 100%) !important;
+    border: none !important;
+    border-radius: var(--ib-radius-md) var(--ib-radius-md) 0 0 !important;
+    padding: 16px 20px !important;
+}
+
+.workspace-container .onboarding-widget-box .widget-title {
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+.workspace-container .onboarding-widget-box .widget-body {
+    background: var(--ib-bg-white) !important;
+    padding: 16px 20px !important;
+}
+
+/* --------------------------------------------------------------------------
+   GLOBAL POLISH
+   -------------------------------------------------------------------------- */
+
+/* Smooth scrolling */
+.workspace-container {
+    scroll-behavior: smooth;
+}
+
+/* Focus states for accessibility */
+.workspace-container .widget:focus-visible,
+.workspace-container .shortcut-widget-box:focus-visible {
+    outline: 2px solid var(--ib-primary) !important;
+    outline-offset: 2px !important;
+}
+
+/* Widget body default */
+.workspace-container .widget-body {
+    border-radius: 0 0 var(--ib-radius-md) var(--ib-radius-md) !important;
 }
