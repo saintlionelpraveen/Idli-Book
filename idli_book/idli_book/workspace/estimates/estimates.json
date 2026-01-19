@@ -1,6 +1,11 @@
 {
- "charts": [],
- "content": "[{\"id\":\"-pzWjeF7ek\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Estimates</span>\",\"col\":12}}]",
+ "charts": [
+  {
+   "chart_name": "Estimate Status",
+   "label": "Estimate Status"
+  }
+ ],
+ "content": "[{\"id\":\"-pzWjeF7ek\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Estimates</span>\",\"col\":12}},{\"id\":\"Oo7LgQnuiu\",\"type\":\"paragraph\",\"data\":{\"text\":\"Here is the total Estimate\",\"col\":12}},{\"id\":\"i8yPlYhch8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Estimate\",\"col\":3}},{\"id\":\"1uAqHvI3Cc\",\"type\":\"paragraph\",\"data\":{\"text\":\"Create your manual Estimate using this shortcut.\",\"col\":12}},{\"id\":\"VPElxoLpyt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Estimate\",\"col\":3}},{\"id\":\"Z-aQHHK5IN\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"QmFKEDJUB8\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Estimate Status\",\"col\":12}},{\"id\":\"8Q4Z3G9f2s\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"lOzPIrg69k\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Estimate List\",\"col\":4}}]",
  "creation": "2026-01-08 16:43:03.279850",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,17 +18,37 @@
  "is_hidden": 0,
  "label": "Estimates",
  "links": [],
- "modified": "2026-01-08 17:20:07.620511",
+ "modified": "2026-01-17 06:58:45.838683",
  "modified_by": "Administrator",
  "module": "Idli Book",
  "name": "Estimates",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Estimate",
+   "number_card_name": "Total Estimate"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "Sales",
  "public": 1,
- "quick_lists": [],
+ "quick_lists": [
+  {
+   "document_type": "IB Estimate",
+   "label": "Estimate List",
+   "quick_list_filter": "[]"
+  }
+ ],
  "roles": [],
  "sequence_id": 9.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "color": "Pink",
+   "doc_view": "New",
+   "label": "Create Estimate",
+   "link_to": "IB Estimate",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
  "title": "Estimates"
 }

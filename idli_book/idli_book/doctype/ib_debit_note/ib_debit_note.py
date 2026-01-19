@@ -3,6 +3,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
 
+
 class IBDebitNote(Document):
 	def validate(self):
 		self.calculate_totals()
@@ -36,7 +37,7 @@ class IBDebitNote(Document):
 
 	def on_submit(self):
 		self.status = "Submitted"
-		self.update_stock(-1) # Return goes OUT (-1)
+		self.update_stock(-1)
 		self.make_gl_entries()
 
 	def on_cancel(self):
@@ -50,13 +51,11 @@ class IBDebitNote(Document):
 		gl_entries = []
 		org = frappe.get_doc("IB Organization", "IB Organization")
 		
-		# Debit Note for Vendor (Purchase Return)
-		# 1. Debit Vendor (Payable reduces)
-		# 2. Credit Expense (Expense reverses)
-		# 3. Credit Tax (Input Tax reverses)
-		
 		# 1. Debit Vendor
-		vendor_acct = frappe.db.get_value("IB Vendor", self.vendor, "default_payable_account") or org.default_payable_account
+		vendor_acct = frappe.db.get_value("IB Vendor", self.vendor, "default_payable_account")
+		if not vendor_acct:
+			vendor_acct = org.default_payable_account
+		
 		gl_entries.append({
 			"account": vendor_acct,
 			"party_type": "IB Vendor",
@@ -67,9 +66,11 @@ class IBDebitNote(Document):
 		})
 		
 		# 2. Credit Expense
+		default_expense = org.default_expense_account
+		
 		for row in self.items:
 			item_doc = frappe.get_doc("IB Item", row.item)
-			expense_acct = item_doc.default_expense_account or org.default_expense_account
+			expense_acct = getattr(item_doc, 'default_expense_account', None) or default_expense
 			
 			row_net = row.amount
 			if self.is_tax_inclusive and row.tax_percentage:
@@ -89,16 +90,15 @@ class IBDebitNote(Document):
 					tax_val = row.amount - row_net
 				else:
 					tax_val = row_net * (row.tax_percentage / 100)
-					
-				hsn_acct = frappe.db.get_value("IB HSN SAC", frappe.db.get_value("IB Item", row.item, "hsn_sac_code"), "account_head")
-				if hsn_acct:
-					gl_entries.append({
-						"account": hsn_acct,
-						"debit": 0,
-						"credit": tax_val,
-						"remarks": "Tax Reversal - " + row.item
-					})
-					
+				
+				tax_acct = org.gst_input_account
+				gl_entries.append({
+					"account": tax_acct,
+					"debit": 0,
+					"credit": tax_val,
+					"remarks": "Tax Reversal - " + row.item
+				})
+				
 		GLEngine.make_gl_entries(self, gl_entries)
 
 	def update_stock(self, factor):

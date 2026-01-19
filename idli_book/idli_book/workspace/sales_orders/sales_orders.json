@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Pj0O67vaHm\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sales orders</span>\",\"col\":12}}]",
+ "content": "[{\"id\":\"Pj0O67vaHm\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sales orders</span>\",\"col\":12}},{\"id\":\"GEpqWjYCtS\",\"type\":\"paragraph\",\"data\":{\"text\":\"Here is the total sales orders count\",\"col\":12}},{\"id\":\"E2YvurYnQV\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Sales order\",\"col\":3}},{\"id\":\"mkPtQk8iIP\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"bzQqHTUct4\",\"type\":\"paragraph\",\"data\":{\"text\":\"Create your sales order manually using this shortcut.&nbsp;\",\"col\":12}},{\"id\":\"wQc-yvv_iQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create sales order\",\"col\":3}}]",
  "creation": "2026-01-08 16:41:57.193181",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,17 +13,31 @@
  "is_hidden": 0,
  "label": "Sales orders",
  "links": [],
- "modified": "2026-01-08 17:19:54.629051",
+ "modified": "2026-01-17 07:11:03.294755",
  "modified_by": "Administrator",
  "module": "Idli Book",
  "name": "Sales orders",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Sales order",
+   "number_card_name": "Total sales Order"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "Sales",
  "public": 1,
  "quick_lists": [],
  "roles": [],
  "sequence_id": 10.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "New",
+   "label": "Create sales order",
+   "link_to": "IB Sales Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
  "title": "Sales orders"
 }

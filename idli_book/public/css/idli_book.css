@@ -1,0 +1,54 @@
+/* Custom Styles for Idli Book Workspace Shortcuts */
+
+/* Target all main widget types globally */
+.widget,
+.shortcut-widget-box,
+.number-card-box,
+.links-card,
+.onboarding-widget-box,
+.chart-widget-box {
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid var(--border-color, #e2e8f0);
+    background-color: var(--card-bg, #fff);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    /* Ensures child elements don't overflow the radius */
+}
+
+/* Hover effects for all widgets */
+.widget:hover,
+.shortcut-widget-box:hover,
+.number-card-box:hover,
+.links-card:hover,
+.onboarding-widget-box:hover,
+.chart-widget-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Specific Logic for Link Lists (The "Add Items" style links) */
+.links-card .link-item,
+.widget-body .link-item,
+.shortcuts-section .shortcut-item {
+    border-radius: 8px;
+    transition: background-color 0.1s ease;
+    padding: 8px;
+    /* Ensure click area is nice */
+}
+
+.links-card .link-item:hover,
+.widget-body .link-item:hover {
+    background-color: var(--fg-hover-color, #f0f4f8);
+}
+
+/* Ensure the header radius matches */
+.widget-head {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+/* Fix for any shadow artifacts */
+.widget .widget-body {
+    background: transparent;
+}

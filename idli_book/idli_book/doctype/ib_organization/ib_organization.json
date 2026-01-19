@@ -1,256 +1,376 @@
 {
- "actions": [],
- "creation": "2025-01-05 15:52:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "organization_profile_section",
-  "organization_logo",
-  "organization_name",
-  "industry",
-  "column_break_loc",
-  "business_location",
-  "country",
-  "address_section",
-  "street_address_1",
-  "street_address_2",
-  "column_break_addr",
-  "city",
-  "state_province",
-  "zip_postal_code",
-  "contact_section",
-  "phone",
-  "fax",
-  "column_break_web",
-  "website",
-  "email",
-  "fiscal_settings_section",
-  "fiscal_year_start",
-  "base_currency",
-  "gst_section",
-  "gstin",
-  "state",
-  "pincode",
-  "accounting_defaults_tab",
-  "default_receivable_account",
-  "default_payable_account",
-  "column_break_acct",
-  "default_income_account",
-  "default_expense_account",
-  "default_bank_account"
- ],
- "fields": [
-  {
-   "fieldname": "organization_profile_section",
-   "fieldtype": "Section Break",
-   "label": "Organization Profile"
-  },
-  {
-   "fieldname": "organization_logo",
-   "fieldtype": "Attach Image",
-   "label": "Organization Logo"
-  },
-  {
-   "fieldname": "organization_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Organization Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "industry",
-   "fieldtype": "Select",
-   "label": "Industry",
-   "options": "\nRetail\nServices\nManufacturing\nTechnology\nDistribution\nNon-Profit\nOther"
-  },
-  {
-   "fieldname": "column_break_loc",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "India",
-   "fieldname": "business_location",
-   "fieldtype": "Data",
-   "label": "Business Location"
-  },
-  {
-   "default": "India",
-   "fieldname": "country",
-   "fieldtype": "Link",
-   "label": "Country",
-   "options": "IB Country"
-  },
-  {
-   "fieldname": "address_section",
-   "fieldtype": "Section Break",
-   "label": "Address"
-  },
-  {
-   "fieldname": "street_address_1",
-   "fieldtype": "Data",
-   "label": "Street Address 1"
-  },
-  {
-   "fieldname": "street_address_2",
-   "fieldtype": "Data",
-   "label": "Street Address 2"
-  },
-  {
-   "fieldname": "column_break_addr",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "city",
-   "fieldtype": "Data",
-   "label": "City"
-  },
-  {
-   "fieldname": "state_province",
-   "fieldtype": "Data",
-   "label": "State/Province"
-  },
-  {
-   "fieldname": "zip_postal_code",
-   "fieldtype": "Data",
-   "label": "Zip/Postal Code"
-  },
-  {
-   "fieldname": "contact_section",
-   "fieldtype": "Section Break",
-   "label": "Contact Info"
-  },
-  {
-   "fieldname": "phone",
-   "fieldtype": "Data",
-   "label": "Phone"
-  },
-  {
-   "fieldname": "fax",
-   "fieldtype": "Data",
-   "label": "Fax"
-  },
-  {
-   "fieldname": "column_break_web",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "website",
-   "fieldtype": "Data",
-   "label": "Website"
-  },
-  {
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "label": "Email"
-  },
-  {
-   "fieldname": "fiscal_settings_section",
-   "fieldtype": "Section Break",
-   "label": "Fiscal Settings"
-  },
-  {
-   "default": "2025-04-01",
-   "fieldname": "fiscal_year_start",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Fiscal Year Start Date",
-   "reqd": 1
-  },
-  {
-   "default": "INR",
-   "fieldname": "base_currency",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Base Currency",
-   "options": "IB Currency",
-   "reqd": 1
-  },
-  {
-   "fieldname": "gst_section",
-   "fieldtype": "Section Break",
-   "label": "GST Details"
-  },
-  {
-   "description": "15-digit GST Identification Number",
-   "fieldname": "gstin",
-   "fieldtype": "Data",
-   "label": "GSTIN",
-   "length": 15
-  },
-  {
-   "description": "State for GST purposes",
-   "fieldname": "state",
-   "fieldtype": "Link",
-   "label": "State",
-   "options": "IB State"
-  },
-  {
-   "fieldname": "pincode",
-   "fieldtype": "Data",
-   "label": "Pincode",
-   "length": 6
-  },
-  {
-   "fieldname": "accounting_defaults_tab",
-   "fieldtype": "Section Break",
-   "label": "Accounting Defaults"
-  },
-  {
-   "fieldname": "default_receivable_account",
-   "fieldtype": "Link",
-   "label": "Default Receivable Account",
-   "options": "IB Chart of Accounts"
-  },
-  {
-   "fieldname": "default_payable_account",
-   "fieldtype": "Link",
-   "label": "Default Payable Account",
-   "options": "IB Chart of Accounts"
-  },
-  {
-   "fieldname": "column_break_acct",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "default_income_account",
-   "fieldtype": "Link",
-   "label": "Default Income Account",
-   "options": "IB Chart of Accounts"
-  },
-  {
-   "fieldname": "default_expense_account",
-   "fieldtype": "Link",
-   "label": "Default Expense Account",
-   "options": "IB Chart of Accounts"
-  },
-  {
-   "fieldname": "default_bank_account",
-   "fieldtype": "Link",
-   "label": "Default Bank Account",
-   "options": "IB Chart of Accounts"
-  }
- ],
- "issingle": 1,
- "links": [],
- "modified": "2026-01-14 09:37:26.188243",
- "modified_by": "Administrator",
- "module": "Idli Book",
- "name": "IB Organization",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "row_format": "Dynamic",
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+    "actions": [],
+    "creation": "2025-01-05 15:52:00",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "organization_profile_section",
+        "organization_logo",
+        "organization_name",
+        "industry",
+        "column_break_loc",
+        "business_location",
+        "country",
+        "address_section",
+        "street_address_1",
+        "street_address_2",
+        "column_break_addr",
+        "city",
+        "state_province",
+        "zip_postal_code",
+        "contact_section",
+        "phone",
+        "fax",
+        "column_break_web",
+        "website",
+        "email",
+        "fiscal_settings_section",
+        "fiscal_year_start",
+        "base_currency",
+        "gst_section",
+        "gstin",
+        "state",
+        "pincode",
+        "bank_details_section",
+        "bank_name",
+        "bank_account_number",
+        "column_break_bank",
+        "ifsc_code",
+        "receivable_payable_section",
+        "default_receivable_account",
+        "column_break_rp",
+        "default_payable_account",
+        "income_expense_section",
+        "default_income_account",
+        "column_break_ie",
+        "default_expense_account",
+        "bank_cash_section",
+        "default_bank_account",
+        "column_break_bc",
+        "default_cash_account",
+        "tax_accounts_section",
+        "gst_output_account",
+        "column_break_tax",
+        "gst_input_account",
+        "other_accounts_section",
+        "discount_account",
+        "column_break_other",
+        "round_off_account"
+    ],
+    "fields": [
+        {
+            "fieldname": "organization_profile_section",
+            "fieldtype": "Section Break",
+            "label": "Organization Profile"
+        },
+        {
+            "fieldname": "organization_logo",
+            "fieldtype": "Attach Image",
+            "label": "Organization Logo"
+        },
+        {
+            "fieldname": "organization_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Organization Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "industry",
+            "fieldtype": "Select",
+            "label": "Industry",
+            "options": "\nRetail\nServices\nManufacturing\nTechnology\nDistribution\nNon-Profit\nOther"
+        },
+        {
+            "fieldname": "column_break_loc",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "India",
+            "fieldname": "business_location",
+            "fieldtype": "Data",
+            "label": "Business Location"
+        },
+        {
+            "default": "India",
+            "fieldname": "country",
+            "fieldtype": "Link",
+            "label": "Country",
+            "options": "IB Country"
+        },
+        {
+            "fieldname": "address_section",
+            "fieldtype": "Section Break",
+            "label": "Address"
+        },
+        {
+            "fieldname": "street_address_1",
+            "fieldtype": "Data",
+            "label": "Street Address 1"
+        },
+        {
+            "fieldname": "street_address_2",
+            "fieldtype": "Data",
+            "label": "Street Address 2"
+        },
+        {
+            "fieldname": "column_break_addr",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "city",
+            "fieldtype": "Data",
+            "label": "City"
+        },
+        {
+            "fieldname": "state_province",
+            "fieldtype": "Data",
+            "label": "State/Province"
+        },
+        {
+            "fieldname": "zip_postal_code",
+            "fieldtype": "Data",
+            "label": "Zip/Postal Code"
+        },
+        {
+            "fieldname": "contact_section",
+            "fieldtype": "Section Break",
+            "label": "Contact Info"
+        },
+        {
+            "fieldname": "phone",
+            "fieldtype": "Data",
+            "label": "Phone"
+        },
+        {
+            "fieldname": "fax",
+            "fieldtype": "Data",
+            "label": "Fax"
+        },
+        {
+            "fieldname": "column_break_web",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "website",
+            "fieldtype": "Data",
+            "label": "Website"
+        },
+        {
+            "fieldname": "email",
+            "fieldtype": "Data",
+            "label": "Email"
+        },
+        {
+            "fieldname": "fiscal_settings_section",
+            "fieldtype": "Section Break",
+            "label": "Fiscal Settings"
+        },
+        {
+            "default": "2025-04-01",
+            "fieldname": "fiscal_year_start",
+            "fieldtype": "Date",
+            "in_list_view": 1,
+            "label": "Fiscal Year Start Date",
+            "reqd": 1
+        },
+        {
+            "default": "INR",
+            "fieldname": "base_currency",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Base Currency",
+            "options": "IB Currency",
+            "reqd": 1
+        },
+        {
+            "fieldname": "gst_section",
+            "fieldtype": "Section Break",
+            "label": "GST Details"
+        },
+        {
+            "description": "15-digit GST Identification Number",
+            "fieldname": "gstin",
+            "fieldtype": "Data",
+            "label": "GSTIN",
+            "length": 15
+        },
+        {
+            "description": "State for GST purposes",
+            "fieldname": "state",
+            "fieldtype": "Link",
+            "label": "State",
+            "options": "IB State"
+        },
+        {
+            "fieldname": "pincode",
+            "fieldtype": "Data",
+            "label": "Pincode",
+            "length": 6
+        },
+        {
+            "fieldname": "bank_details_section",
+            "fieldtype": "Section Break",
+            "label": "Bank Details"
+        },
+        {
+            "fieldname": "bank_name",
+            "fieldtype": "Data",
+            "label": "Bank Name",
+            "description": "Organization's primary bank"
+        },
+        {
+            "fieldname": "bank_account_number",
+            "fieldtype": "Data",
+            "label": "Bank Account Number"
+        },
+        {
+            "fieldname": "column_break_bank",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "ifsc_code",
+            "fieldtype": "Data",
+            "label": "IFSC Code",
+            "description": "11-character IFSC code"
+        },
+        {
+            "fieldname": "receivable_payable_section",
+            "fieldtype": "Section Break",
+            "label": "Receivable & Payable Accounts"
+        },
+        {
+            "fieldname": "default_receivable_account",
+            "fieldtype": "Link",
+            "label": "Accounts Receivable (AR)",
+            "options": "IB Chart of Accounts",
+            "description": "Default account for tracking customer dues"
+        },
+        {
+            "fieldname": "column_break_rp",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "default_payable_account",
+            "fieldtype": "Link",
+            "label": "Accounts Payable (AP)",
+            "options": "IB Chart of Accounts",
+            "description": "Default account for tracking vendor dues"
+        },
+        {
+            "fieldname": "income_expense_section",
+            "fieldtype": "Section Break",
+            "label": "Income & Expense Accounts"
+        },
+        {
+            "fieldname": "default_income_account",
+            "fieldtype": "Link",
+            "label": "Default Sales/Income Account",
+            "options": "IB Chart of Accounts",
+            "description": "Default account for recording sales revenue"
+        },
+        {
+            "fieldname": "column_break_ie",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "default_expense_account",
+            "fieldtype": "Link",
+            "label": "Default Expense Account",
+            "options": "IB Chart of Accounts",
+            "description": "Default account for recording expenses"
+        },
+        {
+            "fieldname": "bank_cash_section",
+            "fieldtype": "Section Break",
+            "label": "Bank & Cash Accounts"
+        },
+        {
+            "fieldname": "default_bank_account",
+            "fieldtype": "Link",
+            "label": "Default Bank Account",
+            "options": "IB Chart of Accounts",
+            "description": "Primary bank account for transactions"
+        },
+        {
+            "fieldname": "column_break_bc",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "default_cash_account",
+            "fieldtype": "Link",
+            "label": "Default Cash Account",
+            "options": "IB Chart of Accounts",
+            "description": "Account for cash transactions"
+        },
+        {
+            "fieldname": "tax_accounts_section",
+            "fieldtype": "Section Break",
+            "label": "Tax Accounts"
+        },
+        {
+            "fieldname": "gst_output_account",
+            "fieldtype": "Link",
+            "label": "GST Output (Payable)",
+            "options": "IB Chart of Accounts",
+            "description": "GST collected on sales"
+        },
+        {
+            "fieldname": "column_break_tax",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "gst_input_account",
+            "fieldtype": "Link",
+            "label": "GST Input (Credit)",
+            "options": "IB Chart of Accounts",
+            "description": "GST paid on purchases"
+        },
+        {
+            "fieldname": "other_accounts_section",
+            "fieldtype": "Section Break",
+            "label": "Other Accounts"
+        },
+        {
+            "fieldname": "discount_account",
+            "fieldtype": "Link",
+            "label": "Discount Account",
+            "options": "IB Chart of Accounts",
+            "description": "Account for recording discounts"
+        },
+        {
+            "fieldname": "column_break_other",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "round_off_account",
+            "fieldtype": "Link",
+            "label": "Round Off Account",
+            "options": "IB Chart of Accounts",
+            "description": "Account for rounding adjustments"
+        }
+    ],
+    "issingle": 1,
+    "links": [],
+    "modified": "2026-01-18 22:34:00.000000",
+    "modified_by": "Administrator",
+    "module": "Idli Book",
+    "name": "IB Organization",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "row_format": "Dynamic",
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
 }
