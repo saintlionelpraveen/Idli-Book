@@ -8,32 +8,44 @@ This folder contains comprehensive documentation for the Idli Book accounting ap
 docs/
 ├── README.md                          # This file
 ├── CHANGELOG.md                       # Version history and changes
+├── INSTALLATION.md                    # Installation and setup guide
 ├── complete_documentation.md          # Full system documentation
-├── complete_documentation.html        # HTML version for web viewing
-├── api/                               # API documentation
-│   ├── payment_integration.md         # Payment APIs (UPI, Razorpay)
-│   └── api_reference.md              # All API endpoints
-├── user_guides/                       # End-user documentation
-│   ├── getting_started.md
-│   ├── sales_workflow.md
-│   └── purchase_workflow.md
-└── developer_guides/                  # Developer documentation
-    ├── architecture.md
-    ├── doctype_reference.md
-    └── customization_guide.md
+└── complete_documentation.html        # HTML version for web viewing
 ```
 
 ## Quick Links
 
 - [Complete Documentation](./complete_documentation.md) - Single comprehensive document
+- [Installation Guide](./INSTALLATION.md) - Step-by-step setup
 - [Changelog](./CHANGELOG.md) - Track all changes
-- [API Documentation](./api/) - Integration guides
+
+## Application Summary
+
+| Component | Count |
+|-----------|-------|
+| **DocTypes** | 29 |
+| **Reports** | 27 |
+| **Workspaces** | 14 |
+| **Dashboard Charts** | 7 |
+| **Number Cards** | 11 |
+| **Custom Pages** | 4 |
 
 ## Version
 
-- **Current Version**: 1.0.0
-- **Last Updated**: January 11, 2026
+- **Current Version**: 1.0.2
+- **Last Updated**: January 19, 2026
 - **Platform**: Frappe Framework v15
+
+## Key Features
+
+- ✅ Complete Sales & Purchase workflow
+- ✅ General Ledger with auto-accounting
+- ✅ Inventory tracking
+- ✅ UPI QR Code payments
+- ✅ Email workflows with Accept/Reject links
+- ✅ AI Chatbot (Google Gemini powered)
+- ✅ 27 built-in reports
+- ✅ Interactive dashboard
 
 ## Maintenance
 
@@ -60,4 +72,4 @@ When updating documentation:
 
 For questions or issues:
 - GitHub Issues: [Repository Issues]
-- Email: support@idlibook.com
+- Email: jaga03038@gmail.com

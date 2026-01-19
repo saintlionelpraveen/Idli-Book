@@ -51,7 +51,7 @@ bench get-app https://github.com/praveeny/idli_book.git
 bench get-app https://github.com/praveeny/idli_book.git --branch develop
 
 # Install from a specific version tag
-bench get-app https://github.com/praveeny/idli_book.git --branch v1.0.0
+bench get-app https://github.com/praveeny/idli_book.git --branch v1.0.2
 ```
 
 This will clone the repository into `apps/idli_book`.
@@ -70,9 +70,9 @@ bench --site mysite.local install-app idli_book
 ```
 
 This will:
-- Install all doctypes
+- Install all doctypes (29 DocTypes)
 - Create database tables
-- Set up workspaces and reports
+- Set up workspaces (14) and reports (27)
 - Register the app with your site
 
 ---
@@ -89,16 +89,31 @@ This ensures all database schemas are up to date.
 
 ### Step 4: Install Python Dependencies
 
-The app requires the `qrcode` library for UPI QR code generation:
+The app requires additional Python libraries:
 
 ```bash
 cd /path/to/frappe-bench
+
+# For UPI QR Code generation
 ./env/bin/pip install qrcode[pil]
+
+# For AI Chatbot (optional but recommended)
+./env/bin/pip install -U google-generativeai
 ```
 
 ---
 
-### Step 5: Restart Bench
+### Step 5: Build Assets
+
+```bash
+bench build --app idli_book
+```
+
+This compiles JavaScript and CSS assets including the chatbot widget.
+
+---
+
+### Step 6: Restart Bench
 
 **For Development:**
 ```bash
@@ -126,7 +141,7 @@ Configure:
 - GSTIN (if applicable)
 - Address Details
 - Financial Year Start/End
-- Base Currency
+- Base Currency (links to IB Currency)
 
 **Accounting Defaults:**
 - Default Receivable Account
@@ -159,7 +174,17 @@ Navigate to: **Search → IB Payment Settings**
 3. Enter **Razorpay Key Secret**
 4. Save
 
-### 4. Email Settings
+### 4. AI Chatbot Settings (Optional)
+
+Navigate to: **Search → IB Chatbot Settings**
+
+1. Check **Enable Chatbot**
+2. Set **LLM Provider** to "Google Gemini"
+3. Leave **Model** field blank (auto-discovery)
+4. Enter **API Key** from [Google AI Studio](https://aistudio.google.com/apikey)
+5. Save
+
+### 5. Email Settings
 
 Configure SMTP in Frappe for invoice email delivery:
 
@@ -204,6 +229,7 @@ Set up your outgoing email account.
    - Go to **Idli Book → Sales → New Estimate**
    - Select customer, add items
    - Submit and check for errors
+   - Verify email is sent with Accept/Reject links
 
 2. **Create a Sales Invoice**
    - Create from estimate or standalone
@@ -222,6 +248,29 @@ Set up your outgoing email account.
    - Check email for "Pay Now" button
    - Click and verify payment page loads
    - Verify QR code displays
+
+5. **Test AI Chatbot** (if configured):
+   - Look for purple chat icon in bottom-right
+   - Click and type "Show me all customers"
+   - Verify response with data
+
+### Verify Installation Summary
+
+```bash
+bench --site YOUR_SITE console
+```
+
+```python
+# Check DocTypes
+doctypes = frappe.get_all("DocType", filters={"module": "idli_book"}, pluck="name")
+print(f"DocTypes installed: {len(doctypes)}")
+
+# Check Workspaces
+workspaces = frappe.get_all("Workspace", filters={"module": "idli_book"}, pluck="name")
+print(f"Workspaces installed: {len(workspaces)}")
+```
+
+Expected: 29 DocTypes, 14 Workspaces
 
 ---
 
@@ -251,7 +300,8 @@ bench --site YOUR_SITE migrate
 ### Issue 3: Payment page shows 404
 **Solution:**
 ```bash
-# Restart bench
+# Build assets and restart
+bench build --app idli_book
 bench restart
 
 # Clear browser cache
@@ -274,6 +324,25 @@ bench restart
 - Configure SMTP settings in Frappe
 - Check Email Account configuration
 
+### Issue 6: Chatbot not appearing
+**Solution:**
+```bash
+# Install google-generativeai
+./env/bin/pip install -U google-generativeai
+
+# Build assets
+bench build --app idli_book
+
+# Restart
+bench restart
+```
+
+### Issue 7: Chatbot returns errors
+**Solution:**
+- Check API key is valid at [Google AI Studio](https://aistudio.google.com/apikey)
+- Leave model field blank for auto-discovery
+- Check Error Log for details
+
 ---
 
 ## Upgrading
@@ -288,6 +357,9 @@ git pull
 # Update site
 cd /path/to/frappe-bench
 bench --site YOUR_SITE migrate
+
+# Build assets
+bench build --app idli_book
 
 # Restart
 bench restart
@@ -341,11 +413,16 @@ For production environments:
 
 ## Quick Start Checklist
 
+### Core Installation
 - [ ] Frappe v15 installed
 - [ ] Run `bench get-app` command
 - [ ] Run `bench install-app` command
-- [ ] Install qrcode library: `./env/bin/pip install qrcode[pil]`
 - [ ] Run `bench migrate`
+- [ ] Install qrcode library: `./env/bin/pip install qrcode[pil]`
+- [ ] Build assets: `bench build --app idli_book`
+- [ ] Restart bench
+
+### Configuration
 - [ ] Configure IB Organization
 - [ ] Set up Chart of Accounts
 - [ ] Configure Payment Settings (UPI/Razorpay)
@@ -353,8 +430,19 @@ For production environments:
 - [ ] Add States for GST
 - [ ] Create sample Customer
 - [ ] Create sample Item
+
+### AI Chatbot (Optional)
+- [ ] Install google-generativeai: `./env/bin/pip install -U google-generativeai`
+- [ ] Get API key from Google AI Studio
+- [ ] Configure IB Chatbot Settings
+- [ ] Enable chatbot
+- [ ] Test with sample query
+
+### Verification
+- [ ] Test with sample Estimate
 - [ ] Test with sample Invoice
 - [ ] Verify reports work
+- [ ] Verify chatbot works (if enabled)
 
 ---
 
@@ -373,10 +461,10 @@ If you encounter issues:
 
 - [Frappe Bench Commands](https://frappeframework.com/docs/user/en/bench)
 - [Frappe Framework Documentation](https://frappeframework.com/docs)
-- [ERPNext Documentation](https://docs.erpnext.com/)
+- [Google AI Studio](https://aistudio.google.com/) - For Chatbot API keys
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: January 11, 2026  
+**Version**: 1.0.2  
+**Last Updated**: January 19, 2026  
 **Maintainer**: Praveen Y

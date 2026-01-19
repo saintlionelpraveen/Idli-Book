@@ -1,8 +1,8 @@
 # Idli Book - Complete System Documentation
 
-> **Version**: 1.0.1  
-> **Last Updated**: January 14, 2026  
-> **Total DocTypes**: 27 | **Reports**: 30 | **Workspaces**: 14
+> **Version**: 1.0.2  
+> **Last Updated**: January 19, 2026  
+> **Total DocTypes**: 29 | **Reports**: 27 | **Workspaces**: 14 | **Dashboard Charts**: 7 | **Number Cards**: 11
 
 ---
 
@@ -11,11 +11,16 @@
 1. [Module Overview](#1-module-overview)
 2. [DocTypes Reference](#2-doctypes-reference)
 3. [Reports Documentation](#3-reports-documentation)
-4. [Workspaces Guide](#4-workspaces-guide)
-5. [Chart of Accounts](#5-chart-of-accounts)
-6. [APIs & Features](#6-apis--features)
-7. [Tax & Calculations](#7-tax--calculations)
-8. [Workflows](#8-workflows)
+4. [Dashboard Charts](#4-dashboard-charts)
+5. [Number Cards](#5-number-cards)
+6. [Workspaces Guide](#6-workspaces-guide)
+7. [Chart of Accounts](#7-chart-of-accounts)
+8. [APIs & Features](#8-apis--features)
+9. [AI Chatbot Assistant](#9-ai-chatbot-assistant)
+10. [Tax & Calculations](#10-tax--calculations)
+11. [Workflows](#11-workflows)
+12. [Scheduler Tasks](#12-scheduler-tasks)
+13. [Installation & Setup](#13-installation--setup)
 
 ---
 
@@ -32,51 +37,53 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 | **Inventory** | Track stock levels | Item management, stock tracking |
 | **Accounting** | Financial management | Chart of Accounts, Journal Entries, GL |
 | **Payments** | Payment processing | UPI QR Codes, Payment tracking |
-| **Reports** | Business intelligence | Financial & operational reports |
+| **Reports** | Business intelligence | 27 Financial & operational reports |
+| **AI Chatbot** | Natural language assistant | Query data using Gemini AI |
+
+### Architecture Overview
+
+```
+idli_book/
+├── idli_book/
+│   ├── ai/                    # AI Chatbot (Gemini integration)
+│   │   ├── llm_provider.py    # LLM API wrapper
+│   │   └── action_executor.py # Business function definitions
+│   ├── api/                   # REST APIs
+│   │   ├── chatbot.py         # Chat endpoint
+│   │   ├── workflow.py        # Estimate workflow (Accept/Reject)
+│   │   ├── email_tracker.py   # Email status tracking
+│   │   ├── hsn_data.py        # HSN code data
+│   │   └── tax_api.py         # Tax calculations
+│   ├── idli_book/
+│   │   ├── doctype/           # 29 DocTypes
+│   │   ├── report/            # 27 Reports
+│   │   ├── workspace/         # 14 Workspaces
+│   │   ├── dashboard_chart/   # 7 Dashboard Charts
+│   │   ├── number_card/       # 11 Number Cards
+│   │   ├── page/              # 4 Custom Pages
+│   │   └── www/               # Public web pages
+│   ├── utils/                 # Utility functions
+│   ├── templates/             # Email templates
+│   ├── public/                # Static assets
+│   └── www/                   # Public pages (invoice_payment)
+└── docs/                      # Documentation
+```
 
 ---
 
 ## 2. DocTypes Reference
 
-**Total DocTypes: 27**
+**Total DocTypes: 29**
 
-### DocType Overview
+### DocType Summary
 
-| Category | DocType | Purpose |
-|----------|---------|---------|
-| **Core Masters (3)** | | |
-| | IB Currency | Independent currency master (50+ currencies) |
-| | IB UOM | Unit of measurement master (17 UOMs) |
-| | IB Country | Country master (60 countries) |
-| **Master Data (7)** | | |
-| | IB Organization | Organization settings and defaults (Single) |
-| | IB Customer | Customer master with auto-created AR accounts |
-| | IB Vendor | Vendor/Supplier master with auto-created AP accounts |
-| | IB Item | Product/Service master with inventory tracking |
-| | IB Tax | Tax rate master (CGST, SGST, IGST) |
-| | IB State | State master for GST compliance |
-| | IB HSN Code | HSN code master for products |
-| | IB SAC Code | SAC code master for services |
-| **Transaction DocTypes (9)** | | |
-| | IB Estimate | Quotation/Proforma invoice |
-| | IB Sales Order | Confirmed customer order |
-| | IB Sales Invoice | Final customer bill with GL integration |
-| | IB Purchase Order | Vendor purchase order |
-| | IB Purchase Bill | Vendor bill with GL integration |
-| | IB Credit Note | Sales return/reversal |
-| | IB Debit Note | Purchase return/reversal |
-| | IB Payment | Customer/Vendor payment entry |
-| | IB Journal Entry | Manual accounting adjustments |
-| **Accounting (2)** | | |
-| | IB Chart of Accounts | Ledger account master |
-| | IB GL Entry | General ledger transaction records |
-| **Configuration (1)** | | |
-| | IB Payment Settings | Payment gateway & UPI configuration (Single) |
-| **Child Tables (3)** | | |
-| | IB Invoice Item | Line items for sales documents |
-| | IB Purchase Item | Line items for purchase documents |
-| | IB Payment Reference | Invoice allocation in payment entry |
-| | IB Journal Entry Account | Account lines in journal entry |
+| Category | Count | DocTypes |
+|----------|-------|----------|
+| Core Masters | 3 | IB Currency, IB UOM, IB Country |
+| Master Data | 10 | IB Organization, IB Customer, IB Vendor, IB Item, IB Tax, IB State, IB HSN Code, IB SAC Code, IB Chatbot Settings, IB Payment Settings |
+| Transactions | 9 | IB Estimate, IB Sales Order, IB Sales Invoice, IB Purchase Order, IB Purchase Bill, IB Credit Note, IB Debit Note, IB Payment, IB Journal Entry |
+| Accounting | 2 | IB Chart of Accounts, IB GL Entry |
+| Child Tables | 4 | IB Invoice Item, IB Purchase Item, IB Payment Reference, IB Journal Entry Account |
 
 ---
 
@@ -217,7 +224,7 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 | `track_inventory` | Check | Enable stock tracking | - |
 | `current_stock` | Float | Available quantity | - |
 | `reorder_level` | Float | Low stock alert level | - |
-| `unit_of_measurement` | Data | UOM (pcs, kg, etc.) | - |
+| `unit_of_measurement` | Link | UOM | IB UOM |
 | `standard_rate` | Currency | Selling price | - |
 | `purchase_rate` | Currency | Buy price | - |
 | `hsn_code` | Link | HSN/SAC code | IB HSN Code |
@@ -230,24 +237,95 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 
 ---
 
-### 2.2 Transaction DocTypes
+#### IB Chatbot Settings
+**Purpose**: AI Chatbot configuration (Single DocType).
+
+| Field Name | Type | Purpose |
+|------------|------|---------|
+| `enable_chatbot` | Check | Enable/disable chatbot |
+| `llm_provider` | Select | Google Gemini / OpenAI |
+| `model` | Data | Model name (blank for auto-discovery) |
+| `api_key` | Password | LLM API key |
+
+**Configuration**:
+- Set `llm_provider` to "Google Gemini"
+- Leave `model` blank for automatic best model selection
+- Enter your Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey)
+
+---
+
+#### IB Payment Settings
+**Purpose**: Payment gateway and UPI configuration (Single DocType).
+
+| Field Name | Type | Purpose |
+|------------|------|---------|
+| `enable_payment_gateway` | Check | Enable Razorpay |
+| `razorpay_key_id` | Data | API Key |
+| `razorpay_key_secret` | Password | API Secret |
+| `enable_upi_qr` | Check | Enable UPI QR |
+| `upi_id` | Data | UPI VPA |
+| `payee_name` | Data | UPI payee name |
+
+---
+
+#### IB Tax
+**Purpose**: Tax rate master (CGST, SGST, IGST).
+
+| Field Name | Type | Purpose |
+|------------|------|---------|
+| `tax_name` | Data | Tax name |
+| `tax_rate` | Float | Tax percentage |
+| `account` | Link | Tax GL account |
+
+---
+
+#### IB State
+**Purpose**: State master for GST (CGST+SGST vs IGST logic).
+
+| Field Name | Type | Purpose |
+|------------|------|---------|
+| `state_name` | Data | State name |
+| `state_code` | Data | GST state code |
+
+---
+
+#### IB HSN Code / IB SAC Code
+**Purpose**: HSN/SAC code masters for GST compliance.
+
+| Field Name | Type | Purpose |
+|------------|------|---------|
+| `code` | Data | HSN/SAC code |
+| `description` | Text | Code description |
+| `tax_rate` | Float | Default tax rate |
+
+---
+
+### 2.3 Transaction DocTypes
 
 #### IB Estimate
-**Purpose**: Quotation/Proforma invoice for customers.
+**Purpose**: Quotation/Proforma invoice for customers with email workflow.
 
 | Field Name | Type | Purpose | Links To |
 |------------|------|---------|----------|
 | `customer` | Link | Customer | IB Customer |
 | `estimate_date` | Date | Quote date | - |
 | `valid_till` | Date | Validity period | - |
-| `status` | Select | Draft/Sent/Converted | - |
+| `status` | Select | Draft/Submitted/Accepted/Halted/Cancelled/Ordered | - |
+| `customer_opinion` | Select | Pending/Accepted/Declined | - |
 | `items` | Table | Line items | IB Invoice Item |
 | `subtotal` | Currency | Pre-tax total | - |
 | `tax_total` | Currency | Total tax | - |
 | `grand_total` | Currency | Final amount | - |
 | `notes` | Text | Terms & conditions | - |
+| `email_delivery_status` | Data | Email sent status | - |
 
-**Status Flow**: Draft → Sent → Converted to Sales Order
+**Status Flow**: Draft → Submitted → Accepted/Halted → Ordered/Cancelled
+
+**Email Workflow Features**:
+- Auto-sends approval email on submit
+- Customer can Accept or Reject via secure email links
+- Accepted estimates auto-create Sales Orders
+- Token-based security for email links
 
 ---
 
@@ -264,7 +342,7 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 | `subtotal` | Currency | Pre-tax total | - |
 | `tax_total` | Currency | Total tax | - |
 | `grand_total` | Currency | Final amount | - |
-| `estimate` | Link | Source estimate (optional) | IB Estimate |
+| `estimate_ref` | Link | Source estimate (optional) | IB Estimate |
 
 **Status Flow**: Draft → Confirmed → Billed (via Sales Invoice)
 
@@ -335,7 +413,45 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 
 ---
 
-### 2.3 Accounting DocTypes
+#### IB Credit Note
+**Purpose**: Sales return/reversal document.
+
+| Field Name | Type | Purpose | Links To |
+|------------|------|---------|----------|
+| `customer` | Link | Customer | IB Customer |
+| `sales_invoice` | Link | Original invoice | IB Sales Invoice |
+| `credit_note_date` | Date | CN date | - |
+| `items` | Table | Return items | IB Invoice Item |
+| `total_amount` | Currency | Credit amount | - |
+| `reason` | Text | Return reason | - |
+
+**Effects**:
+- Reverses Sales Invoice GL entries
+- Reduces receivable
+- Reverses stock (if tracked)
+
+---
+
+#### IB Debit Note
+**Purpose**: Purchase return/reversal document.
+
+| Field Name | Type | Purpose | Links To |
+|------------|------|---------|----------|
+| `vendor` | Link | Vendor | IB Vendor |
+| `purchase_bill` | Link | Original bill | IB Purchase Bill |
+| `debit_note_date` | Date | DN date | - |
+| `items` | Table | Return items | IB Purchase Item |
+| `total_amount` | Currency | Debit amount | - |
+| `reason` | Text | Return reason | - |
+
+**Effects**:
+- Reverses Purchase Bill GL entries
+- Reduces payable
+- Reverses stock (if tracked)
+
+---
+
+### 2.4 Accounting DocTypes
 
 #### IB Chart of Accounts
 **Purpose**: Ledger account master.
@@ -425,67 +541,10 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 
 ---
 
-#### IB Debit Note / IB Credit Note
-**Purpose**: Sales/Purchase returns.
-
-**Debit Note** (Purchase Return):
-- Reverses Purchase Bill
-- Reduces payable
-- Reverses stock (if tracked)
-
-**Credit Note** (Sales Return):
-- Reverses Sales Invoice
-- Reduces receivable  
-- Reverses stock (if tracked)
-
----
-
-### 2.4 Configuration DocTypes
-
-#### IB Payment Settings
-**Purpose**: Payment gateway and UPI configuration.
-
-| Field Name | Type | Purpose |
-|------------|------|---------|
-| `enable_payment_gateway` | Check | Enable Razorpay |
-| `razorpay_key_id` | Data | API Key |
-| `razorpay_key_secret` | Password | API Secret |
-| `enable_upi_qr` | Check | Enable UPI QR |
-| `upi_id` | Data | UPI VPA |
-| `payee_name` | Data | UPI payee name |
-
----
-
-#### IB Tax
-**Purpose**: Tax rate master (CGST, SGST, IGST).
-
-| Field Name | Type | Purpose |
-|------------|------|---------|
-| `tax_name` | Data | Tax name |
-| `tax_rate` | Float | Tax percentage |
-| `account` | Link | Tax GL account |
-
----
-
-#### IB State
-**Purpose**: State master for GST (CGST+SGST vs IGST logic).
-
-| Field Name | Type | Purpose |
-|------------|------|---------|
-| `state_name` | Data | State name |
-| `state_code` | Data | GST state code |
-
----
-
-#### IB HSN Code / IB SAC Code
-**Purpose**: HSN/SAC code masters for GST compliance.
-
----
-
 ### 2.5 Child Table DocTypes
 
 #### IB Invoice Item
-**Child of**: Estimate, Sales Order, Sales Invoice
+**Child of**: Estimate, Sales Order, Sales Invoice, Credit Note
 
 | Field Name | Type | Purpose | Links To |
 |------------|------|---------|----------|
@@ -500,7 +559,7 @@ Idli Book is a minimal yet powerful accounting application built on the Frappe F
 ---
 
 #### IB Purchase Item
-**Child of**: Purchase Order, Purchase Bill
+**Child of**: Purchase Order, Purchase Bill, Debit Note
 
 Similar to IB Invoice Item, tailored for purchase documents.
 
@@ -518,7 +577,20 @@ Similar to IB Invoice Item, tailored for purchase documents.
 
 ---
 
+#### IB Journal Entry Account
+**Child of**: IB Journal Entry
+
+| Field Name | Type | Purpose | Links To |
+|------------|------|---------|----------|
+| `account` | Link | Account | IB Chart of Accounts |
+| `debit` | Currency | Debit amount | - |
+| `credit` | Currency | Credit amount | - |
+
+---
+
 ## 3. Reports Documentation
+
+**Total Reports: 27**
 
 ### 3.1 Financial Reports
 
@@ -580,6 +652,27 @@ Similar to IB Invoice Item, tailored for purchase documents.
 
 ---
 
+#### IB Customer Growth
+- **Type**: Script Report
+- **Purpose**: Customer acquisition trends with chart
+- **Columns**: Period, New Customers, Total Customers, Growth Rate, Active Customers
+- **Filters**: From Date, To Date, Period (Monthly/Quarterly/Yearly)
+- **Chart**: Mixed chart with bars (new) and lines (total/active)
+
+---
+
+#### IB Total Customer Growth
+- **Type**: Script Report
+- **Purpose**: Extended customer growth metrics
+
+---
+
+#### IB Total Sales Order Status
+- **Type**: Query Report
+- **Purpose**: Sales order tracking
+
+---
+
 ### 3.3 Purchase Reports
 
 #### IB Purchase Order Status
@@ -627,36 +720,72 @@ Similar to IB Invoice Item, tailored for purchase documents.
 
 ---
 
-#### IB Customer Growth
-- **Type**: Script Report
-- **Purpose**: Customer acquisition trends with chart
-- **Columns**: Period, New Customers, Total Customers, Growth Rate, Active Customers
-- **Filters**: From Date, To Date, Period (Monthly/Quarterly/Yearly)
-- **Chart**: Mixed chart with bars (new) and lines (total/active)
+### 3.5 Summary Reports
+
+| Report | Purpose | Type |
+|--------|---------|------|
+| IB Total Customers | Customer count | Script Report |
+| IB Total Vendors | Vendor count | Script Report |
+| IB Total Items | Item count | Script Report |
+| IB Total Estimates | Estimate count | Script Report |
+| IB Total Sales Orders | SO count | Script Report |
+| IB Total Income | Revenue total | Script Report |
+| IB Total Expenses | Expense total | Script Report |
+| IB Total Receivables | AR total | Script Report |
+| IB Total Amount Payable | AP total | Script Report |
+| IB Top 5 Expenses | Expense breakdown | Script Report |
 
 ---
 
-### 3.5 Summary Reports (Number Cards)
+## 4. Dashboard Charts
 
-- **IB Total Customers**: Customer count
-- **IB Total Vendors**: Vendor count
-- **IB Total Items**: Item count
-- **IB Total Estimates**: Estimate count
-- **IB Total Sales Orders**: SO count
-- **IB Total Income**: Revenue total
-- **IB Total Expenses**: Expense total
-- **IB Total Receivables**: AR total
-- **IB Total Amount Payable**: AP total
-- **IB Top 5 Expenses**: Expense breakdown
+**Total Dashboard Charts: 7**
+
+Dashboard charts provide visual insights on the main Idli Book workspace.
+
+| Chart Name | Purpose | Chart Type |
+|------------|---------|------------|
+| **Cash Flow** | Track cash inflows/outflows | Line/Bar |
+| **Customer Trend Chart** | Customer growth over time | Line |
+| **Payment Receive** | Payment receipt trends | Bar |
+| **Purchase Order Status** | PO status breakdown | Pie/Donut |
+| **Sales Invoice** | Invoice status/amounts | Bar |
+| **Sales Order Trends** | SO trends over time | Line |
+| **Top 5 Expense** | Top expense categories | Bar |
 
 ---
 
-## 4. Workspaces Guide
+## 5. Number Cards
+
+**Total Number Cards: 11**
+
+Number cards display key metrics at a glance on workspaces.
+
+| Card Name | Metric | Location |
+|-----------|--------|----------|
+| **Total Customers** | Count of IB Customer | Dashboard |
+| **Total Items** | Count of IB Item | Dashboard |
+| **Total Sales Order** | Count of IB Sales Order | Dashboard |
+| **Vendors** | Count of IB Vendor | Dashboard |
+| **Purchased Products** | Total purchased items | Dashboard |
+| **IB Total Payables** | Total AP amount | Dashboard |
+| **IB Total Receivables** | Total AR amount | Dashboard |
+| **Payable Amount** | Outstanding payables | Dashboard |
+| **Payment Receivable** | Outstanding receivables | Dashboard |
+| **IB Top Expense Item** | Highest expense item | Dashboard |
+| **Top 5 Expense** | Top 5 expenses display | Dashboard |
+
+---
+
+## 6. Workspaces Guide
+
+**Total Workspaces: 14**
 
 ### Idli Book (Main)
 - **Purpose**: Central dashboard
 - **Quick Access**: Recent transactions, shortcuts
-- **Charts**: Revenue, Expenses
+- **Charts**: Revenue, Expenses, Cash Flow
+- **Number Cards**: Key metrics at a glance
 
 ### Sales
 - **Shortcuts**: Estimate, Sales Order, Sales Invoice, Customer
@@ -678,13 +807,18 @@ Similar to IB Invoice Item, tailored for purchase documents.
 - **Shortcuts**: Add new
 - **Reports**: Aging, payment status
 
-### Bills / Purchase Orders / Sales Invoices / Sales Orders / Estimates
-- **Purpose**: Dedicated transaction views
-- **Features**: List view, filters, bulk actions
+### Transaction Workspaces
+| Workspace | Purpose | Key Features |
+|-----------|---------|--------------|
+| Bills | Purchase Bills management | List view, filters, bulk actions |
+| Purchase Orders | PO management | List view, filters |
+| Sales Invoices | Invoice management | List view, filters |
+| Sales Orders | SO management | List view, filters |
+| Estimates | Quote management | List view, filters |
 
 ---
 
-## 5. Chart of Accounts
+## 7. Chart of Accounts
 
 ### Account Structure
 
@@ -743,11 +877,11 @@ Root
 
 ---
 
-## 6. APIs & Features
+## 8. APIs & Features
 
-### 6.1 UPI QR Code Payment
+### 8.1 UPI QR Code Payment
 
-**Implementation**: `invoice_payment.py`, `invoice_payment.html`
+**Implementation**: `www/invoice_payment.py`, `www/invoice_payment.html`
 
 **Flow**:
 1. Customer receives invoice email with "Pay Now" button
@@ -780,9 +914,45 @@ img = qr.make_image(fill_color="black", back_color="white")
 
 ---
 
-### 6.2 Razorpay Integration (Optional)
+### 8.2 Estimate Workflow API
 
-**Implementation**: `api.py`, `pay.html`, `pay.py`
+**Implementation**: `api/workflow.py`
+
+**Purpose**: Allow customers to Accept or Reject estimates directly from email links.
+
+**Endpoint**:
+```
+/api/method/idli_book.idli_book.api.workflow.handle_estimate_response
+```
+
+**Parameters**:
+- `name`: Estimate ID (e.g., EST-0001)
+- `action`: "accept" or "reject"
+- `token`: Security token (hash of name + creation)
+
+**Actions**:
+
+**Accept**:
+1. Updates estimate status to "Accepted"
+2. Sets `customer_opinion` to "Accepted"
+3. Auto-creates Sales Order from estimate
+4. Adds comment to estimate
+
+**Reject**:
+1. Updates estimate status to "Halted"
+2. Sets `customer_opinion` to "Declined"
+3. Adds comment to estimate
+
+**Security**:
+- Token-based verification (hash of estimate name + creation timestamp)
+- Prevents tampering with links
+- Single-use validation (cannot accept/reject already actioned estimates)
+
+---
+
+### 8.3 Razorpay Integration (Optional)
+
+**Implementation**: `api.py`, `www/pay.html`, `www/pay.py`
 
 **APIs**:
 - `get_payment_details(invoice_name)`: Fetch invoice info
@@ -796,7 +966,7 @@ img = qr.make_image(fill_color="black", back_color="white")
 
 ---
 
-### 6.3 Email Features
+### 8.4 Email Features
 
 **Auto-Email on Invoice Submission**:
 ```python
@@ -816,205 +986,16 @@ def send_invoice_email(self):
 
 ---
 
-### 6.4 API Endpoints
+### 8.5 API Endpoints Summary
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
+| `/api/method/idli_book.api.chatbot.chat` | POST | Chatbot conversation |
+| `/api/method/idli_book.api.chatbot.get_suggestions` | GET | Chat suggestions |
+| `/api/method/idli_book.idli_book.api.workflow.handle_estimate_response` | GET | Estimate Accept/Reject |
 | `/api/method/idli_book.idli_book.api.get_payment_details` | GET | Invoice details |
 | `/api/method/idli_book.idli_book.api.create_razorpay_order` | POST | Create order |
 | `/api/method/idli_book.idli_book.api.verify_payment` | POST | Verify payment |
-
----
-
-## 7. Tax & Calculations
-
-### 7.1 GST Logic
-
-**Same State**: CGST + SGST
-**Interstate**: IGST
-
-**Tax Rates**:
-- 18% = 9% CGST + 9% SGST (same state)
-- 18% = 18% IGST (interstate)
-
-### 7.2 Sales Invoice Calculation
-
-**Example**:
-
-| Item | Qty | Rate | Amount | Tax Rate | Tax Amount |
-|------|-----|------|--------|----------|------------|
-| Product A | 2 | ₹1,000 | ₹2,000 | 18% | ₹360 |
-| Service B | 1 | ₹500 | ₹500 | 18% | ₹90 |
-
-**Calculation**:
-```
-Subtotal = ₹2,500
-CGST @ 9% = ₹225
-SGST @ 9% = ₹225
-Grand Total = ₹2,950
-```
-
-**GL Entries (Same State)**:
-```
-DR Accounts Receivable - Customer A    ₹2,950
-   CR Sales Income                              ₹2,500
-   CR CGST Payable                              ₹225
-   CR SGST Payable                              ₹225
-```
-
-**GL Entries (Interstate)**:
-```
-DR Accounts Receivable - Customer A    ₹2,950
-   CR Sales Income                              ₹2,500
-   CR IGST Payable                              ₹450
-```
-
-### 7.3 Purchase Bill Calculation
-
-**GL Entries**:
-```
-DR Cost of Goods Sold                  ₹2,500
-DR CGST Paid                           ₹225
-DR SGST Paid                           ₹225
-   CR Accounts Payable - Vendor X              ₹2,950
-```
-
-### 7.4 Payment Entry
-
-**Customer Payment (Receive)**:
-```
-DR Bank Account                        ₹2,950
-   CR Accounts Receivable - Customer A         ₹2,950
-```
-
-**Vendor Payment (Pay)**:
-```
-DR Accounts Payable - Vendor X         ₹2,950
-   CR Bank Account                             ₹2,950
-```
-
----
-
-## 8. Workflows
-
-### 8.1 Sales Workflow
-
-```mermaid
-graph LR
-    A[Estimate] --> B[Sales Order]
-    B --> C[Sales Invoice]
-    C --> D[Payment]
-    D --> E[Invoice Paid]
-```
-
-**Detailed Flow**:
-
-1. **Create Estimate**
-   - Add customer
-   - Add items
-   - Submit
-   - Send email
-
-2. **Convert to Sales Order**
-   - Create from Estimate (optional)
-   - Or create directly
-   - Confirm order
-
-3. **Create Sales Invoice**
-   - Create from SO (optional)
-   - Or create directly
-   - Submit → GL entries created
-   - Stock reduced
-   - Email sent with UPI link
-
-4. **Record Payment**
-   - Customer pays via UPI/Bank
-   - Create Payment Entry
-   - Allocate to invoice
-   - Submit → GL entries created
-   - Invoice status updated
-
-### 8.2 Purchase Workflow
-
-```mermaid
-graph LR
-    A[Purchase Order] --> B[Purchase Bill]
-    B --> C[Payment]
-    C --> D[Bill Paid]
-```
-
-**Detailed Flow**:
-
-1. **Create Purchase Order**
-   - Add vendor
-   - Add items
-   - Submit
-
-2. **Create Purchase Bill**
-   - Create from PO (optional)
-   - Submit → GL entries
-   - Stock increased
-
-3. **Make Payment**
-   - Create Payment Entry (Pay)
-   - Allocate to bill
-   - Submit → GL entries
-   - Bill status updated
-
-### 8.3 Payment Workflow
-
-**Customer Payment**:
-1. Customer → Sales Invoice created
-2. Email sent with UPI QR link
-3. Customer scans → Pays
-4. Record Payment Entry (manually or via Razorpay webhook)
-5. Invoice marked Paid
-
-**Vendor Payment**:
-1. Vendor → Purchase Bill created
-2. Due date tracking
-3. Create Payment Entry before/on due date
-4. Bill marked Paid
-
-### 8.4 Accounting Workflow
-
-**Month-End Close**:
-1. Run Trial Balance
-2. Verify balances
-3. Check Profit & Loss
-4. Review Balance Sheet
-5. Journal entries for adjustments (if needed)
-
----
-
-## Appendix: Installation & Setup
-
-### Prerequisites
-- Frappe v15
-- Python 3.10+
-- MariaDB/PostgreSQL
-
-### Installation
-```bash
-bench get-app https://github.com/your-repo/idli_book
-bench --site site1.local install-app idli_book
-bench --site site1.local migrate
-```
-
-### Initial Setup
-1. **IB Organization**: Configure company details
-2. **Chart of Accounts**: Review/customize
-3. **Customers & Vendors**: Import master data
-4. **Items**: Add products/services
-5. **Payment Settings**: Configure UPI/Gateway
-
-### Library Dependencies
-```bash
-cd /path/to/frappe-bench
-./env/bin/pip install qrcode[pil]
-```
-
----
 
 ---
 
@@ -1031,6 +1012,7 @@ The Idli Book AI Chatbot is a production-ready Google Gemini-powered assistant t
 - 📊 Real-time data access
 - 🎯 Context-aware (knows current date)
 - 🛡️ Robust error handling
+- 📋 Dynamic schema awareness
 
 ### 9.2 Architecture
 
@@ -1047,10 +1029,15 @@ The Idli Book AI Chatbot is a production-ready Google Gemini-powered assistant t
 **Available Tools**:
 
 ```python
-get_customers(status: str) → List customer records
-get_invoices(status: str, customer: str, from_date: str, to_date: str) → Invoices
-get_payments(from_date: str, to_date: str) → Payment entries
-get_summary() → Business KPIs and metrics
+# Generic DocType Access
+get_table_list(doctype, filters, search, limit, order_by) → List any IB DocType records
+get_record_details(doctype, name) → Full record details
+
+# Specialized Functions
+get_customers(limit, search) → Customer list
+get_invoices(status, customer, from_date, to_date, limit) → Sales invoices
+get_payments(from_date, to_date, payment_type, limit) → Payment entries
+get_summary(metric) → Business KPIs and metrics
 ```
 
 ### 9.3 Configuration
@@ -1076,7 +1063,7 @@ get_summary() → Business KPIs and metrics
    ```
 3. **Install Library**:
    ```bash
-   cd ~/frappe-v15/frappe-bench
+   cd ~/frappe-bench
    ./env/bin/pip install -U google-generativeai
    ```
 4. **Build Assets**:
@@ -1106,21 +1093,32 @@ get_summary() → Business KPIs and metrics
 
 "Give me a business summary"
 → Calls get_summary()
+
+"Show me details of invoice INV-0001"
+→ Calls get_record_details(doctype='IB Sales Invoice', name='INV-0001')
+
+"List all purchase bills from last week"
+→ Calls get_table_list(doctype='IB Purchase Bill', ...)
 ```
 
 ### 9.5 Technical Implementation
 
 **System Prompt Architecture**:
 ```
-CRITICAL INSTRUCTION: You are the internal AI for 'Idli Book'.
-You have FULL ACCESS to the company' database via the provided functions.
-The user is the Business Owner/Admin and is AUTHORIZED to see all financial data.
+You are an AI assistant for Idli Book, an accounting software.
 
-Current Date: 2026-01-14
+You have access to the following Tables (DocTypes):
+{dynamic_schema}
 
-You MUST use the tools/functions to answer questions about data.
-DO NOT WRITE PYTHON CODE or SQL queries to solve the problem.
-CALL THE FUNCTIONS DIRECTLY.
+You help users with:
+- Querying business data
+- Getting details of records
+- Getting business insights
+
+When asked to list or find records, use `get_table_list`.
+When asked for specific details of a record, use `get_record_details`.
+
+Current date: {today}
 ```
 
 **Model Selection Flow**:
@@ -1128,6 +1126,13 @@ CALL THE FUNCTIONS DIRECTLY.
 2. Try `models/gemini-flash-latest` (always latest)
 3. Try `models/gemini-pro-latest` (premium)
 4. Fallback: Auto-discovery (list all available models)
+
+**Loopback Mechanism**:
+1. User sends message
+2. LLM responds with function call
+3. System executes function, gets results
+4. Results fed back to LLM
+5. LLM generates natural language response
 
 **Error Handling**:
 - `tool_config` wrapped in try/except for compatibility
@@ -1187,18 +1192,27 @@ verify_idli_bot.test_manual_query()
 ```
 idli_book/
 ├── ai/
+│   ├── __init__.py
 │   ├── llm_provider.py          # Gemini integration
 │   │   ├── _gemini_chat()       # Main chat method
 │   │   ├── _convert_to_gemini_tools()  # Tool conversion
 │   │   └── _parse_gemini_response()    # Response parsing
 │   └── action_executor.py       # Business functions
+│       ├── execute()            # Function router
+│       ├── get_table_list()     # Generic DocType query
+│       ├── get_record_details() # Single record details
 │       ├── get_customers()
 │       ├── get_invoices()
 │       ├── get_payments()
-│       └── get_summary()
+│       ├── get_summary()
+│       └── get_available_functions()
 ├── api/
 │   └── chatbot.py              # REST API
-│       └── chat()              # Whitelisted endpoint
+│       ├── chat()              # Main endpoint
+│       ├── build_context()     # System prompt builder
+│       ├── get_suggestions()   # Quick actions
+│       ├── get_doctype_schema() # Dynamic schema
+│       └── clear_session()
 ├── public/js/
 │   └── chatbot_widget.js       # Floating widget
 └── idli_book/page/ib_chatbot/
@@ -1229,8 +1243,8 @@ idli_book/
 - **Check**: [API Key Usage](https://aistudio.google.com/app/apikey)
 
 **Issue**: "I don't have access to your data"**
-- **Solution**: Ensure system prompt includes "FULL ACCESS" instruction
-- **Verify**: Check `_build_gemini_contents_and_system()` in `llm_provider.py`
+- **Solution**: Ensure system prompt includes business context
+- **Verify**: Check `build_context()` in `chatbot.py`
 
 **Issue: "Empty response"**
 - **Solution**: Verify safety settings are `BLOCK_ONLY_HIGH`
@@ -1254,13 +1268,284 @@ idli_book/
 
 ---
 
+## 10. Tax & Calculations
+
+### 10.1 GST Logic
+
+**Same State**: CGST + SGST
+**Interstate**: IGST
+
+**Tax Rates**:
+- 18% = 9% CGST + 9% SGST (same state)
+- 18% = 18% IGST (interstate)
+
+### 10.2 Sales Invoice Calculation
+
+**Example**:
+
+| Item | Qty | Rate | Amount | Tax Rate | Tax Amount |
+|------|-----|------|--------|----------|------------|
+| Product A | 2 | ₹1,000 | ₹2,000 | 18% | ₹360 |
+| Service B | 1 | ₹500 | ₹500 | 18% | ₹90 |
+
+**Calculation**:
+```
+Subtotal = ₹2,500
+CGST @ 9% = ₹225
+SGST @ 9% = ₹225
+Grand Total = ₹2,950
+```
+
+**GL Entries (Same State)**:
+```
+DR Accounts Receivable - Customer A    ₹2,950
+   CR Sales Income                              ₹2,500
+   CR CGST Payable                              ₹225
+   CR SGST Payable                              ₹225
+```
+
+**GL Entries (Interstate)**:
+```
+DR Accounts Receivable - Customer A    ₹2,950
+   CR Sales Income                              ₹2,500
+   CR IGST Payable                              ₹450
+```
+
+### 10.3 Purchase Bill Calculation
+
+**GL Entries**:
+```
+DR Cost of Goods Sold                  ₹2,500
+DR CGST Paid                           ₹225
+DR SGST Paid                           ₹225
+   CR Accounts Payable - Vendor X              ₹2,950
+```
+
+### 10.4 Payment Entry
+
+**Customer Payment (Receive)**:
+```
+DR Bank Account                        ₹2,950
+   CR Accounts Receivable - Customer A         ₹2,950
+```
+
+**Vendor Payment (Pay)**:
+```
+DR Accounts Payable - Vendor X         ₹2,950
+   CR Bank Account                             ₹2,950
+```
+
+---
+
+## 11. Workflows
+
+### 11.1 Sales Workflow
+
+```mermaid
+graph LR
+    A[Estimate] --> B[Email to Customer]
+    B --> C{Customer Response}
+    C -->|Accept| D[Sales Order Auto-Created]
+    C -->|Reject| E[Estimate Halted]
+    D --> F[Sales Invoice]
+    F --> G[Payment]
+    G --> H[Invoice Paid]
+```
+
+**Detailed Flow**:
+
+1. **Create Estimate**
+   - Add customer
+   - Add items
+   - Submit
+   - Auto-sends email with Accept/Reject links
+
+2. **Customer Response**
+   - Customer clicks Accept → Sales Order auto-created
+   - Customer clicks Reject → Estimate marked as Halted
+   - Secure token-based verification
+
+3. **Create Sales Invoice**
+   - Create from SO (optional)
+   - Or create directly
+   - Submit → GL entries created
+   - Stock reduced
+   - Email sent with UPI link
+
+4. **Record Payment**
+   - Customer pays via UPI/Bank
+   - Create Payment Entry
+   - Allocate to invoice
+   - Submit → GL entries created
+   - Invoice status updated
+
+### 11.2 Purchase Workflow
+
+```mermaid
+graph LR
+    A[Purchase Order] --> B[Purchase Bill]
+    B --> C[Payment]
+    C --> D[Bill Paid]
+```
+
+**Detailed Flow**:
+
+1. **Create Purchase Order**
+   - Add vendor
+   - Add items
+   - Submit
+
+2. **Create Purchase Bill**
+   - Create from PO (optional)
+   - Submit → GL entries
+   - Stock increased
+
+3. **Make Payment**
+   - Create Payment Entry (Pay)
+   - Allocate to bill
+   - Submit → GL entries
+   - Bill status updated
+
+### 11.3 Payment Workflow
+
+**Customer Payment**:
+1. Customer → Sales Invoice created
+2. Email sent with UPI QR link
+3. Customer scans → Pays
+4. Record Payment Entry (manually or via Razorpay webhook)
+5. Invoice marked Paid
+
+**Vendor Payment**:
+1. Vendor → Purchase Bill created
+2. Due date tracking
+3. Create Payment Entry before/on due date
+4. Bill marked Paid
+
+### 11.4 Accounting Workflow
+
+**Month-End Close**:
+1. Run Trial Balance
+2. Verify balances
+3. Check Profit & Loss
+4. Review Balance Sheet
+5. Journal entries for adjustments (if needed)
+
+---
+
+## 12. Scheduler Tasks
+
+Idli Book includes automated background tasks for various operations.
+
+### Task Schedule
+
+| Schedule | Task | Purpose |
+|----------|------|---------|
+| **All (Every minute)** | `sync_email_statuses` | Sync email delivery status from Email Queue |
+| **Daily** | `daily_tasks` | Daily maintenance and cleanup |
+| **Daily** | `send_payment_reminders` | Send payment reminder emails for overdue invoices |
+| **Hourly** | `hourly_tasks` | Hourly maintenance tasks |
+
+### Configuration
+
+Tasks are configured in `hooks.py`:
+
+```python
+scheduler_events = {
+    "all": [
+        "idli_book.tasks.sync_email_statuses"
+    ],
+    "daily": [
+        "idli_book.tasks.daily_tasks",
+        "idli_book.tasks.send_payment_reminders"
+    ],
+    "hourly": [
+        "idli_book.tasks.hourly_tasks"
+    ]
+}
+```
+
+### Email Status Tracking
+
+The system tracks email delivery status via doc events:
+
+```python
+doc_events = {
+    "Email Queue": {
+        "on_update": "idli_book.api.email_tracker.update_estimate_email_status"
+    }
+}
+```
+
+---
+
+## 13. Installation & Setup
+
+### Prerequisites
+- Frappe v15
+- Python 3.10+
+- MariaDB/PostgreSQL
+- Node.js 18+
+
+### Installation
+```bash
+bench get-app https://github.com/your-repo/idli_book
+bench --site site1.local install-app idli_book
+bench --site site1.local migrate
+```
+
+### Initial Setup
+1. **IB Organization**: Configure company details
+2. **Chart of Accounts**: Review/customize
+3. **Customers & Vendors**: Import master data
+4. **Items**: Add products/services
+5. **Payment Settings**: Configure UPI/Gateway
+6. **Chatbot Settings**: Configure AI chatbot (optional)
+
+### Library Dependencies
+```bash
+cd /path/to/frappe-bench
+
+# For UPI QR Code generation
+./env/bin/pip install qrcode[pil]
+
+# For AI Chatbot
+./env/bin/pip install -U google-generativeai
+```
+
+### Post-Installation
+```bash
+# Build assets
+bench build --app idli_book
+
+# Restart server
+bench restart
+```
+
+---
+
 ## Support & Resources
 
 - **Documentation**: This file
+- **Installation Guide**: [INSTALLATION.md](./INSTALLATION.md)
+- **Changelog**: [CHANGELOG.md](./CHANGELOG.md)
 - **Issue Tracker**: GitHub Issues
-- **Email**: support@idlibook.com
+- **Email**: jaga03038@gmail.com
+
+---
+
+## Custom Pages
+
+**Total Pages: 4**
+
+| Page | Purpose | Location |
+|------|---------|----------|
+| **IB Chatbot** | Standalone AI chatbot interface | `/app/ib-chatbot` |
+| **IB Dash** | Custom dashboard view | `/app/ib-dash` |
+| **IB Workflow** | Workflow management page | `/app/ib-workflow` |
+| **Idli Dashboard** | Main analytics dashboard | `/app/idli-dashboard` |
 
 ---
 
 **End of Documentation**
 
+*Version 1.0.2 - January 19, 2026*

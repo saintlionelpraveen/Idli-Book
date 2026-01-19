@@ -5,6 +5,69 @@ All notable changes to Idli Book will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-01-19
+
+### Added
+
+#### Workflow API
+- **Estimate Accept/Reject Workflow** - Email-based approval system
+  - Customers can Accept or Reject estimates directly from email links
+  - Token-based security verification (hash of name + creation)
+  - Auto-creates Sales Order on acceptance
+  - Updates estimate status and customer opinion
+  - Implementation: `api/workflow.py`
+
+#### AI Chatbot Enhancements
+- **Dynamic Schema Discovery** - Chatbot now automatically discovers all IB DocTypes
+- **Generic DocType Access**:
+  - `get_table_list()` - Query any IB DocType with filters
+  - `get_record_details()` - Get full details of any record
+- **Improved Context Building** - Schema injected into system prompt
+- **Loopback Mechanism** - LLM results fed back for natural language responses
+
+#### Dashboard Charts (7 total)
+- Cash Flow chart
+- Customer Trend Chart
+- Payment Receive chart
+- Purchase Order Status chart
+- Sales Invoice chart
+- Sales Order Trends chart
+- Top 5 Expense chart
+
+#### Number Cards (11 total)
+- Total Customers, Vendors, Items
+- Total Sales Orders
+- Total Payables, Receivables
+- Top Expense Item
+- Purchased Products
+
+#### Custom Pages (4 total)
+- IB Chatbot - Standalone chatbot interface
+- IB Dash - Custom dashboard
+- IB Workflow - Workflow management
+- Idli Dashboard - Main analytics dashboard
+
+#### Scheduler Tasks
+- `sync_email_statuses` - Sync email delivery status (all)
+- `daily_tasks` - Daily maintenance (daily)
+- `send_payment_reminders` - Payment reminder emails (daily)
+- `hourly_tasks` - Hourly maintenance (hourly)
+
+### Changed
+- **Documentation**: Complete overhaul of all documentation files
+- **Complete Documentation**: Updated to version 1.0.2 with accurate counts
+  - DocTypes: 29 (previously 27)
+  - Reports: 27 (previously 30)
+  - Added sections for Dashboard Charts, Number Cards, Scheduler Tasks
+  - Enhanced AI Chatbot documentation
+  - Added Estimate Workflow API documentation
+
+### Technical
+- Email tracking via doc_events on Email Queue
+- Improved hooks.py configuration
+
+---
+
 ## [1.0.1] - 2026-01-14
 
 ### Added
@@ -98,7 +161,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IB State master for GST
 - IB HSN/SAC codes
 
-#### Reports (29 Total)
+#### Reports (27 Total)
 **Financial:**
 - Profit & Loss
 - Balance Sheet
@@ -165,25 +228,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Dependencies
 - Frappe Framework v15
-- ERPNext v15 (optional)
 - Python 3.10+
 - qrcode[pil] library for UPI QR generation
+- google-generativeai for AI chatbot
 
 #### File Structure
 ```
 idli_book/
 ├── idli_book/
-│   ├── doctype/           # 24 DocTypes
-│   ├── report/            # 29 Reports
-│   ├── workspace/         # 14 Workspaces
-│   ├── page/              # Custom pages
-│   ├── www/               # Public web pages
-│   │   ├── invoice_payment.py
-│   │   ├── invoice_payment.html
-│   │   ├── pay.py
-│   │   └── pay.html
-│   ├── api.py             # Payment APIs
-│   └── gl_engine.py       # GL creation logic
+│   ├── ai/                # AI Chatbot
+│   ├── api/               # REST APIs
+│   ├── idli_book/
+│   │   ├── doctype/       # 29 DocTypes
+│   │   ├── report/        # 27 Reports
+│   │   ├── workspace/     # 14 Workspaces
+│   │   ├── dashboard_chart/ # 7 Dashboard Charts
+│   │   ├── number_card/   # 11 Number Cards
+│   │   ├── page/          # 4 Custom Pages
+│   │   └── www/           # Public web pages
+│   ├── utils/             # Utility functions
+│   ├── templates/         # Email templates
+│   ├── public/            # Static assets
+│   └── www/               # Public pages
 └── docs/                  # Documentation
 ```
 
@@ -227,12 +293,26 @@ idli_book/
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 1.0.2 | 2026-01-19 | Workflow API, Chatbot enhancements, Documentation overhaul |
 | 1.0.1 | 2026-01-14 | Independent master data (Currency, UOM, Country) |
 | 1.0.0 | 2026-01-11 | Initial production release |
 
 ---
 
 ## Upgrade Notes
+
+### From v1.0.1 to v1.0.2
+
+1. Run migration:
+   ```bash
+   bench --site site1.local migrate
+   ```
+
+2. Build assets:
+   ```bash
+   bench build --app idli_book
+   bench restart
+   ```
 
 ### From Development to v1.0.0
 
