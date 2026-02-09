@@ -1,181 +1,196 @@
 {
-    "actions": [],
-    "allow_rename": 1,
-    "autoname": "naming_series:",
-    "creation": "2025-01-05 16:50:00.000000",
-    "doctype": "DocType",
-    "engine": "InnoDB",
-    "field_order": [
-        "po_details",
-        "naming_series",
-        "vendor",
-        "order_date",
-        "delivery_date",
-        "reference",
-        "item_section",
-        "items",
-        "totals_section",
-        "subtotal",
-        "discount_amount",
-        "tax_amount",
-        "grand_total",
-        "status_section",
-        "status",
-        "terms_section",
-        "vendor_notes",
-        "terms_and_conditions"
-    ],
-    "fields": [
-        {
-            "fieldname": "po_details",
-            "fieldtype": "Section Break",
-            "label": "Purchase Order Details"
-        },
-        {
-            "fieldname": "naming_series",
-            "fieldtype": "Select",
-            "label": "Series",
-            "options": "PO-.YYYY.-",
-            "default": "PO-.YYYY.-"
-        },
-        {
-            "fieldname": "vendor",
-            "fieldtype": "Link",
-            "label": "Vendor Name",
-            "options": "IB Vendor",
-            "reqd": 1,
-            "in_list_view": 1
-        },
-        {
-            "fieldname": "billing_address",
-            "fieldtype": "Small Text",
-            "label": "Vendor Address"
-        },
-        {
-            "fieldname": "shipping_address",
-            "fieldtype": "Small Text",
-            "label": "Ship To Address"
-        },
-        {
-            "fieldname": "order_date",
-            "fieldtype": "Date",
-            "label": "Order Date",
-            "default": "Today",
-            "reqd": 1
-        },
-        {
-            "fieldname": "delivery_date",
-            "fieldtype": "Date",
-            "label": "Expected Delivery Date"
-        },
-        {
-            "fieldname": "reference",
-            "fieldtype": "Data",
-            "label": "Reference#"
-        },
-        {
-            "fieldname": "item_section",
-            "fieldtype": "Section Break",
-            "label": "Items"
-        },
-        {
-            "fieldname": "items",
-            "fieldtype": "Table",
-            "label": "Items",
-            "options": "IB Invoice Item",
-            "reqd": 1
-        },
-        {
-            "fieldname": "totals_section",
-            "fieldtype": "Section Break",
-            "label": "Totals"
-        },
-        {
-            "fieldname": "subtotal",
-            "fieldtype": "Currency",
-            "label": "Subtotal",
-            "read_only": 1
-        },
-        {
-            "fieldname": "discount_amount",
-            "fieldtype": "Currency",
-            "label": "Discount"
-        },
-        {
-            "fieldname": "tax_amount",
-            "fieldtype": "Currency",
-            "label": "Total Tax",
-            "read_only": 1
-        },
-        {
-            "fieldname": "grand_total",
-            "fieldtype": "Currency",
-            "label": "Grand Total",
-            "read_only": 1,
-            "in_list_view": 1
-        },
-        {
-            "fieldname": "status_section",
-            "fieldtype": "Section Break",
-            "label": "Status"
-        },
-        {
-            "fieldname": "status",
-            "fieldtype": "Select",
-            "label": "Status",
-            "options": "Draft\nIssued\nBilled\nClosed\nCancelled",
-            "default": "Draft",
-            "read_only": 1
-        },
-        {
-            "fieldname": "email_delivery_status",
-            "fieldtype": "Select",
-            "label": "Email Status",
-            "options": "Not Sent\nQueued\nSent\nError",
-            "default": "Not Sent",
-            "read_only": 1
-        },
-        {
-            "fieldname": "terms_section",
-            "fieldtype": "Section Break",
-            "label": "Terms & Notes"
-        },
-        {
-            "fieldname": "vendor_notes",
-            "fieldtype": "Small Text",
-            "label": "Vendor Notes"
-        },
-        {
-            "fieldname": "terms_and_conditions",
-            "fieldtype": "Small Text",
-            "label": "Terms & Conditions"
-        }
-    ],
-    "index_web_pages_for_search": 1,
-    "is_submittable": 1,
-    "links": [],
-    "modified": "2025-01-05 16:50:00.000000",
-    "modified_by": "Administrator",
-    "module": "Idli Book",
-    "name": "IB Purchase Order",
-    "naming_rule": "By \"naming_series\" field",
-    "owner": "Administrator",
-    "permissions": [
-        {
-            "create": 1,
-            "delete": 1,
-            "email": 1,
-            "export": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "System Manager",
-            "share": 1,
-            "submit": 1,
-            "write": 1
-        }
-    ],
-    "sort_field": "modified",
-    "sort_order": "DESC",
-    "states": []
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-01-05 16:50:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "po_details",
+  "naming_series",
+  "vendor",
+  "order_date",
+  "delivery_date",
+  "reference",
+  "item_section",
+  "items",
+  "totals_section",
+  "subtotal",
+  "discount_amount",
+  "tax_amount",
+  "grand_total",
+  "status_section",
+  "status",
+  "terms_section",
+  "vendor_notes",
+  "terms_and_conditions",
+  "billing_address",
+  "shipping_address",
+  "email_delivery_status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "po_details",
+   "fieldtype": "Section Break",
+   "label": "Purchase Order Details"
+  },
+  {
+   "default": "PO-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "PO-.YYYY.-"
+  },
+  {
+   "fieldname": "vendor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vendor Name",
+   "options": "IB Vendor",
+   "reqd": 1
+  },
+  {
+   "fieldname": "billing_address",
+   "fieldtype": "Small Text",
+   "label": "Vendor Address"
+  },
+  {
+   "fieldname": "shipping_address",
+   "fieldtype": "Small Text",
+   "label": "Ship To Address"
+  },
+  {
+   "default": "Today",
+   "fieldname": "order_date",
+   "fieldtype": "Date",
+   "label": "Order Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Expected Delivery Date"
+  },
+  {
+   "fieldname": "reference",
+   "fieldtype": "Data",
+   "label": "Reference#"
+  },
+  {
+   "fieldname": "item_section",
+   "fieldtype": "Section Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "IB Invoice Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "fieldname": "subtotal",
+   "fieldtype": "Currency",
+   "label": "Subtotal",
+   "read_only": 1
+  },
+  {
+   "fieldname": "discount_amount",
+   "fieldtype": "Currency",
+   "label": "Discount"
+  },
+  {
+   "fieldname": "tax_amount",
+   "fieldtype": "Currency",
+   "label": "Total Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Grand Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status_section",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nIssued\nBilled\nClosed\nCancelled",
+   "read_only": 1
+  },
+  {
+   "default": "Not Sent",
+   "fieldname": "email_delivery_status",
+   "fieldtype": "Select",
+   "label": "Email Status",
+   "options": "Not Sent\nQueued\nSent\nError",
+   "read_only": 1
+  },
+  {
+   "fieldname": "terms_section",
+   "fieldtype": "Section Break",
+   "label": "Terms & Notes"
+  },
+  {
+   "fieldname": "vendor_notes",
+   "fieldtype": "Small Text",
+   "label": "Vendor Notes"
+  },
+  {
+   "fieldname": "terms_and_conditions",
+   "fieldtype": "Small Text",
+   "label": "Terms & Conditions"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "IB Purchase Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-01-20 11:51:21.141521",
+ "modified_by": "Administrator",
+ "module": "Idli Book",
+ "name": "IB Purchase Order",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
 }
