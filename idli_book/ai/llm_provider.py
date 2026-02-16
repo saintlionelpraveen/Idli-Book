@@ -63,8 +63,13 @@ class LLMProvider:
 			response = client.chat.completions.create(**params)
 			return self._parse_openai_response(response)
 		except Exception as e:
-			frappe.log_error(f"OpenAI API Error: {str(e)}", "Chatbot OpenAI Error")
-			frappe.throw(_("Failed to get response from OpenAI: {0}").format(str(e)))
+			error_msg = str(e)
+			frappe.log_error(f"OpenAI API Error: {error_msg}", "Chatbot OpenAI Error")
+			
+			if "insufficient_quota" in error_msg or "429" in error_msg:
+				frappe.throw(_("OpenAI Account Quota Exceeded. Please check your OpenAI billing details and credit balance."))
+			
+			frappe.throw(_("Failed to get response from OpenAI: {0}").format(error_msg[:140]))
 	
 	def _parse_openai_response(self, response):
 		"""Parse OpenAI response"""
